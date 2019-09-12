@@ -17,17 +17,22 @@ public class LinearBoi extends LinearOpMode
 
         waitForStart();
 
-        while(opModeIsActive()){
-            if(gamepad1.right_stick_y!=0)
-            {
-                robot.back_left.setPower(gamepad1.right_stick_y);
-                robot.front_right.setPower(gamepad1.right_stick_y);
-            }
-
+        while(opModeIsActive())
+        {
             if(gamepad1.left_stick_y!=0)
             {
-                robot.back_right.setPower(gamepad1.left_stick_y);
+                robot.front_right.setPower(gamepad1.left_stick_y);
                 robot.front_left.setPower(gamepad1.left_stick_y);
+                robot.back_right.setPower(gamepad1.left_stick_y);
+                robot.back_left.setPower(gamepad1.left_stick_y);
+            }
+//--------------------
+            if(gamepad1.right_stick_x!=0)
+            {
+                robot.front_right.setPower(gamepad1.right_stick_x);
+                robot.front_left.setPower(-gamepad1.right_stick_x);
+                robot.back_right.setPower(gamepad1.right_stick_x);
+                robot.back_left.setPower(-gamepad1.right_stick_x);
             }
         }
     }

@@ -173,8 +173,6 @@ public class OGTele extends LinearOpMode {
                 HookMotor.setPower(-gamepad1.left_trigger);
             }
 
-
-
             //------------------------------------------------------------------------Controller-Two
             //ExtendUp/Down
             //LiftUp/Down
@@ -213,8 +211,6 @@ public class OGTele extends LinearOpMode {
             if(gamepad2.left_trigger != 0){
                 angle.setPower(gamepad2.left_trigger);
             }
-
-
         }
     }
 }
