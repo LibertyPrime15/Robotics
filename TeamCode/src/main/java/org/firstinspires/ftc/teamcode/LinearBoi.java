@@ -16,10 +16,12 @@ public class LinearBoi extends LinearOpMode
         telemetry.update();
 
         waitForStart();
-
+//------------------------------------------------------------
         while(opModeIsActive())
         {
-            if(gamepad1.left_stick_y!=0)
+//--------------------
+            //This is for basic movement forward - with the left joystick
+            if(gamepad1.left_stick_y !=0)
             {
                 robot.front_right.setPower(gamepad1.left_stick_y);
                 robot.front_left.setPower(gamepad1.left_stick_y);
@@ -27,13 +29,42 @@ public class LinearBoi extends LinearOpMode
                 robot.back_left.setPower(gamepad1.left_stick_y);
             }
 //--------------------
-            if(gamepad1.right_stick_x!=0)
+            //This is for mechanum/driving directly to the left - with the left joystick
+            if(gamepad1.left_stick_x !=0 && gamepad1.left_stick_x !=1)
+            {
+                robot.front_right.setPower(gamepad1.left_stick_x);
+                robot.front_left.setPower(-gamepad1.left_stick_x);
+                robot.back_right.setPower(-gamepad1.left_stick_x);
+                robot.back_left.setPower(gamepad1.left_stick_x);
+            }
+//--------------------
+            //This is for mechanum/driving directly to the right - with the left joystick
+            if(gamepad1.left_stick_x !=0 && gamepad1.left_stick_x !=-1)
+            {
+                robot.front_right.setPower(-gamepad1.left_stick_x);
+                robot.front_left.setPower(gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
+            }
+//--------------------These are the right joystick controls
+            //This is for turning the robot to the right - with the right joystick
+            if(gamepad1.right_stick_x !=0)
             {
                 robot.front_right.setPower(gamepad1.right_stick_x);
                 robot.front_left.setPower(-gamepad1.right_stick_x);
                 robot.back_right.setPower(gamepad1.right_stick_x);
                 robot.back_left.setPower(-gamepad1.right_stick_x);
             }
+//--------------------
+            //This is for turning the robot to the left - with the right joystick
+            if(gamepad1.right_stick_x !=0)
+            {
+                robot.front_right.setPower(gamepad1.right_stick_x);
+                robot.front_left.setPower(-gamepad1.right_stick_x);
+                robot.back_right.setPower(gamepad1.right_stick_x);
+                robot.back_left.setPower(-gamepad1.right_stick_x);
+            }
+//--------------------
         }
     }
 }
