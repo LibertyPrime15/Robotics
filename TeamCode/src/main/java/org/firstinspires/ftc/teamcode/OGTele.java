@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="TeleOp", group = "Main")
+@Disabled
 public class OGTele extends LinearOpMode {
 
     DcMotor FrontLeftMotor;
@@ -29,7 +31,6 @@ public class OGTele extends LinearOpMode {
 
     //----------------------------------------------------------------------------------------------
     double teamMarkerServoPosition = 0;
-
     double FrontLeftMotorPower = 0;
     double FrontRightMotorPower = 0;
     double BackRightMotorPower = 0;

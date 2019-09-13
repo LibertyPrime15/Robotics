@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,6 +12,7 @@ public class LibertysMap
     public DcMotor  front_left    = null;
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
+    ModernRoboticsI2cGyro GyroSensor;
 
     HardwareMap hwMap  =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -25,10 +27,12 @@ public class LibertysMap
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        front_right  = hwMap.get(DcMotor.class, "front_right");
-        front_left = hwMap.get(DcMotor.class, "front_left");
-        back_right   = hwMap.get(DcMotor.class, "back_right");
-        back_left  = hwMap.get(DcMotor.class, "back_left");
+        GyroSensor = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+
+        front_right = hwMap.get(DcMotor.class, "front_right");
+        front_left  = hwMap.get(DcMotor.class, "front_left");
+        back_right  = hwMap.get(DcMotor.class, "back_right");
+        back_left   = hwMap.get(DcMotor.class, "back_left");
 
         front_right.setPower(0);
         front_left.setPower(0);
