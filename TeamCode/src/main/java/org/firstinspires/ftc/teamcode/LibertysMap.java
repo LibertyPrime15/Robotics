@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,11 +17,13 @@ public class LibertysMap
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public LibertysMap(){
+    public LibertysMap()
+    {
 
     }
 
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap)
+    {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -53,5 +54,8 @@ public class LibertysMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        gyro.resetZAxisIntegrator();
+        gyro.calibrate();
     }
 }
