@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Colee's Mec Auto", group = "Concept")
+@Autonomous(name = "Mec Auto", group = "Concept")
 @Disabled
 public class LibertyMecAuto extends LinearOpMode
 {

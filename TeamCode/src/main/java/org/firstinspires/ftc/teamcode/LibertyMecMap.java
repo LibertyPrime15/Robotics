@@ -14,9 +14,8 @@ public class LibertyMecMap
     public DcMotor  back_right    = null;
 
     public GyroSensor gyro;
-
+//--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
-
     public LibertyMecMap(){}
 
     public void init(HardwareMap ahwMap)

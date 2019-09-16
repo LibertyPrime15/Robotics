@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Colee's TeleOp", group = "Main")
+@TeleOp(name="Mec Tele", group = "Main")
 @Disabled
 public class LibertyMecTele extends LinearOpMode
 {

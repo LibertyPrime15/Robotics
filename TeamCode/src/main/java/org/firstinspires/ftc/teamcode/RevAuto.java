@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name ="RevTestAuto", group = "Concept")
+@Autonomous(name ="Rev Auto", group = "Concept")
 @Disabled
-public class RevTestAuto extends LinearOpMode
+public class RevAuto extends LinearOpMode
 {
     LibertyRevMap robot = new LibertyRevMap();
     private ElapsedTime runtime = new ElapsedTime();
@@ -91,7 +91,7 @@ public class RevTestAuto extends LinearOpMode
             }
         }
 
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+        //IF THE NUMBER IS A POSITIVE NUMBER WE GO BACKWARD!
         else if (totDistInSteps < 0)
         {
             //Move backward until we over shoot

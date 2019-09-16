@@ -22,9 +22,8 @@ public class LibertyRevMap
     public Servo claw2 = null;
 
     public GyroSensor gyro;
-
+//--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
-
     public LibertyRevMap(){}
 
     public void init(HardwareMap ahwMap)
