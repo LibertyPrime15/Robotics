@@ -1,22 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Colee's Auto", group = "Concept")
-//@Disabled
+@Disabled
 public class LibertyAuto extends LinearOpMode
 {
-    LibertysMap robot = new LibertysMap();
+    LibertyRevMap robot = new LibertyRevMap();
+
+    private ElapsedTime runtime = new ElapsedTime();
     double distPerRot = (Math.PI * 3.8125);
     double stepsPerRot = 1120;
     double lengthOfField = 12 * 12;
-//----------------------------------------
-//----------------------------------------
-//---These are all of my Called Methods---
-//----------------------------------------
-//----------------------------------------
-
+    GyroSensor gyro;
+//----------------------------------------//
+//----------------------------------------//
+//---These are all of my Called Methods---//
+//----------------------------------------//
+//----------------------------------------//
     //Reset all encoder values
     public void resetEncoder()
     {
@@ -108,7 +113,6 @@ public class LibertyAuto extends LinearOpMode
         resetEncoder();
         sleep(1000);
     }
-
 //--------------------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException
     {
