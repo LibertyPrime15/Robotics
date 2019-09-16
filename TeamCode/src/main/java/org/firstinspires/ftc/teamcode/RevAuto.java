@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,10 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
-@Disabled
+//@Disabled
 public class RevAuto extends LinearOpMode
 {
-    LibertyRevMap robot = new LibertyRevMap();
+    RevMap robot = new RevMap();
     private ElapsedTime runtime = new ElapsedTime();
 //----------------------------------------//
 //----------------------------------------//
@@ -114,10 +113,10 @@ public class RevAuto extends LinearOpMode
         robot.init(hardwareMap);
         if (opModeIsActive())
         {
-            robot.gyro.resetZAxisIntegrator();
-            robot.gyro.calibrate();
+//            robot.gyro.resetZAxisIntegrator();
+//            robot.gyro.calibrate();
 
-            telemetry.addData("Heading", robot.gyro.getHeading());
+//            telemetry.addData("Heading", robot.gyro.getHeading());
             telemetry.update();
 
             waitForStart();
@@ -126,7 +125,7 @@ public class RevAuto extends LinearOpMode
             while(opModeIsActive())
             {
                 runtime.reset();
-                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
+//                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
                 {
                     LTurn(.1);
                 }
@@ -135,7 +134,7 @@ public class RevAuto extends LinearOpMode
                 sleep(1000);
                 resetEncoder();
 
-                while (!(robot.gyro.getHeading() >= 335 && robot.gyro.getHeading() <= 340))
+//                while (!(robot.gyro.getHeading() >= 335 && robot.gyro.getHeading() <= 340))
                 {
                     RTurn(.1);
                 }

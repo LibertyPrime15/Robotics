@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Mec Tele", group = "Main")
-@Disabled
+//@Disabled
 public class LibertyMecTele extends LinearOpMode
 {
     LibertyMecMap robot = new LibertyMecMap();
@@ -31,6 +30,14 @@ public class LibertyMecTele extends LinearOpMode
             }
 //--------------------------------------------------------------------------------
             //This moves the robot to the  left
+            else if(gamepad1.left_stick_x < 0)
+            {
+                robot.front_right.setPower(-gamepad1.left_stick_x);
+                robot.front_left.setPower(gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
+            }
+            //This moves the robot to the right
             else if(gamepad1.left_stick_x > 0)
             {
                 robot.front_right.setPower(-gamepad1.left_stick_x);
@@ -38,25 +45,17 @@ public class LibertyMecTele extends LinearOpMode
                 robot.back_right.setPower(gamepad1.left_stick_x);
                 robot.back_left.setPower(-gamepad1.left_stick_x);
             }
-            //This is for Moving horiztonally to the right
-            else if(gamepad1.left_stick_x < 0)
-            {
-                robot.front_right.setPower(gamepad1.left_stick_x);
-                robot.front_left.setPower(-gamepad1.left_stick_x);
-                robot.back_right.setPower(-gamepad1.left_stick_x);
-                robot.back_left.setPower(gamepad1.left_stick_x);
-            }
 //--------------------------------------------------------------------------------
-//            This is for turning the robot to the right
+//            This is for turning the robot to the left
             else if(gamepad1.right_stick_x < 0)
             {
-                robot.front_right.setPower(-gamepad1.right_stick_x);
-                robot.front_left.setPower(gamepad1.right_stick_x);
-                robot.back_right.setPower(-gamepad1.right_stick_x);
-                robot.back_left.setPower(gamepad1.right_stick_x);
+                robot.front_right.setPower(gamepad1.right_stick_x);
+                robot.front_left.setPower(-gamepad1.right_stick_x);
+                robot.back_right.setPower(gamepad1.right_stick_x);
+                robot.back_left.setPower(-gamepad1.right_stick_x);
             }
 //            //This is for turning the robot to the left
-            else if(gamepad1.right_stick_x < 0)
+            else if(gamepad1.right_stick_x > 0)
             {
                 robot.front_right.setPower(gamepad1.right_stick_x);
                 robot.front_left.setPower(-gamepad1.right_stick_x);

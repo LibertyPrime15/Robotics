@@ -11,11 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class LibertyMecAuto extends LinearOpMode
 {
     LibertyMecMap robot = new LibertyMecMap();
-
     private ElapsedTime runtime = new ElapsedTime();
-    double distPerRot = (Math.PI * 3.8125);
-    double stepsPerRot = 1120;
-    double lengthOfField = 12 * 12;
     GyroSensor gyro;
 //----------------------------------------//
 //----------------------------------------//
@@ -54,6 +50,7 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
+    //Backward
     public void Backward(double power)
     {
         robot.front_right.setPower(-power);
@@ -62,6 +59,7 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
+    //Left Turn
     public void LTurn(double power)
     {
         robot.front_right.setPower(-power);
@@ -70,6 +68,7 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
+    //Right Turn
     public void RTurn(double power)
     {
         robot.front_right.setPower(power);
@@ -78,6 +77,7 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
+    //Move A Distance Via Encoders
     public void moveDistance(double length)
     {
         double distPerRot = Math.PI * 3.8125;
@@ -122,7 +122,7 @@ public class LibertyMecAuto extends LinearOpMode
             gyro.resetZAxisIntegrator();
             gyro.calibrate();
 
-            telemetry.addData("Heading", robot.gyro.getHeading());
+            telemetry.addData("Heading", gyro.getHeading());
             telemetry.update();
             waitForStart();
             runtime.reset();
@@ -130,12 +130,13 @@ public class LibertyMecAuto extends LinearOpMode
             while (opModeIsActive())
             {
                 runtime.reset();
+                moveDistance(-5);
                 while (!(gyro.getHeading() >= 30 && gyro.getHeading() <= 35))
                 {
                     LTurn(.1);
                 }
 
-                moveDistance(-26);
+                moveDistance(-4);
                 sleep(1000);
                 resetEncoder();
                 while (!(gyro.getHeading() >= 335 && gyro.getHeading() <= 340))
@@ -143,7 +144,7 @@ public class LibertyMecAuto extends LinearOpMode
                     RTurn(.1);
                 }
 
-                moveDistance(-10);
+                moveDistance(20);
             }
 //--------------------------------------------------------------------------------------------------------------
         }
