@@ -35,8 +35,11 @@ public class RevMap
         back_right  = hwMap.get(DcMotor.class, "back_right");
         back_left   = hwMap.get(DcMotor.class, "back_left");
 
-        lift  = hwMap.get(DcMotor.class, "back_right");
-        arm   = hwMap.get(DcMotor.class, "back_left");
+        lift  = hwMap.get(DcMotor.class, "lift");
+        arm   = hwMap.get(DcMotor.class, "arm");
+
+        claw1  = hwMap.get(Servo.class, "claw1");
+        claw2  = hwMap.get(Servo.class, "claw2");
 
         front_right.setPower(0);
         front_left.setPower(0);
@@ -45,6 +48,9 @@ public class RevMap
 
         lift.setPower(0);
         arm.setPower(0);
+
+        claw1.setPosition(0);
+        claw2.setPosition(0);
 
         front_right.setDirection(DcMotor.Direction.FORWARD);
         front_left.setDirection(DcMotor.Direction.REVERSE);

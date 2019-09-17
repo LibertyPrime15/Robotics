@@ -20,6 +20,7 @@ public class RevTele extends LinearOpMode
 //------------------------------------------------------------
         while(opModeIsActive())
         {
+            //This drives the robot forward
             if(gamepad1.left_stick_y !=0)
             {
                 robot.front_right.setPower(gamepad1.left_stick_y);
@@ -28,51 +29,54 @@ public class RevTele extends LinearOpMode
                 robot.back_left.setPower(gamepad1.left_stick_y);
             }
 
-            else if(gamepad1.right_stick_x > 0)
+            //This turns the robot to the left
+            else if(gamepad1.left_stick_x < 0)
             {
-                robot.front_right.setPower(gamepad1.right_stick_x);
-                robot.front_left.setPower(-gamepad1.right_stick_x);
-                robot.back_right.setPower(gamepad1.right_stick_x);
-                robot.back_left.setPower(-gamepad1.right_stick_x);
+                robot.front_right.setPower(gamepad1.left_stick_x);
+                robot.front_left.setPower(-gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
             }
 
-            else if(gamepad1.right_stick_x < 0)
+            //This turns the robot to the right
+            else if(gamepad1.left_stick_x > 0)
             {
-                robot.front_right.setPower(gamepad1.right_stick_x);
-                robot.front_left.setPower(-gamepad1.right_stick_x);
-                robot.back_right.setPower(gamepad1.right_stick_x);
-                robot.back_left.setPower(-gamepad1.right_stick_x);
+                robot.front_right.setPower(gamepad1.left_stick_x);
+                robot.front_left.setPower(-gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
             }
 
+            //This opens the claw
             else if(gamepad1.y)
             {
-                robot.claw1.setPosition(.5);
+                robot.claw1.setPosition(0);
                 robot.claw2.setPosition(.5);
             }
 
+            //This closes the claw
             else if(gamepad1.x)
             {
-                robot.claw1.setPosition(-.5);
-                robot.claw2.setPosition(-.5);
+                robot.claw1.setPosition(.5);
+                robot.claw2.setPosition(0);
             }
+
+            //This moves the arm up
             else if(gamepad1.left_trigger !=0)
             {
-                robot.lift.setPower(gamepad1.left_trigger);
+                robot.arm.setPower(-.3);
             }
 
+            //This moves the arm down
             else if(gamepad1.right_trigger !=0)
             {
-                robot.lift.setPower(gamepad1.right_trigger);
+                robot.arm.setPower(.3);
             }
 
-            else if(gamepad1.left_bumper)
+            //This move the arm around
+            else if(gamepad1.right_stick_y !=0)
             {
-                robot.arm.setPower(.2);
-            }
-
-            else if(gamepad1.right_bumper)
-            {
-                robot.arm.setPower(-.2);
+                robot.lift.setPower(gamepad1.right_stick_y);
             }
 
             else
@@ -81,6 +85,9 @@ public class RevTele extends LinearOpMode
                 robot.front_left.setPower(0);
                 robot.back_right.setPower(0);
                 robot.back_left.setPower(0);
+
+                robot.lift.setPower(0);
+                robot.arm.setPower(0);
             }
             telemetry.update();
         }

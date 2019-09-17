@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-//@Disabled
+@Disabled
 public class LibertyMecMap
 {
     /* Public OpMode members */
