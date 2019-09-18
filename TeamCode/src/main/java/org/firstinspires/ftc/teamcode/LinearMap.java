@@ -6,25 +6,28 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Disabled
 public class LinearMap
 {
     /* Public OpMode members */
-    DcMotor FL = null;
-    DcMotor FR = null;
-    DcMotor BR = null;
-    DcMotor BL = null;
+    public DcMotor FL = null;
+    public DcMotor FR = null;
+    public DcMotor BR = null;
+    public DcMotor BL = null;
 
-    DcMotor EndDefectorSweeper = null;
-    DcMotor HookMotor = null;
+    public DcMotor EndDefectorSweeper = null;
+    public DcMotor HookMotor = null;
 
-    DcMotor JointOne = null;
-    DcMotor JointTwo = null;
+    public DcMotor JointOne = null;
+    public DcMotor JointTwo = null;
 
-    GyroSensor gyro;
+    public GyroSensor gyro;
     public CRServo D;
-//--------------------------------------------------------------------------------------------------
+
+    public ElapsedTime runtime = new ElapsedTime();
+    //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
     public LinearMap(){}
 

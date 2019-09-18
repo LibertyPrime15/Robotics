@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-//@Disabled
+@Disabled
 public class RevMap
 {
     /* Public OpMode members */
@@ -20,6 +21,7 @@ public class RevMap
     public Servo claw1 = null;
     public Servo claw2 = null;
 
+    public ElapsedTime runtime = new ElapsedTime();
 //    public GyroSensor gyro;
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;

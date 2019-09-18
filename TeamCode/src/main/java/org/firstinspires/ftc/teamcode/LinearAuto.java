@@ -1,21 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Mec Auto", group = "Concept")
-@Disabled
-public class LibertyMecAuto extends LinearOpMode
+@Autonomous(name ="Rev Auto", group = "Concept")
+//@Disabled
+public class LinearAuto extends LinearOpMode
 {
-    LibertyMecMap robot = new LibertyMecMap();
-//----------------------------------------------------------------------------------------------
+    RevMap robot = new RevMap();
+    private ElapsedTime runtime = new ElapsedTime();
 //----------------------------------------//
 //----------------------------------------//
-//---These are all of my Called Methods---// This autonomous is broken because the
-//----------------------------------------// Gyros do not work - Do not run
+//---These are all of my Called Methods---//
+//----------------------------------------//
 //----------------------------------------//
     //Reset all encoder values
     public void resetEncoder()
@@ -49,7 +47,6 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
-    //Backward
     public void Backward(double power)
     {
         robot.front_right.setPower(-power);
@@ -58,17 +55,7 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
-    //Left Turn
     public void LTurn(double power)
-    {
-        robot.front_right.setPower(-power);
-        robot.front_left.setPower(power);
-        robot.back_right.setPower(-power);
-        robot.back_left.setPower(power);
-    }
-
-    //Right Turn
-    public void RTurn(double power)
     {
         robot.front_right.setPower(power);
         robot.front_left.setPower(-power);
@@ -76,7 +63,14 @@ public class LibertyMecAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
-    //Move A Distance Via Encoders
+    public void RTurn(double power)
+    {
+        robot.front_right.setPower(-power);
+        robot.front_left.setPower(power);
+        robot.back_right.setPower(-power);
+        robot.back_left.setPower(power);
+    }
+
     public void moveDistance(double length)
     {
         double distPerRot = Math.PI * 3.8125;
@@ -95,7 +89,7 @@ public class LibertyMecAuto extends LinearOpMode
             }
         }
 
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+        //IF THE NUMBER IS A POSITIVE NUMBER WE GO BACKWARD!
         else if (totDistInSteps < 0)
         {
             //Move backward until we over shoot
@@ -112,7 +106,7 @@ public class LibertyMecAuto extends LinearOpMode
         resetEncoder();
         sleep(1000);
     }
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException
     {
         robot.init(hardwareMap);
@@ -125,12 +119,11 @@ public class LibertyMecAuto extends LinearOpMode
             telemetry.update();
 
             waitForStart();
-            robot.runtime.reset();
-//--------------------------------------------------------------------------------------------------------------
-            while (opModeIsActive())
+            runtime.reset();
+
+            while(opModeIsActive())
             {
-                robot.runtime.reset();
-                moveDistance(-5);
+                runtime.reset();
 //                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
                 {
                     LTurn(.1);
@@ -139,12 +132,13 @@ public class LibertyMecAuto extends LinearOpMode
                 moveDistance(-4);
                 sleep(1000);
                 resetEncoder();
+
 //                while (!(robot.gyro.getHeading() >= 335 && robot.gyro.getHeading() <= 340))
                 {
                     RTurn(.1);
                 }
 
-                moveDistance(20);
+                moveDistance(-10);
             }
 //--------------------------------------------------------------------------------------------------------------
         }

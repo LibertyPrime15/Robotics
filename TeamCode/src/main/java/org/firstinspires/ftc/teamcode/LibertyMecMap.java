@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Disabled
 public class LibertyMecMap
@@ -14,6 +15,7 @@ public class LibertyMecMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
+    public ElapsedTime runtime = new ElapsedTime();
 //    public GyroSensor gyro;
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
@@ -22,12 +24,13 @@ public class LibertyMecMap
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
-//        gyro   = hwMap.get(GyroSensor.class, "gyro");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");
         back_right  = hwMap.get(DcMotor.class, "back_right");
         back_left   = hwMap.get(DcMotor.class, "back_left");
+
+//        gyro   = hwMap.get(GyroSensor.class, "gyro");
 
         front_right.setPower(0);
         front_left.setPower(0);

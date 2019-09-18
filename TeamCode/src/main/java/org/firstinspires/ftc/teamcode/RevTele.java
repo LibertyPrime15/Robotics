@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Rev Tele", group = "Main")
-//@Disabled
+@Disabled
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
@@ -13,7 +13,7 @@ public class RevTele extends LinearOpMode
     public void runOpMode()
     {
         robot.init(hardwareMap);
-        telemetry.addData("Status", "Let's Go Boisssss");
+        telemetry.addData("Status", "Let's Go Get this Lego Boi");
         telemetry.update();
 
         waitForStart();
@@ -79,6 +79,7 @@ public class RevTele extends LinearOpMode
                 robot.lift.setPower(gamepad1.right_stick_y);
             }
 
+            //This sets all of the motors to 0
             else
             {
                 robot.front_right.setPower(0);

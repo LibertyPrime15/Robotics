@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,31 +9,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 public class LinearTele extends LinearOpMode
 {
-    private ElapsedTime runTime = new ElapsedTime();
     LinearMap robot = new LinearMap();
+//----------------------------------------------------------------------------------------------
 
-
-    public void FaB(double pow){
+    public void FaB(double pow)
+    {
         robot.FL.setPower(pow);
         robot.FR.setPower(pow);
         robot.BL.setPower(pow);
         robot.BR.setPower(pow);
     }
-    public void Turn(double pow){
+    public void Turn(double pow)
+    {
         robot.FL.setPower(pow);
         robot.FR.setPower(-pow);
         robot.BL.setPower(pow);
         robot.BR.setPower(-pow);
     }
 
-    public void moveArm(int power){
-
-    }
-    public void JointTwo(int power){
+    public void JointTwo(int power)
+    {
         robot.JointTwo.setPower(power);
     }
 
-    public void Cease(){
+    public void Halt()
+    {
         robot.FL.setPower(0);
         robot.FR.setPower(0);
         robot.BL.setPower(0);
@@ -46,21 +45,17 @@ public class LinearTele extends LinearOpMode
     double dPosition = 100;
     double ePos = 100;
 
-
-    public void runOpMode(){
-
-        runTime.reset();
-
-        telemetry.addData("Status", "Initialized");
+    @Override
+    public void runOpMode()
+    {
+        robot.init(hardwareMap);
+        telemetry.addData("Status", "Groovy to Go Bois");
         telemetry.update();
 
-
-
         waitForStart();
-        runTime.reset();
-
-        while(opModeIsActive()){
-
+//--------------------------------------------------------------------------------
+        while(opModeIsActive())
+        {
             if(gamepad1.right_stick_y!=0)
                 FaB(-gamepad1.right_stick_y / 2);
 

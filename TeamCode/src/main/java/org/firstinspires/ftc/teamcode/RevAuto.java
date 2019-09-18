@@ -6,15 +6,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
-//@Disabled
+@Disabled
 public class RevAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
-    private ElapsedTime runtime = new ElapsedTime();
+//----------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---These are all of my Called Methods---//
-//----------------------------------------//
+//---These are all of my Called Methods---// This autonomous is broken because the
+//----------------------------------------// Gyros do not work - Do not run
 //----------------------------------------//
     //Reset all encoder values
     public void resetEncoder()
@@ -107,7 +107,7 @@ public class RevAuto extends LinearOpMode
         resetEncoder();
         sleep(1000);
     }
-    //--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException
     {
         robot.init(hardwareMap);
@@ -120,11 +120,11 @@ public class RevAuto extends LinearOpMode
             telemetry.update();
 
             waitForStart();
-            runtime.reset();
-
+            robot.runtime.reset();
+//--------------------------------------------------------------------------------------------------------------
             while(opModeIsActive())
             {
-                runtime.reset();
+                robot.runtime.reset();
 //                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
                 {
                     LTurn(.1);
