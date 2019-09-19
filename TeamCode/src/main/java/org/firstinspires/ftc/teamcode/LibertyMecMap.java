@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
+//@Disabled
 public class LibertyMecMap
 {
     /* Public OpMode members */
@@ -15,7 +15,7 @@ public class LibertyMecMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
-    public ElapsedTime runtime = new ElapsedTime();
+//    public ElapsedTime runtime = new ElapsedTime();
 //    public GyroSensor gyro;
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;

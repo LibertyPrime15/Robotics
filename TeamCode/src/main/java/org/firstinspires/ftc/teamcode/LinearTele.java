@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="TeleOp", group = "test")
+@TeleOp(name="Linear Tele", group = "test")
 @Disabled
 public class LinearTele extends LinearOpMode
 {
@@ -27,9 +27,9 @@ public class LinearTele extends LinearOpMode
         robot.BR.setPower(-pow);
     }
 
-    public void JointTwo(int power)
+    public void angle(int power)
     {
-        robot.JointTwo.setPower(power);
+        robot.angle.setPower(power);
     }
 
     public void Halt()
@@ -38,8 +38,8 @@ public class LinearTele extends LinearOpMode
         robot.FR.setPower(0);
         robot.BL.setPower(0);
         robot.BR.setPower(0);
-        robot.JointOne.setPower(0);
-        robot.JointTwo.setPower(0);
+        robot.lift.setPower(0);
+        robot.angle.setPower(0);
     }
 
     double dPosition = 100;
@@ -71,10 +71,10 @@ public class LinearTele extends LinearOpMode
             }
 
             if(gamepad2.right_stick_y!=0)
-                robot.JointOne.setPower(gamepad2.right_stick_y);
+                robot.lift.setPower(gamepad2.right_stick_y);
 
             else if(gamepad2.left_stick_y!=0)
-                robot.JointTwo.setPower(gamepad2.left_stick_y);
+                robot.angle.setPower(gamepad2.left_stick_y);
 
             else if(gamepad2.right_bumper)
                 robot.D.setPower(.8);
@@ -83,10 +83,10 @@ public class LinearTele extends LinearOpMode
                 robot.D.setPower(-.8);
 
             else if(gamepad2.right_trigger !=0)
-                robot.EndDefectorSweeper.setPower(gamepad2.right_trigger);
+                robot.EndDefector.setPower(gamepad2.right_trigger);
 
             else if(gamepad2.left_trigger !=0)
-                robot.EndDefectorSweeper.setPower(-gamepad2.left_trigger);
+                robot.EndDefector.setPower(-gamepad2.left_trigger);
 
             else if(gamepad2.y)
                 robot.HookMotor.setPower(1);
@@ -96,12 +96,12 @@ public class LinearTele extends LinearOpMode
 
             else
             {
-                robot.EndDefectorSweeper.setPower(0);
+                robot.EndDefector.setPower(0);
                 robot.HookMotor.setPower(0);
 
                 robot.D.setPower(0);
-                robot.JointOne.setPower(0);
-                robot.JointTwo.setPower(0);
+                robot.lift.setPower(0);
+                robot.angle.setPower(0);
             }
             telemetry.update();
         }

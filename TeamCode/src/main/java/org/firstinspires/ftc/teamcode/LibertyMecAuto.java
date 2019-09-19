@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Mec Auto", group = "Concept")
-@Disabled
+//@Disabled
 public class LibertyMecAuto extends LinearOpMode
 {
     LibertyMecMap robot = new LibertyMecMap();
+    private ElapsedTime runtime = new ElapsedTime();
 //----------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -125,11 +126,11 @@ public class LibertyMecAuto extends LinearOpMode
             telemetry.update();
 
             waitForStart();
-            robot.runtime.reset();
+            runtime.reset();
 //--------------------------------------------------------------------------------------------------------------
             while (opModeIsActive())
             {
-                robot.runtime.reset();
+                runtime.reset();
                 moveDistance(-5);
 //                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
                 {

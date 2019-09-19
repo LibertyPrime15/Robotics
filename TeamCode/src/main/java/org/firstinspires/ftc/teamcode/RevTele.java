@@ -2,13 +2,15 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Rev Tele", group = "Main")
-@Disabled
+//@Disabled
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
-//----------------------------------------------------------------------------------------------
+    private ElapsedTime runtime = new ElapsedTime();
+    //----------------------------------------------------------------------------------------------
     @Override
     public void runOpMode()
     {

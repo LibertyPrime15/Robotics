@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name ="Rev Auto", group = "Concept")
-//@Disabled
+@Autonomous(name ="Linear Auto", group = "Concept")
+@Disabled
 public class LinearAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
@@ -106,7 +107,7 @@ public class LinearAuto extends LinearOpMode
         resetEncoder();
         sleep(1000);
     }
-    //--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException
     {
         robot.init(hardwareMap);

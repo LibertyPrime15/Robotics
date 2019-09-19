@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
-@Disabled
+//@Disabled
 public class RevAuto extends LinearOpMode
 {
+    private ElapsedTime runtime = new ElapsedTime();
     RevMap robot = new RevMap();
 //----------------------------------------------------------------------------------------------
 //----------------------------------------//
@@ -120,11 +121,11 @@ public class RevAuto extends LinearOpMode
             telemetry.update();
 
             waitForStart();
-            robot.runtime.reset();
+            runtime.reset();
 //--------------------------------------------------------------------------------------------------------------
             while(opModeIsActive())
             {
-                robot.runtime.reset();
+                runtime.reset();
 //                while (!(robot.gyro.getHeading() >= 30 && robot.gyro.getHeading() <= 35))
                 {
                     LTurn(.1);

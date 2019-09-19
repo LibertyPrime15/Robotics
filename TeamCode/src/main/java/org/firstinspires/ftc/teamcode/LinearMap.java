@@ -17,11 +17,11 @@ public class LinearMap
     public DcMotor BR = null;
     public DcMotor BL = null;
 
-    public DcMotor EndDefectorSweeper = null;
+    public DcMotor EndDefector = null;
     public DcMotor HookMotor = null;
 
-    public DcMotor JointOne = null;
-    public DcMotor JointTwo = null;
+    public DcMotor lift = null;
+    public DcMotor angle = null;
 
     public GyroSensor gyro;
     public CRServo D;
@@ -41,17 +41,17 @@ public class LinearMap
         FR = hwMap.get(DcMotor.class, "FR");
         BR = hwMap.get(DcMotor.class, "BR");
 
-        EndDefectorSweeper = hwMap.get(DcMotor.class, "Sweeper");
-        HookMotor = hwMap.get(DcMotor.class, "Hook");
+        EndDefector = hwMap.get(DcMotor.class, "Sweeper");
+        HookMotor   = hwMap.get(DcMotor.class, "Hook");
 
-        JointOne = hwMap.get(DcMotor.class, "one");
-        JointTwo = hwMap.get(DcMotor.class, "two");
+        lift = hwMap.get(DcMotor.class, "one");
+        angle = hwMap.get(DcMotor.class, "two");
 
-        D = hwMap.get(CRServo.class, "d");
+        D    = hwMap.get(CRServo.class, "d");
         gyro = hwMap.get(GyroSensor.class, "gyro");
 
-        JointOne.setDirection(DcMotorSimple.Direction.FORWARD);
-        JointTwo.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        angle.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         FR.setDirection(DcMotorSimple.Direction.FORWARD);
