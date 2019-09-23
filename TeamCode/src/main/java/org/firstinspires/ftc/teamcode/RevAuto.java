@@ -1,9 +1,21 @@
 package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.Func;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
 //@Disabled
@@ -11,7 +23,7 @@ public class RevAuto extends LinearOpMode
 {
     private ElapsedTime runtime = new ElapsedTime();
     RevMap robot = new RevMap();
-//----------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---// This autonomous is broken because the
@@ -49,6 +61,7 @@ public class RevAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
+    //Backward
     public void Backward(double power)
     {
         robot.front_right.setPower(-power);
@@ -57,6 +70,7 @@ public class RevAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
+    //LTurn
     public void LTurn(double power)
     {
         robot.front_right.setPower(power);
@@ -65,6 +79,7 @@ public class RevAuto extends LinearOpMode
         robot.back_left.setPower(-power);
     }
 
+    //RTurn
     public void RTurn(double power)
     {
         robot.front_right.setPower(-power);
@@ -73,6 +88,7 @@ public class RevAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
+    //MoveDistance
     public void moveDistance(double length)
     {
         double distPerRot = Math.PI * 3.8125;
@@ -108,7 +124,7 @@ public class RevAuto extends LinearOpMode
         resetEncoder();
         sleep(1000);
     }
-//--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException
     {
         robot.init(hardwareMap);
@@ -122,7 +138,7 @@ public class RevAuto extends LinearOpMode
 
             waitForStart();
             runtime.reset();
-//--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
             while(opModeIsActive())
             {
                 runtime.reset();
@@ -142,7 +158,7 @@ public class RevAuto extends LinearOpMode
 
                 moveDistance(-10);
             }
-//--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
         }
     }
 }
