@@ -22,8 +22,8 @@ public class RevMap
     public Servo claw1 = null;
     public Servo claw2 = null;
 
-//    public ElapsedTime runtime = new ElapsedTime();
-//    public GyroSensor gyro;
+    public BNO055IMU imu;
+    public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
     public RevMap(){}
@@ -31,7 +31,7 @@ public class RevMap
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
-//        gyro   = hwMap.get(GyroSensor.class, "gyro");
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");
@@ -79,4 +79,64 @@ public class RevMap
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+//----------------------------------------//
+    //Stop
+    public void Halt()
+    {
+        front_right.setPower(0);
+        front_left.setPower(0);
+        back_right.setPower(0);
+        back_left.setPower(0);
+    }
+//----------------------------------------//
+    //Forward
+    public void Forward(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(power);
+        back_right.setPower(power);
+        back_left.setPower(power);
+    }
+//----------------------------------------//
+    //Backward
+    public void Backward(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(-power);
+    }
+//----------------------------------------//
+    //LTurn
+    public void LTurn(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(power);
+        back_left.setPower(-power);
+    }
+//----------------------------------------//
+    //RTurn
+    public void RTurn(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
+    }
+//----------------------------------------//
+    //Reset all of the encoder values
+    public void resetEncoder()
+    {
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+//----------------------------------------//
 }
