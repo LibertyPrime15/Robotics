@@ -22,7 +22,6 @@ import java.util.Locale;
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
-    private ElapsedTime runtime = new ElapsedTime();
 
     BNO055IMU imu;
     Orientation angles;

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,8 +17,11 @@ import java.util.Locale;
 public class RevAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
-    double curHeading;
     Orientation angles;
+    BNO055IMU imu;
+
+//    String curPos;
+    double curHeading;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -29,13 +31,14 @@ public class RevAuto extends LinearOpMode
     //Check imu angle
     public double angleCheck()
     {
-        angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.robot.imu.getPosition();
+        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.imu.getPosition();
         curHeading = angles.firstAngle;
         return curHeading;
     }
-//----------------------------------------//
-    //MoveDistance
+//--------------------------------------------------------------------------------------------------
+    //This is move distance that moves the robot forward or
+    //backward depends on how many inches you want it to move
     public void moveDistance(double length)
     {
         double distPerRot = Math.PI * 3.8125;
@@ -66,38 +69,6 @@ public class RevAuto extends LinearOpMode
         robot.resetEncoder();
         sleep(1000);
     }
-//----------------------------------------//
-    public void composeTelemetry()
-    {
-        telemetry.addAction(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            }
-        });
-
-        telemetry.addLine()
-                .addData("heading", new Func<String>()
-                {
-                    @Override
-                    public String value()
-                    {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                });
-    }
-//--------------------------------------------------------------------------------------------------
-    String formatAngle(AngleUnit angleUnit, double angle)
-    {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees)
-    {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 //--------------------------------------------------------------------------------------------------
 
 
@@ -132,39 +103,53 @@ public class RevAuto extends LinearOpMode
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//
+//
+//
+//
+//    String checkSpot()
+//    {
+//        curPos = formatAngle(angles.angleUnit, angles.firstAngle);
+//        return curPos;
+//    }
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//    void composeTelemetry()
+//    {
+//        telemetry.update();
+//        telemetry.addLine().addData("Heading",new Func<String>()
+//        {
+//            @Override
+//            public String value()
+//            {
+//                return formatAngle(angles.angleUnit, angles.firstAngle);
+//            }
+//        });
+//    }
+//
+//    String formatAngle(AngleUnit angleUnit, double angle)
+//    {
+//        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+//    }
+//
+//    String formatDegrees(double degrees)
+//    {
+//        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+//    }
+//
+//
 
 
 
@@ -195,38 +180,41 @@ public class RevAuto extends LinearOpMode
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
         parameters.loggingEnabled = true;
         parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        robot.imu.initialize(parameters);
-        composeTelemetry();
+        robot.init(hardwareMap);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         waitForStart();
-        robot.init(hardwareMap);
 
         if (opModeIsActive())
         {
-            telemetry.addData("Heading", this.robot.imu.getPosition());
-            telemetry.update();
-
             waitForStart();
             robot.runtime.reset();
 //--------------------------------------------------------------------------------------------------
             while (opModeIsActive())
             {
-                telemetry.update();
                 robot.runtime.reset();
-                while (!(angleCheck() <= 30))
+//                composeTelemetry();
+                angleCheck();
+                telemetry.addLine().addData("Heading", curHeading);
+                while(!(curHeading <= 30 && curHeading >= 39))
                 {
+                    angleCheck();
+                    telemetry.update();
+//                    composeTelemetry();
                     robot.LTurn(.1);
                 }
-
-                telemetry.update();
-                moveDistance(-4);
-                sleep(1000);
-                robot.resetEncoder();
-                moveDistance(-10);
+//                telemetry.update();
+//                moveDistance(-4);
+//                sleep(1000);
+//                robot.resetEncoder();
+//                moveDistance(-10);
             }
         }
     }
