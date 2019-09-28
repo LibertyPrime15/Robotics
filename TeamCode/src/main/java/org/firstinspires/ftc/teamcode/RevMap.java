@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,10 +56,10 @@ public class RevMap
         claw1.setPosition(0);
         claw2.setPosition(0);
 
-        front_right.setDirection(DcMotor.Direction.FORWARD);
-        front_left.setDirection(DcMotor.Direction.REVERSE);
-        back_right.setDirection(DcMotor.Direction.FORWARD);
-        back_left.setDirection(DcMotor.Direction.REVERSE);
+        front_right.setDirection(DcMotor.Direction.REVERSE);
+        front_left.setDirection(DcMotor.Direction.FORWARD);
+        back_right.setDirection(DcMotor.Direction.REVERSE);
+        back_left.setDirection(DcMotor.Direction.FORWARD);
 
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.REVERSE);
@@ -92,37 +93,37 @@ public class RevMap
     //Forward
     public void Forward(double power)
     {
-        front_right.setPower(power);
-        front_left.setPower(power);
-        back_right.setPower(power);
-        back_left.setPower(power);
+        front_right.setPower(-power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(-power);
     }
 //----------------------------------------//
     //Backward
     public void Backward(double power)
     {
-        front_right.setPower(-power);
-        front_left.setPower(-power);
-        back_right.setPower(-power);
-        back_left.setPower(-power);
+        front_right.setPower(power);
+        front_left.setPower(power);
+        back_right.setPower(power);
+        back_left.setPower(power);
     }
 //----------------------------------------//
     //LTurn
     public void LTurn(double power)
     {
-        front_right.setPower(power);
-        front_left.setPower(-power);
-        back_right.setPower(power);
-        back_left.setPower(-power);
+        front_right.setPower(-power);
+        front_left.setPower(power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
     }
 //----------------------------------------//
     //RTurn
     public void RTurn(double power)
     {
-        front_right.setPower(-power);
-        front_left.setPower(power);
-        back_right.setPower(-power);
-        back_left.setPower(power);
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(power);
+        back_left.setPower(-power);
     }
 //----------------------------------------//
     //Reset all of the encoder values

@@ -68,20 +68,20 @@ public class RevTele extends LinearOpMode
             //This turns the robot to the left
             else if(gamepad1.left_stick_x > 0)
             {
-                robot.front_right.setPower(-gamepad1.left_stick_x);
-                robot.front_left.setPower(gamepad1.left_stick_x);
-                robot.back_right.setPower(-gamepad1.left_stick_x);
-                robot.back_left.setPower(gamepad1.left_stick_x);
+                robot.front_right.setPower(gamepad1.left_stick_x);
+                robot.front_left.setPower(-gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
                 telemetry.update();
             }
 
             //This turns the robot to the right
             else if(gamepad1.left_stick_x < 0)
             {
-                robot.front_right.setPower(-gamepad1.left_stick_x);
-                robot.front_left.setPower(gamepad1.left_stick_x);
-                robot.back_right.setPower(-gamepad1.left_stick_x);
-                robot.back_left.setPower(gamepad1.left_stick_x);
+                robot.front_right.setPower(gamepad1.left_stick_x);
+                robot.front_left.setPower(-gamepad1.left_stick_x);
+                robot.back_right.setPower(gamepad1.left_stick_x);
+                robot.back_left.setPower(-gamepad1.left_stick_x);
                 telemetry.update();
             }
 
@@ -89,14 +89,14 @@ public class RevTele extends LinearOpMode
             else if(gamepad1.y)
             {
                 robot.claw1.setPosition(0);
-                robot.claw2.setPosition(.5);
+                robot.claw2.setPosition(0);
             }
 
             //This closes the claw
             else if(gamepad1.x)
             {
                 robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(0);
+                robot.claw2.setPosition(.5);
             }
 
             //This moves the arm up
