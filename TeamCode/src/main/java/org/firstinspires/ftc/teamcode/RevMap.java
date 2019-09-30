@@ -30,12 +30,13 @@ public class RevMap
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
+    //This is our class constructor
     public RevMap(){}
 
+    //This all of our hardware on this bot
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
-//        imu = hwMap.get(BNO055IMU.class, "imu");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");
@@ -141,6 +142,12 @@ public class RevMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+//----------------------------------------//
+    public void Reset()
+    {
+        resetEncoder();
+        curHeading = 0;
     }
 //----------------------------------------//
 }

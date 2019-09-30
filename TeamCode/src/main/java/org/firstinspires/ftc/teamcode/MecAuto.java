@@ -2,131 +2,117 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name = "Mec Auto", group = "Concept")
 //@Disabled
 public class MecAuto extends LinearOpMode
 {
     MecMap robot = new MecMap();
-//----------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---These are all of my Called Methods---// This autonomous is broken because the
-//----------------------------------------// Gyros do not work - Do not run
+//---These are all of my Called Methods---//
 //----------------------------------------//
-    //Reset all encoder values
-    public void resetEncoder()
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+    //This method turns the robot
+    private double angleCheck()
     {
-        robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addLine().addData("Heading", robot.curHeading);
+        telemetry.update();
+        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.robot.imu.getPosition();
+        robot.curHeading = robot.angles.firstAngle;
+        return robot.curHeading;
     }
-
-    //Stop
-    public void Halt()
+//--------------------------------------------------------------------------------------------------
+    //This method moves the robot a certain distance in inches
+    private void moveDistance(double length)
     {
-        robot.front_right.setPower(0);
-        robot.front_left.setPower(0);
-        robot.back_right.setPower(0);
-        robot.back_left.setPower(0);
-    }
+        double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-    //Forward
-    public void Forward(double power)
-    {
-        robot.front_right.setPower(power);
-        robot.front_left.setPower(power);
-        robot.back_right.setPower(power);
-        robot.back_left.setPower(power);
-    }
-
-    //Backward
-    public void Backward(double power)
-    {
-        robot.front_right.setPower(-power);
-        robot.front_left.setPower(-power);
-        robot.back_right.setPower(-power);
-        robot.back_left.setPower(-power);
-    }
-
-    //Left Turn
-    public void LTurn(double power)
-    {
-        robot.front_right.setPower(-power);
-        robot.front_left.setPower(power);
-        robot.back_right.setPower(-power);
-        robot.back_left.setPower(power);
-    }
-
-    //Right Turn
-    public void RTurn(double power)
-    {
-        robot.front_right.setPower(power);
-        robot.front_left.setPower(-power);
-        robot.back_right.setPower(power);
-        robot.back_left.setPower(-power);
-    }
-
-    //Move A Distance Via Encoders
-    public void moveDistance(double length)
-    {
-        double distPerRot = Math.PI * 3.8125;
-        double stepsPerRot = 1120;
-        double totDistInSteps = ((length / distPerRot) * stepsPerRot);
-
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO FORWARD!
-        if (totDistInSteps > 0)
+        //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+        if (totDistInSteps < robot.front_right.getCurrentPosition())
         {
-            //Move forward until we over shoot
-            while (totDistInSteps >= robot.front_right.getCurrentPosition())
+            while(totDistInSteps <= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
-                Forward(.5);
-                telemetry.addData("power", robot.front_right.getCurrentPosition());
+                telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
+                telemetry.addData("totDistInSteps",totDistInSteps);
                 telemetry.update();
+                robot.Forward(.1);
             }
         }
-
         //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
-        else if (totDistInSteps < 0)
+        else if (totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            //Move backward until we over shoot
-            while (totDistInSteps <= robot.front_right.getCurrentPosition())
+            while (totDistInSteps >= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
-                Backward(.5);
-                telemetry.addData("power", robot.front_right.getCurrentPosition());
+                telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
+                telemetry.addData("---totDistInSteps",totDistInSteps);
                 telemetry.update();
+                robot.Backward(.1);
             }
         }
-
-        //reset our encoder values because we may need to do more encoder driving
-        Halt();
-        resetEncoder();
-        sleep(1000);
+        robot.Halt();
+        robot.resetEncoder();
     }
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //--------------------------------------------------------------------------------------------------------------
-    public void runOpMode() throws InterruptedException
+    public void runOpMode()
     {
-        robot.init(hardwareMap);
-        if (opModeIsActive())
+        waitForStart();
+        if (opModeIsActive() && (!(isStopRequested())))
         {
             waitForStart();
             robot.runtime.reset();
-//--------------------------------------------------------------------------------------------------------------
-            while (opModeIsActive())
+//--------------------------------------------------------------------------------------------------
+            while (opModeIsActive() && (!(isStopRequested())))
             {
                 robot.runtime.reset();
-                moveDistance(20);
+                moveDistance(10);
+                while(opModeIsActive() && (robot.curHeading < 60))
+                {
+                    angleCheck();
+                    robot.LTurn(.1);
+                }
+                robot.Reset();
+                stop();
             }
-//--------------------------------------------------------------------------------------------------------------
         }
     }
 }

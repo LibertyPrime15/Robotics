@@ -72,40 +72,35 @@ public class LinearAuto extends LinearOpMode
         robot.back_left.setPower(power);
     }
 
-    public void moveDistance(double length)
+    //This method moves the robot a certain distance in inches
+    private void moveDistance(double length)
     {
-        double distPerRot = Math.PI * 3.8125;
-        double stepsPerRot = 1120;
-        double totDistInSteps = ((length / distPerRot) * stepsPerRot);
+        double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO FORWARD!
-        if (totDistInSteps > 0)
+        //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+        if (totDistInSteps < robot.front_right.getCurrentPosition())
         {
-            //Move forward until we over shoot
-            while (totDistInSteps >= robot.front_right.getCurrentPosition())
+            while(totDistInSteps <= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
-                Forward(.5);
-                telemetry.addData("power", robot.front_right.getCurrentPosition());
+                telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
+                telemetry.addData("totDistInSteps",totDistInSteps);
                 telemetry.update();
+                robot.Forward(.1);
             }
         }
-
-        //IF THE NUMBER IS A POSITIVE NUMBER WE GO BACKWARD!
-        else if (totDistInSteps < 0)
+        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+        else if (totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            //Move backward until we over shoot
-            while (totDistInSteps <= robot.front_right.getCurrentPosition())
+            while (totDistInSteps >= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
-                Backward(.5);
-                telemetry.addData("power", robot.front_right.getCurrentPosition());
+                telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
+                telemetry.addData("---totDistInSteps",totDistInSteps);
                 telemetry.update();
+                robot.Backward(.1);
             }
         }
-
-        //reset our encoder values because we may need to do more encoder driving
-        Halt();
-        resetEncoder();
-        sleep(1000);
+        robot.Halt();
+        robot.resetEncoder();
     }
 //--------------------------------------------------------------------------------------------------------------
     public void runOpMode() throws InterruptedException

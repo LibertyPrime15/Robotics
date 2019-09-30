@@ -4,23 +4,90 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 @TeleOp(name="Mec Tele", group = "Main")
 //@Disabled
 public class MecTele extends LinearOpMode
 {
     MecMap robot = new MecMap();
-//----------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//----------------------------------------//
+//----------------------------------------//
+//---These are all of my Called Methods---//
+//----------------------------------------//
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+    public double angleCheck()
+    {
+        telemetry.addLine().addData("After", robot.curHeading);
+        telemetry.update();
+        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.robot.imu.getPosition();
+        robot.curHeading = robot.angles.firstAngle;
+        return robot.curHeading;
+    }
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------
     @Override
     public void runOpMode()
     {
-        robot.init(hardwareMap);
+        angleCheck();
         telemetry.addData("Status", "Let's Go Boisssss");
         telemetry.update();
 
         waitForStart();
 //------------------------------------------------------------
-        while(opModeIsActive())
+        while(opModeIsActive() && (!(isStopRequested())))
         {
+            telemetry.addLine().addData("Heading",robot.curHeading);
+            telemetry.update();
+
             //This is for basic movement forward/backward
             if(gamepad1.left_stick_y !=0)
             {

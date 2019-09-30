@@ -1,16 +1,10 @@
 package org.firstinspires.ftc.teamcode;
-import android.graphics.Path;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
 //@Disabled
@@ -25,7 +19,7 @@ public class RevAuto extends LinearOpMode
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
     //This method turns the robot
-    public double angleCheck()
+    private double angleCheck()
     {
         telemetry.addLine().addData("Heading", robot.curHeading);
         telemetry.update();
@@ -35,9 +29,8 @@ public class RevAuto extends LinearOpMode
         return robot.curHeading;
     }
 //--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
     //This method moves the robot a certain distance in inches
-    public void moveDistance(double length)
+    private void moveDistance(double length)
     {
         double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -64,6 +57,7 @@ public class RevAuto extends LinearOpMode
             }
         }
         robot.Halt();
+        robot.resetEncoder();
     }
 //--------------------------------------------------------------------------------------------------
 
@@ -118,20 +112,7 @@ public class RevAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-//        parameters.loggingEnabled = true;
-//        parameters.loggingTag = "IMU";
-//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-//
-//        robot.init(hardwareMap);
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        imu.initialize(parameters);
-
         waitForStart();
-
         if (opModeIsActive() && (!(isStopRequested())))
         {
             waitForStart();
@@ -146,6 +127,7 @@ public class RevAuto extends LinearOpMode
                     angleCheck();
                     robot.LTurn(.1);
                 }
+                robot.curHeading = 0;
                 stop();
             }
         }

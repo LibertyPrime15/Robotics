@@ -22,10 +22,6 @@ import java.util.Locale;
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
-
-    BNO055IMU imu;
-    Orientation angles;
-    Acceleration gravity;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -42,7 +38,45 @@ public class RevTele extends LinearOpMode
         robot.curHeading = robot.angles.firstAngle;
         return robot.curHeading;
     }
-//----------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------
     @Override
     public void runOpMode()
     {
@@ -52,6 +86,7 @@ public class RevTele extends LinearOpMode
 //------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
+            angleCheck();
             telemetry.addLine().addData("Heading",robot.curHeading);
             telemetry.update();
 

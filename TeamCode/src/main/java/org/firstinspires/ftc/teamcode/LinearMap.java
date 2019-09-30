@@ -26,6 +26,9 @@ public class LinearMap
     public GyroSensor gyro;
     public CRServo D;
 
+    public double dPosition = 100;
+    public double ePos = 100;
+
     public ElapsedTime runtime = new ElapsedTime();
     //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
@@ -70,5 +73,35 @@ public class LinearMap
 
         gyro.resetZAxisIntegrator();
         gyro.calibrate();
+    }
+
+    public void FaB(double pow)
+    {
+        FL.setPower(pow);
+        FR.setPower(pow);
+        BL.setPower(pow);
+        BR.setPower(pow);
+    }
+    public void Turn(double pow)
+    {
+        FL.setPower(pow);
+        FR.setPower(-pow);
+        BL.setPower(pow);
+        BR.setPower(-pow);
+    }
+
+    public void angle(int power)
+    {
+        angle.setPower(power);
+    }
+
+    public void Halt()
+    {
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+        lift.setPower(0);
+        angle.setPower(0);
     }
 }

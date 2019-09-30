@@ -10,40 +10,37 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class LinearTele extends LinearOpMode
 {
     LinearMap robot = new LinearMap();
-//----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
+//----------------------------------------//
+//----------------------------------------//
+//---These are all of my Called Methods---//
+//----------------------------------------//
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
 
-    public void FaB(double pow)
-    {
-        robot.FL.setPower(pow);
-        robot.FR.setPower(pow);
-        robot.BL.setPower(pow);
-        robot.BR.setPower(pow);
-    }
-    public void Turn(double pow)
-    {
-        robot.FL.setPower(pow);
-        robot.FR.setPower(-pow);
-        robot.BL.setPower(pow);
-        robot.BR.setPower(-pow);
-    }
 
-    public void angle(int power)
-    {
-        robot.angle.setPower(power);
-    }
 
-    public void Halt()
-    {
-        robot.FL.setPower(0);
-        robot.FR.setPower(0);
-        robot.BL.setPower(0);
-        robot.BR.setPower(0);
-        robot.lift.setPower(0);
-        robot.angle.setPower(0);
-    }
 
-    double dPosition = 100;
-    double ePos = 100;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void runOpMode()
@@ -57,10 +54,10 @@ public class LinearTele extends LinearOpMode
         while(opModeIsActive())
         {
             if(gamepad1.right_stick_y!=0)
-                FaB(-gamepad1.right_stick_y / 2);
+                robot.FaB(-gamepad1.right_stick_y / 2);
 
             else if(gamepad1.left_stick_x != 0)
-                Turn(gamepad1.left_stick_x / 2);
+                robot.Turn(gamepad1.left_stick_x / 2);
 
             else
             {
