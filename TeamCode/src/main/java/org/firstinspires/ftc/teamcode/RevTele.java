@@ -26,35 +26,35 @@ public class RevTele extends LinearOpMode
     BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
+//--------------------------------------------------------------------------------------------------
+//----------------------------------------//
+//----------------------------------------//
+//---These are all of my Called Methods---//
+//----------------------------------------//
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+    public double angleCheck()
+    {
+        telemetry.addLine().addData("After", robot.curHeading);
+        telemetry.update();
+        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.robot.imu.getPosition();
+        robot.curHeading = robot.angles.firstAngle;
+        return robot.curHeading;
+    }
 //----------------------------------------------------------------------------------------------
     @Override
     public void runOpMode()
     {
         robot.init(hardwareMap);
-        telemetry.addData("Status", "Let's Go Get this Lego Boi");
-        telemetry.update();
-
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        composeTelemetry();
-
         waitForStart();
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 //------------------------------------------------------------
-        while(opModeIsActive())
+        while(opModeIsActive() && (!(isStopRequested())))
         {
+            telemetry.addLine().addData("Heading",robot.curHeading);
             telemetry.update();
+
             //This drives the robot forward
             if(gamepad1.left_stick_y !=0)
             {
@@ -131,70 +131,4 @@ public class RevTele extends LinearOpMode
             telemetry.update();
         }
     }
-
-    void composeTelemetry()
-    {
-        telemetry.addAction(new Runnable()
-        {
-            @Override public void run()
-            {
-                angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                gravity  = imu.getGravity();
-            }
-        });
-
-        telemetry.addLine()
-            .addData("status", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return imu.getSystemStatus().toShortString();
-                }
-            })
-            .addData("calib", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return imu.getCalibrationStatus().toString();
-                }
-            });
-
-        telemetry.addLine()
-            .addData("heading", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.firstAngle);
-                }
-            })
-            .addData("roll", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.secondAngle);
-                }
-            })
-            .addData("pitch", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.thirdAngle);
-                }
-            });
-    }
-
-//----------------------------------------------------------------------------------------------
-// Formatting
-//----------------------------------------------------------------------------------------------
-
-    String formatAngle(AngleUnit angleUnit, double angle)
-    {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees)
-    {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 }
-//----------------------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode;
+import android.graphics.Path;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,48 +17,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class RevAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
-    Orientation angles;
-    BNO055IMU imu;
-
-    double curHeading;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---These are all of my Called Methods---// This autonomous is broken because the
-//----------------------------------------// Gyros do not work - Do not run
+//---These are all of my Called Methods---//
 //----------------------------------------//
-    //Check imu angle
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+    //This method turns the robot
     public double angleCheck()
     {
-        telemetry.addLine().addData("After", curHeading);
+        telemetry.addLine().addData("Heading", robot.curHeading);
         telemetry.update();
-        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.imu.getPosition();
-        curHeading = angles.firstAngle;
-        return curHeading;
+        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.robot.imu.getPosition();
+        robot.curHeading = robot.angles.firstAngle;
+        return robot.curHeading;
     }
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------------------------------------------------------------
+    //This method moves the robot a certain distance in inches
     public void moveDistance(double length)
     {
         double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-//IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+        //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
         if (totDistInSteps < robot.front_right.getCurrentPosition())
         {
             while(totDistInSteps <= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
@@ -67,7 +52,7 @@ public class RevAuto extends LinearOpMode
                 robot.Forward(.1);
             }
         }
-//IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
         else if (totDistInSteps > robot.front_right.getCurrentPosition())
         {
             while (totDistInSteps >= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
@@ -133,17 +118,17 @@ public class RevAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        robot.init(hardwareMap);
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+//        parameters.loggingEnabled = true;
+//        parameters.loggingTag = "IMU";
+//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+//
+//        robot.init(hardwareMap);
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        imu.initialize(parameters);
 
         waitForStart();
 
@@ -156,7 +141,7 @@ public class RevAuto extends LinearOpMode
             {
                 robot.runtime.reset();
                 moveDistance(10);
-                while (opModeIsActive() && (curHeading < 60))
+                while(opModeIsActive() && (robot.curHeading < 60))
                 {
                     angleCheck();
                     robot.LTurn(.1);
