@@ -1,16 +1,22 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name ="Rev Auto", group = "Concept")
 //@Disabled
 public class RevAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
+
+    Orientation angles;
+    BNO055IMU imu;
+    double curHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -21,12 +27,12 @@ public class RevAuto extends LinearOpMode
     //This method turns the robot
     private double angleCheck()
     {
-        telemetry.addLine().addData("Heading", robot.curHeading);
+        telemetry.addLine().addData("Heading", curHeading);
         telemetry.update();
-        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.robot.imu.getPosition();
-        robot.curHeading = robot.angles.firstAngle;
-        return robot.curHeading;
+        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.imu.getPosition();
+        curHeading = angles.firstAngle;
+        return curHeading;
     }
 //--------------------------------------------------------------------------------------------------
     //This method moves the robot a certain distance in inches
@@ -120,14 +126,14 @@ public class RevAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
             while (opModeIsActive() && (!(isStopRequested())))
             {
+                angleCheck();
                 robot.runtime.reset();
                 moveDistance(10);
-                while(opModeIsActive() && (robot.curHeading < 60))
+                while(curHeading < 60)
                 {
                     angleCheck();
                     robot.LTurn(.1);
                 }
-                robot.curHeading = 0;
                 stop();
             }
         }

@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -22,6 +21,10 @@ import java.util.Locale;
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
+
+//    Orientation angles;
+//    BNO055IMU imu;
+//    double curHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -29,15 +32,15 @@ public class RevTele extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    public double angleCheck()
-    {
-        telemetry.addLine().addData("Heading", robot.curHeading);
-        telemetry.update();
-        robot.angles = this.robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.robot.imu.getPosition();
-        robot.curHeading = robot.angles.firstAngle;
-        return robot.curHeading;
-    }
+//    public double angleCheck()
+//    {
+//        telemetry.addLine().addData("Heading", curHeading);
+//        telemetry.update();
+//        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        this.imu.getPosition();
+//        curHeading = angles.firstAngle;
+//        return curHeading;
+//    }
 //--------------------------------------------------------------------------------------------------
 
 
@@ -82,13 +85,10 @@ public class RevTele extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-
 //------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
-            angleCheck();
-            telemetry.addLine().addData("Heading",robot.curHeading);
-            telemetry.update();
+//            angleCheck();
 
             //This drives the robot forward
             if(gamepad1.left_stick_y !=0)

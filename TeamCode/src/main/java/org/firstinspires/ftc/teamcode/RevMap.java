@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 //@Disabled
@@ -18,11 +17,6 @@ public class RevMap
 
     public DcMotor  lift          = null;
     public DcMotor  arm           = null;
-
-    public Orientation angles;
-    public BNO055IMU imu;
-
-    public double curHeading;
 
     public Servo claw1 = null;
     public Servo claw2 = null;
@@ -142,12 +136,6 @@ public class RevMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-//----------------------------------------//
-    public void Reset()
-    {
-        resetEncoder();
-        curHeading = 0;
     }
 //----------------------------------------//
 }
