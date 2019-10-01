@@ -23,7 +23,6 @@ public class RevMap
     public Servo claw1 = null;
     public Servo claw2 = null;
 
-//    public BNO055IMU imu;
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
@@ -32,7 +31,6 @@ public class RevMap
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
-//        imu = hwMap.get(BNO055IMU.class, "imu");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");

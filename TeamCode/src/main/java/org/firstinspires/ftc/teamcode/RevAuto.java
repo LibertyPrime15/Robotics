@@ -155,8 +155,13 @@ public class RevAuto extends LinearOpMode
                 moveDistance(10);
 
                 turnAngle(40);
+
                 moveDistance(-15);
+
                 turnAngle(-65);
+
+                moveDistance(15);
+
 //---------------------------------------
                 stop();
             }

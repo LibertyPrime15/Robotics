@@ -22,39 +22,113 @@ import java.util.Locale;
 public class RevTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
-
-    BNO055IMU imu;
     Orientation angles;
-    Acceleration gravity;
-//----------------------------------------------------------------------------------------------
-    @Override
+    BNO055IMU imu;
+
+    float curHeading = 0;
+//--------------------------------------------------------------------------------------------------
+//----------------------------------------//
+//----------------------------------------//
+//---These are all of my Called Methods---//
+//----------------------------------------//
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+public void imuInit()
+{
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+    parameters.loggingEnabled = true;
+    parameters.loggingTag = "IMU";
+    parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+    robot.init(hardwareMap);
+    imu = hardwareMap.get(BNO055IMU.class, "imu");
+    imu.initialize(parameters);
+}
+//--------------------------------------------------------------------------------------------------
+public double angleBoi()
+{
+    telemetry.addLine().addData("Heading", curHeading);
+    telemetry.update();
+    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    this.imu.getPosition();
+    curHeading = angles.firstAngle;
+    return curHeading;
+}
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        robot.init(hardwareMap);
-        telemetry.addData("Status", "Let's Go Get this Lego Boi");
-        telemetry.update();
-
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        composeTelemetry();
-
-        waitForStart();
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-//------------------------------------------------------------
-        while(opModeIsActive())
+        imuInit();
+//--------------------------------------------------------------------------------------------------
+        while(opModeIsActive() && (!(isStopRequested())))
         {
-            telemetry.update();
+            angleBoi();
+//----------------------------------
             //This drives the robot forward
             if(gamepad1.left_stick_y !=0)
             {
@@ -64,7 +138,7 @@ public class RevTele extends LinearOpMode
                 robot.back_left.setPower(gamepad1.left_stick_y);
                 telemetry.update();
             }
-
+//----------------------------------
             //This turns the robot to the left
             else if(gamepad1.left_stick_x > 0)
             {
@@ -74,7 +148,7 @@ public class RevTele extends LinearOpMode
                 robot.back_left.setPower(-gamepad1.left_stick_x);
                 telemetry.update();
             }
-
+//----------------------------------
             //This turns the robot to the right
             else if(gamepad1.left_stick_x < 0)
             {
@@ -84,39 +158,39 @@ public class RevTele extends LinearOpMode
                 robot.back_left.setPower(-gamepad1.left_stick_x);
                 telemetry.update();
             }
-
+//----------------------------------
             //This opens the claw
             else if(gamepad1.y)
             {
                 robot.claw1.setPosition(0);
                 robot.claw2.setPosition(0);
             }
-
+//----------------------------------
             //This closes the claw
             else if(gamepad1.x)
             {
                 robot.claw1.setPosition(.5);
                 robot.claw2.setPosition(.5);
             }
-
+//----------------------------------
             //This moves the arm up
             else if(gamepad1.left_trigger !=0)
             {
                 robot.arm.setPower(-.3);
             }
-
+//----------------------------------
             //This moves the arm down
             else if(gamepad1.right_trigger !=0)
             {
                 robot.arm.setPower(.3);
             }
-
+//----------------------------------
             //This move the arm around
             else if(gamepad1.right_stick_y !=0)
             {
                 robot.lift.setPower(gamepad1.right_stick_y);
             }
-
+//----------------------------------
             //This sets all of the motors to 0
             else
             {
@@ -128,73 +202,9 @@ public class RevTele extends LinearOpMode
                 robot.lift.setPower(0);
                 robot.arm.setPower(0);
             }
+//----------------------------------
             telemetry.update();
         }
     }
-
-    void composeTelemetry()
-    {
-        telemetry.addAction(new Runnable()
-        {
-            @Override public void run()
-            {
-                angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                gravity  = imu.getGravity();
-            }
-        });
-
-        telemetry.addLine()
-            .addData("status", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return imu.getSystemStatus().toShortString();
-                }
-            })
-            .addData("calib", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return imu.getCalibrationStatus().toString();
-                }
-            });
-
-        telemetry.addLine()
-            .addData("heading", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.firstAngle);
-                }
-            })
-            .addData("roll", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.secondAngle);
-                }
-            })
-            .addData("pitch", new Func<String>()
-            {
-                @Override public String value()
-                {
-                    return formatAngle(angles.angleUnit, angles.thirdAngle);
-                }
-            });
-    }
-
-//----------------------------------------------------------------------------------------------
-// Formatting
-//----------------------------------------------------------------------------------------------
-
-    String formatAngle(AngleUnit angleUnit, double angle)
-    {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees)
-    {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 }
-//----------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
