@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 //@Disabled
 public class RevMap
@@ -21,16 +23,16 @@ public class RevMap
     public Servo claw1 = null;
     public Servo claw2 = null;
 
+//    public BNO055IMU imu;
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
-    //This is our class constructor
     public RevMap(){}
 
-    //This all of our hardware on this bot
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
+//        imu = hwMap.get(BNO055IMU.class, "imu");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");

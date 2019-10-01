@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -13,10 +15,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class RevAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
-
     Orientation angles;
     BNO055IMU imu;
-    double curHeading = 0;
+
+    float curHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -24,23 +26,42 @@ public class RevAuto extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    //This method turns the robot
-    private double angleCheck()
+    private void turnAngle(double angle)
     {
-        telemetry.addLine().addData("Heading", curHeading);
-        telemetry.update();
-        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.imu.getPosition();
-        curHeading = angles.firstAngle;
-        return curHeading;
+        if(angle > 0)
+        {
+            while(angle > curHeading && (!(isStopRequested())))
+            {
+                telemetry.addLine().addData("Heading", curHeading);
+                telemetry.update();
+                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                this.imu.getPosition();
+                curHeading = angles.firstAngle;
+                robot.LTurn(.1);
+            }
+            imuInit();
+        }
+
+        else if(angle < 0)
+        {
+            while(angle < curHeading && (!(isStopRequested())))
+            {
+                telemetry.addLine().addData("---Heading", curHeading);
+                telemetry.update();
+                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                this.imu.getPosition();
+                curHeading = angles.firstAngle;
+                robot.RTurn(.1);
+            }
+            imuInit();
+        }
     }
 //--------------------------------------------------------------------------------------------------
-    //This method moves the robot a certain distance in inches
-    private void moveDistance(double length)
+    public void moveDistance(double length)
     {
         double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-        //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+//IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
         if (totDistInSteps < robot.front_right.getCurrentPosition())
         {
             while(totDistInSteps <= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
@@ -51,7 +72,7 @@ public class RevAuto extends LinearOpMode
                 robot.Forward(.1);
             }
         }
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+//IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
         else if (totDistInSteps > robot.front_right.getCurrentPosition())
         {
             while (totDistInSteps >= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
@@ -63,22 +84,23 @@ public class RevAuto extends LinearOpMode
             }
         }
         robot.Halt();
-        robot.resetEncoder();
     }
 //--------------------------------------------------------------------------------------------------
+    public void imuInit()
+    {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-
-
-
-
-
-
-
-
-
-
-
-
+        robot.init(hardwareMap);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+    }
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -118,7 +140,9 @@ public class RevAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
+        imuInit();
         waitForStart();
+
         if (opModeIsActive() && (!(isStopRequested())))
         {
             waitForStart();
@@ -126,14 +150,14 @@ public class RevAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
             while (opModeIsActive() && (!(isStopRequested())))
             {
-                angleCheck();
                 robot.runtime.reset();
+//---------------------------------------
                 moveDistance(10);
-                while(curHeading < 60)
-                {
-                    angleCheck();
-                    robot.LTurn(.1);
-                }
+
+                turnAngle(40);
+                moveDistance(-15);
+                turnAngle(-65);
+//---------------------------------------
                 stop();
             }
         }
