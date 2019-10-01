@@ -151,7 +151,7 @@ public class RevAuto extends LinearOpMode
             while (opModeIsActive() && (!(isStopRequested())))
             {
                 robot.runtime.reset();
-//---------------------------------------
+//---------------------------------------\/ \/ \/ \/ Code Goes there
                 moveDistance(10);
 
                 turnAngle(40);
@@ -162,7 +162,7 @@ public class RevAuto extends LinearOpMode
 
                 moveDistance(15);
 
-//---------------------------------------
+//---------------------------------------/\ /\ /\ /\ Code Goes There
                 stop();
             }
         }

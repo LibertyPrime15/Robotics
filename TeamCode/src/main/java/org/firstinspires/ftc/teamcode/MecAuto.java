@@ -56,8 +56,8 @@ public class MecAuto extends LinearOpMode
             imuInit();
         }
     }
-    //--------------------------------------------------------------------------------------------------
-    public void moveDistance(double length)
+//--------------------------------------------------------------------------------------------------
+    private void moveDistance(double length)
     {
         double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -85,8 +85,8 @@ public class MecAuto extends LinearOpMode
         }
         robot.Halt();
     }
-    //--------------------------------------------------------------------------------------------------
-    public void imuInit()
+//--------------------------------------------------------------------------------------------------
+    private void imuInit()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
