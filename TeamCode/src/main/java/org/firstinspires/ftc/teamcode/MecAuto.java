@@ -18,7 +18,7 @@ public class MecAuto extends LinearOpMode
     Orientation angles;
     BNO055IMU imu;
 
-    float curHeading = 0;
+    float currHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -30,13 +30,13 @@ public class MecAuto extends LinearOpMode
     {
         if(angle > 0)
         {
-            while(angle > curHeading && (!(isStopRequested())))
+            while(angle > currHeading && (!(isStopRequested())))
             {
-                telemetry.addLine().addData("Heading", curHeading);
+                telemetry.addLine().addData("Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
-                curHeading = angles.firstAngle;
+                currHeading = angles.firstAngle;
                 robot.LTurn(.1);
             }
             imuInit();
@@ -44,13 +44,13 @@ public class MecAuto extends LinearOpMode
 
         else if(angle < 0)
         {
-            while(angle < curHeading && (!(isStopRequested())))
+            while(angle < currHeading && (!(isStopRequested())))
             {
-                telemetry.addLine().addData("---Heading", curHeading);
+                telemetry.addLine().addData("---Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
-                curHeading = angles.firstAngle;
+                currHeading = angles.firstAngle;
                 robot.RTurn(.1);
             }
             imuInit();

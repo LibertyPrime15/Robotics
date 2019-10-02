@@ -19,7 +19,7 @@ public class MecTele extends LinearOpMode
     Orientation angles;
     BNO055IMU imu;
 
-    float curHeading = 0;
+    float currHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -44,12 +44,12 @@ public class MecTele extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public double angleBoi()
     {
-        telemetry.addLine().addData("Heading", curHeading);
+        telemetry.addLine().addData("Heading", currHeading);
         telemetry.update();
         angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         this.imu.getPosition();
-        curHeading = angles.firstAngle;
-        return curHeading;
+        currHeading = angles.firstAngle;
+        return currHeading;
     }
 //--------------------------------------------------------------------------------------------------
 

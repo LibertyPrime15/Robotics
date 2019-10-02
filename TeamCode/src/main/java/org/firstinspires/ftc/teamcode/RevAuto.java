@@ -18,7 +18,7 @@ public class RevAuto extends LinearOpMode
     Orientation angles;
     BNO055IMU imu;
 
-    float curHeading = 0;
+    float currHeading = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -26,32 +26,32 @@ public class RevAuto extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    private void turnAngle(double angle)
+    private void turnAngle(double angle, double thing)
     {
         if(angle > 0)
         {
-            while(angle > curHeading && (!(isStopRequested())))
+            while(angle > currHeading && (!(isStopRequested())))
             {
-                telemetry.addLine().addData("Heading", curHeading);
+                telemetry.addLine().addData("Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
-                curHeading = angles.firstAngle;
-                robot.LTurn(.1);
+                currHeading = angles.firstAngle;
+                robot.LTurn(thing);
             }
             imuInit();
         }
 
         else if(angle < 0)
         {
-            while(angle < curHeading && (!(isStopRequested())))
+            while(angle < currHeading && (!(isStopRequested())))
             {
-                telemetry.addLine().addData("---Heading", curHeading);
+                telemetry.addLine().addData("---Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
-                curHeading = angles.firstAngle;
-                robot.RTurn(.1);
+                currHeading = angles.firstAngle;
+                robot.RTurn(thing);
             }
             imuInit();
         }
@@ -152,15 +152,13 @@ public class RevAuto extends LinearOpMode
             {
                 robot.runtime.reset();
 //---------------------------------------\/ \/ \/ \/ Code Goes there
-                moveDistance(10);
-
-                turnAngle(40);
-
-                moveDistance(-15);
-
-                turnAngle(-65);
+                turnAngle(40, .1);
 
                 moveDistance(15);
+
+                turnAngle(-65, .2);
+                moveDistance(-20);
+                turnAngle(35, .3);
 
 //---------------------------------------/\ /\ /\ /\ Code Goes There
                 stop();

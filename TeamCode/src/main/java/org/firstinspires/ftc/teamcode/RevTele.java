@@ -25,9 +25,9 @@ public class RevTele extends LinearOpMode
     Orientation angles;
     BNO055IMU imu;
 
-    float curHeading = 0;
+    float currHeading = 0;
 //--------------------------------------------------------------------------------------------------
-//----------------------------------------//z
+//----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//
 //----------------------------------------//
@@ -50,12 +50,12 @@ public void imuInit()
 //--------------------------------------------------------------------------------------------------
 public double angleBoi()
 {
-    telemetry.addLine().addData("Heading", curHeading);
+    telemetry.addLine().addData("Heading", currHeading);
     telemetry.update();
     angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     this.imu.getPosition();
-    curHeading = angles.firstAngle;
-    return curHeading;
+    currHeading = angles.firstAngle;
+    return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -158,49 +158,57 @@ public double angleBoi()
                 robot.back_left.setPower(-gamepad1.left_stick_x);
                 telemetry.update();
             }
-//----------------------------------
-            //This opens the claw
-            else if(gamepad1.y)
-            {
-                robot.claw1.setPosition(0);
-                robot.claw2.setPosition(0);
-            }
-//----------------------------------
-            //This closes the claw
-            else if(gamepad1.x)
-            {
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-            }
-//----------------------------------
-            //This moves the arm up
-            else if(gamepad1.left_trigger !=0)
-            {
-                robot.arm.setPower(-.3);
-            }
-//----------------------------------
-            //This moves the arm down
-            else if(gamepad1.right_trigger !=0)
-            {
-                robot.arm.setPower(.3);
-            }
-//----------------------------------
-            //This move the arm around
-            else if(gamepad1.right_stick_y !=0)
-            {
-                robot.lift.setPower(gamepad1.right_stick_y);
-            }
-//----------------------------------
-            //This sets all of the motors to 0
+
             else
             {
                 robot.front_right.setPower(0);
                 robot.front_left.setPower(0);
                 robot.back_right.setPower(0);
                 robot.back_left.setPower(0);
+            }
+//----------------------------------
+            //This opens the claw
+            if(gamepad1.y)
+            {
+                robot.claw1.setPosition(0);
+                robot.claw2.setPosition(0);
+            }
+//----------------------------------
+            //This closes the claw
+            if(gamepad1.x)
+            {
+                robot.claw1.setPosition(.5);
+                robot.claw2.setPosition(.5);
+            }
+//----------------------------------
+            //This moves the arm up
+            if(gamepad1.left_trigger !=0)
+            {
+                robot.arm.setPower(-.3);
+            }
 
-                robot.lift.setPower(0);
+            //This moves the arm down
+            else if(gamepad1.right_trigger !=0)
+            {
+                robot.arm.setPower(.3);
+            }
+
+            //Otherwise, the arm shouldn't move
+            else
+            {
                 robot.arm.setPower(0);
+            }
+//----------------------------------
+            //This move the arm around
+            if(gamepad1.right_stick_y !=0)
+            {
+                robot.lift.setPower(gamepad1.right_stick_y);
+            }
+
+            //Otherwise, the list shouldn't move
+            else
+            {
+                robot.lift.setPower(0);
             }
 //----------------------------------
             telemetry.update();
