@@ -33,7 +33,7 @@ public class RevTele extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-public void imuInit()
+private void imuInit()
 {
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -48,7 +48,7 @@ public void imuInit()
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-public double angleBoi()
+private double angleBoi()
 {
     telemetry.addLine().addData("Heading", currHeading);
     telemetry.update();
@@ -58,9 +58,6 @@ public double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-
-
-
 
 
 

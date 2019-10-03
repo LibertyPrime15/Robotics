@@ -152,14 +152,7 @@ public class RevAuto extends LinearOpMode
             {
                 robot.runtime.reset();
 //---------------------------------------\/ \/ \/ \/ Code Goes there
-                turnAngle(40, .1);
-
-                moveDistance(15);
-
-                turnAngle(-65, .2);
-                moveDistance(-20);
-                turnAngle(35, .3);
-
+                turnAngle(35, .5);
 //---------------------------------------/\ /\ /\ /\ Code Goes There
                 stop();
             }
