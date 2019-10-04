@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -125,44 +126,22 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
+
+            double leftPower;
+            double rightPower;
+
+            double drive = gamepad1.left_stick_y;
+            double turn  = -gamepad1.left_stick_x;
+
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------
             //This drives the robot forward
-            if(gamepad1.left_stick_y !=0)
-            {
-                robot.front_right.setPower(gamepad1.left_stick_y);
-                robot.front_left.setPower(gamepad1.left_stick_y);
-                robot.back_right.setPower(gamepad1.left_stick_y);
-                robot.back_left.setPower(gamepad1.left_stick_y);
-                telemetry.update();
-            }
-//----------------------------------
-            //This turns the robot to the left
-            else if(gamepad1.left_stick_x > 0)
-            {
-                robot.front_right.setPower(gamepad1.left_stick_x);
-                robot.front_left.setPower(-gamepad1.left_stick_x);
-                robot.back_right.setPower(gamepad1.left_stick_x);
-                robot.back_left.setPower(-gamepad1.left_stick_x);
-                telemetry.update();
-            }
-//----------------------------------
-            //This turns the robot to the right
-            else if(gamepad1.left_stick_x < 0)
-            {
-                robot.front_right.setPower(gamepad1.left_stick_x);
-                robot.front_left.setPower(-gamepad1.left_stick_x);
-                robot.back_right.setPower(gamepad1.left_stick_x);
-                robot.back_left.setPower(-gamepad1.left_stick_x);
-                telemetry.update();
-            }
-
-            else
-            {
-                robot.front_right.setPower(0);
-                robot.front_left.setPower(0);
-                robot.back_right.setPower(0);
-                robot.back_left.setPower(0);
-            }
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+            telemetry.update();
 //----------------------------------
             //This opens the claw
             if(gamepad1.y)
