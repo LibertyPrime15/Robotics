@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name="Linear Tele", group = "test")
-@Disabled
+//Last Year's Robot
+//@Disabled
 public class LinearTele extends LinearOpMode
 {
     LinearMap robot = new LinearMap();

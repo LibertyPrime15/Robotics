@@ -1,20 +1,16 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name="Old Tele", group = "Main")
 //@Disabled
 public class oldTele extends LinearOpMode
 {
-    oldMap robot = new oldMap();
+    public DcMotor  right_drive   = null;
+    public DcMotor  left_drive    = null;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -44,6 +40,32 @@ public class oldTele extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
+
+
+
+        right_drive = hardwareMap.get(DcMotor.class, "right_drive");
+        left_drive  = hardwareMap.get(DcMotor.class, "left_drive");
+
+        right_drive.setPower(0);
+        left_drive.setPower(0);
+
+        right_drive.setDirection(DcMotor.Direction.REVERSE);
+        left_drive.setDirection(DcMotor.Direction.FORWARD);
+
+        right_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
+
+
+
+
+
+
+
+
+        waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
@@ -58,21 +80,10 @@ public class oldTele extends LinearOpMode
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------
             //This drives the robot forward
-            robot.right_drive.setPower(rightPower);
-            robot.left_drive.setPower(leftPower);
+            right_drive.setPower(rightPower);
+            left_drive.setPower(leftPower);
             telemetry.update();
 //----------------------------------
-            if(gamepad1.x)
-            {
-                robot.claw.setPosition(.5);
-            }
-
-            else if(gamepad1.y)
-            {
-                robot.claw.setPosition(0);
-            }
-//----------------------------------
-            telemetry.update();
         }
     }
 }

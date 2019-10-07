@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name="Mec Tele", group = "Main")
+//The Mecanum robot
 //@Disabled
 public class MecTele extends LinearOpMode
 {
