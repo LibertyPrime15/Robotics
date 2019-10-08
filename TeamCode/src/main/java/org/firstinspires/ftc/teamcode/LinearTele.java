@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="Linear Tele", group = "test")
@@ -12,22 +13,6 @@ public class LinearTele extends LinearOpMode
 {
     LinearMap robot = new LinearMap();
 //----------------------------------------------------------------------------------------------
-
-    public void FaB(double pow)
-    {
-        robot.FL.setPower(pow);
-        robot.FR.setPower(pow);
-        robot.BL.setPower(pow);
-        robot.BR.setPower(pow);
-    }
-    public void Turn(double pow)
-    {
-        robot.FL.setPower(pow);
-        robot.FR.setPower(-pow);
-        robot.BL.setPower(pow);
-        robot.BR.setPower(-pow);
-    }
-
     public void angle(int power)
     {
         robot.angle.setPower(power);
@@ -55,55 +40,54 @@ public class LinearTele extends LinearOpMode
 
         waitForStart();
 //--------------------------------------------------------------------------------
-        while(opModeIsActive())
+        while(opModeIsActive() && (!(isStopRequested())))
         {
-            if(gamepad1.right_stick_y!=0)
-                FaB(-gamepad1.right_stick_y / 2);
+            double leftPower;
+            double rightPower;
 
-            else if(gamepad1.left_stick_x != 0)
-                Turn(gamepad1.left_stick_x / 2);
+            double drive = gamepad1.left_stick_y;
+            double turn  = -gamepad1.left_stick_x;
 
-            else
-            {
-                robot.FL.setPower(0);
-                robot.FR.setPower(0);
-                robot.BL.setPower(0);
-                robot.BR.setPower(0);
-            }
-
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//----------------------------------
+            //This drives the robot forward
+            robot.FR.setPower(rightPower);
+            robot.FL.setPower(leftPower);
+            robot.BR.setPower(rightPower);
+            robot.BL.setPower(leftPower);
+//----------------------------------
             if(gamepad2.right_stick_y!=0)
                 robot.lift.setPower(gamepad2.right_stick_y);
-
-            else if(gamepad2.left_stick_y!=0)
+            else
+                robot.lift.setPower(0);
+//----------------------------------
+            if(gamepad2.left_stick_y!=0)
                 robot.angle.setPower(gamepad2.left_stick_y);
-
-            else if(gamepad2.right_bumper)
+            else
+                robot.angle.setPower(0);
+//----------------------------------
+            if(gamepad2.right_bumper)
                 robot.D.setPower(.8);
-
             else if(gamepad2.left_bumper)
                 robot.D.setPower(-.8);
-
-            else if(gamepad2.right_trigger !=0)
+            else
+                robot.D.setPower(0);
+//----------------------------------
+            if(gamepad2.right_trigger !=0)
                 robot.EndDefector.setPower(gamepad2.right_trigger);
-
             else if(gamepad2.left_trigger !=0)
                 robot.EndDefector.setPower(-gamepad2.left_trigger);
-
-            else if(gamepad2.y)
+            else
+                robot.EndDefector.setPower(0);
+//----------------------------------
+            if(gamepad2.y)
                 robot.HookMotor.setPower(1);
-
             else if(gamepad2.a)
                 robot.HookMotor.setPower(-1);
-
             else
-            {
-                robot.EndDefector.setPower(0);
                 robot.HookMotor.setPower(0);
-
-                robot.D.setPower(0);
-                robot.lift.setPower(0);
-                robot.angle.setPower(0);
-            }
+//----------------------------------
             telemetry.update();
         }
     }
