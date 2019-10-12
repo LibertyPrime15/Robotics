@@ -6,32 +6,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="Linear Tele", group = "test")
+@TeleOp(name="Linear Tele", group = "Main")
 //Last Year's Robot
 //@Disabled
 public class LinearTele extends LinearOpMode
 {
     LinearMap robot = new LinearMap();
 //----------------------------------------------------------------------------------------------
-    public void angle(int power)
-    {
-        robot.angle.setPower(power);
-    }
-
-    public void Halt()
-    {
-        robot.FL.setPower(0);
-        robot.FR.setPower(0);
-        robot.BL.setPower(0);
-        robot.BR.setPower(0);
-        robot.lift.setPower(0);
-        robot.angle.setPower(0);
-    }
-
-    double dPosition = 100;
-    double ePos = 100;
-
-    @Override
     public void runOpMode()
     {
         robot.init(hardwareMap);
@@ -57,37 +38,66 @@ public class LinearTele extends LinearOpMode
             robot.BR.setPower(rightPower);
             robot.BL.setPower(leftPower);
 //----------------------------------
-            if(gamepad2.right_stick_y!=0)
-                robot.lift.setPower(gamepad2.right_stick_y);
-            else
-                robot.lift.setPower(0);
+            if(gamepad1.x)
+            {
+                robot.Gate.setPosition(-.8);
+            }
+            else if(gamepad1.y)
+            {
+                robot.Gate.setPosition(.8);
+            }
+//            else
+//            {
+//                robot.Sweeper.setPower(1);
+//            }
 //----------------------------------
+            if(gamepad1.a)
+            {
+                robot.Marker.setPosition(.8);
+            }
+            else if(gamepad1.b)
+            {
+                robot.Marker.setPosition(-.8);
+            }
+//------------------------------------------------------------------------------------------------//
+            //THIS IS ALL GAMEPAD 2//
+//------------------------------------------------------------------------------------------------//
+            //Moves the Grapple Connector Up Towards the Lander
+            if(gamepad2.x)
+                robot.Grapple.setPower(.4);
+            else if(gamepad2.y)
+                robot.Grapple.setPower(-.4);
+            else
+                robot.Grapple.setPower(0);
+//--------------------------------------------------------------------
+            //Extends the length of the arm
             if(gamepad2.left_stick_y!=0)
-                robot.angle.setPower(gamepad2.left_stick_y);
+                robot.Extender.setPower(gamepad2.left_stick_y);
             else
-                robot.angle.setPower(0);
-//----------------------------------
+                robot.Extender.setPower(0);
+//--------------------------------------------------------------------
+            //Changes the angle of the arm
+            if(gamepad2.right_stick_y!=0)
+                robot.armTilt.setPower(gamepad2.right_stick_y);
+            else
+                robot.armTilt.setPower(0);
+//--------------------------------------------------------------------
+            //Lifts the base of the arm higher into the air
+            if(gamepad2.left_trigger !=0)
+                robot.Lift.setPower(1);
+            else if(gamepad2.right_trigger !=0)
+                robot.Lift.setPower(-1);
+            else
+                robot.Lift.setPower(0);
+//--------------------------------------------------------------------
+            //Opens and closes the gate of the end effector
             if(gamepad2.right_bumper)
-                robot.D.setPower(.8);
+                robot.Sweeper.setPower(.8);
             else if(gamepad2.left_bumper)
-                robot.D.setPower(-.8);
+                robot.Sweeper.setPower(-.8);
             else
-                robot.D.setPower(0);
-//----------------------------------
-            if(gamepad2.right_trigger !=0)
-                robot.EndDefector.setPower(gamepad2.right_trigger);
-            else if(gamepad2.left_trigger !=0)
-                robot.EndDefector.setPower(-gamepad2.left_trigger);
-            else
-                robot.EndDefector.setPower(0);
-//----------------------------------
-            if(gamepad2.y)
-                robot.HookMotor.setPower(1);
-            else if(gamepad2.a)
-                robot.HookMotor.setPower(-1);
-            else
-                robot.HookMotor.setPower(0);
-//----------------------------------
+                robot.Sweeper.setPower(0);
+//--------------------------------------------------------------------
             telemetry.update();
         }
     }

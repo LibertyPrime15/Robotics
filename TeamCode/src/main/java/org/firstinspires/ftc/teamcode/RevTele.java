@@ -27,6 +27,7 @@ public class RevTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
+    double armSteps = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -59,13 +60,14 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
+private void moveArm()
+{
+    if(gamepad1.a && robot.front_left.getCurrentPosition() > 2)
+    {
+        robot.front_left.getCurrentPosition();
+    }
+}
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -148,6 +150,13 @@ private double angleBoi()
             {
                 robot.claw1.setPosition(0);
                 robot.claw2.setPosition(0);
+//
+//                case gamepad1.y
+//                    robot.claw1.setPosition(0);
+//                    .
+//                    .
+//                    break;
+//                case
             }
 //----------------------------------
             //This closes the claw
@@ -178,7 +187,7 @@ private double angleBoi()
             //This move the arm around
             if(gamepad1.right_stick_y !=0)
             {
-                robot.lift.setPower(gamepad1.right_stick_y);
+                robot.lift.setPower(gamepad1.right_stick_y /2);
             }
 
             //Otherwise, the list shouldn't move

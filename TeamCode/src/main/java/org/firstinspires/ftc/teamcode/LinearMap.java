@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //@Disabled
@@ -17,14 +18,21 @@ public class LinearMap
     public DcMotor BR = null;
     public DcMotor BL = null;
 
-    public DcMotor EndDefector = null;
-    public DcMotor HookMotor = null;
+    //The motor for connecting to the lander
+    public DcMotor Grapple = null;
 
-    public DcMotor lift = null;
-    public DcMotor angle = null;
+    //The motors on the arm
+    public DcMotor Lift = null;
+    public DcMotor Extender = null;
+    public DcMotor armTilt = null;
 
+    //The robot's gyro
     public GyroSensor gyro;
-    public CRServo D;
+
+    //Our servos
+    public Servo Marker = null;
+    public Servo Gate = null;
+    public CRServo Sweeper = null;
 
     public ElapsedTime runtime = new ElapsedTime();
     //--------------------------------------------------------------------------------------------------
@@ -36,33 +44,45 @@ public class LinearMap
         hwMap  = ahwMap;
         gyro   = hwMap.get(GyroSensor.class, "gyro");
 
+        //The Motors for the drive train
         FL = hwMap.get(DcMotor.class, "FL");
         BL = hwMap.get(DcMotor.class, "BL");
         FR = hwMap.get(DcMotor.class, "FR");
         BR = hwMap.get(DcMotor.class, "BR");
 
-        EndDefector = hwMap.get(DcMotor.class, "Sweeper");
-        HookMotor   = hwMap.get(DcMotor.class, "Hook");
+        //The Motor That Attaches to the Lander
+        Grapple   = hwMap.get(DcMotor.class, "grapple");
 
-        lift = hwMap.get(DcMotor.class, "one");
-        angle = hwMap.get(DcMotor.class, "two");
+        //The Motors for the arm
+        Lift   = hwMap.get(DcMotor.class, "lift");
+        Extender   = hwMap.get(DcMotor.class, "extender");
+        armTilt   = hwMap.get(DcMotor.class, "armTilt");
 
-        D    = hwMap.get(CRServo.class, "d");
-        gyro = hwMap.get(GyroSensor.class, "gyro");
+        //The Servos the run the End Effector
+        Gate       = hwMap.get(Servo.class, "gate");
+        Sweeper    = hwMap.get(CRServo.class, "sweeper");
 
-        lift.setDirection(DcMotorSimple.Direction.FORWARD);
-        angle.setDirection(DcMotorSimple.Direction.FORWARD);
+        //The Servo for the team marker
+        Marker     = hwMap.get(Servo.class, "marker");
+
+        //Declare the direction of all of our motors
+        Lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        Extender.setDirection(DcMotorSimple.Direction.FORWARD);
+        Grapple.setDirection(DcMotorSimple.Direction.FORWARD);
+        armTilt.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         FR.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        Grapple.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        Grapple.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
