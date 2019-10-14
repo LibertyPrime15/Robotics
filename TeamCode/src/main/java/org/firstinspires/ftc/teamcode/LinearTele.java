@@ -64,9 +64,9 @@ public class LinearTele extends LinearOpMode
 //------------------------------------------------------------------------------------------------//
             //Moves the Grapple Connector Up Towards the Lander
             if(gamepad2.x)
-                robot.Grapple.setPower(.4);
+                robot.Grapple.setPower(1);
             else if(gamepad2.y)
-                robot.Grapple.setPower(-.4);
+                robot.Grapple.setPower(-1);
             else
                 robot.Grapple.setPower(0);
 //--------------------------------------------------------------------

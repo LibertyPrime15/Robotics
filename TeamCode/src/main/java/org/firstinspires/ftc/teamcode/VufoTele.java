@@ -42,7 +42,7 @@ public class VufoTele extends LinearOpMode
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
 
-    private static final String VUFORIA_KEY = ""; // Insert your own key here
+    private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
 
     private float robotX = 0;
     private float robotY = 0;
@@ -79,23 +79,23 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void move()
-{
-    double leftPower;
-    double rightPower;
-
-    double drive = gamepad1.left_stick_y;
-    double turn = -gamepad1.left_stick_x;
-
-    leftPower = Range.clip(drive + turn,-1.0,1.0);
-    rightPower = Range.clip(drive - turn,-1.0,1.0);
-//----------------------------------
-    //This drives the robot forward
-    robot.front_right.setPower(rightPower);
-    robot.front_left.setPower(leftPower);
-    robot.back_right.setPower(rightPower);
-    robot.back_left.setPower(leftPower);
-}
+//private void move()
+//{
+//    double leftPower;
+//    double rightPower;
+//
+//    double drive = gamepad1.left_stick_y;
+//    double turn = -gamepad1.left_stick_x;
+//
+//    leftPower = Range.clip(drive + turn,-1.0,1.0);
+//    rightPower = Range.clip(drive - turn,-1.0,1.0);
+////----------------------------------
+//    //This drives the robot forward
+//    robot.front_right.setPower(rightPower);
+//    robot.front_left.setPower(leftPower);
+//    robot.back_right.setPower(rightPower);
+//    robot.back_left.setPower(leftPower);
+//}
 //--------------------------------------------------------------------------------------------------
 private void setupVuforia()
 {
@@ -164,7 +164,7 @@ private void setupVuforia()
 
         // We don't know where the robot is, so set it to the origin
         // If we don't include this, it would be null, which would cause errors later on
-        lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
+        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 
         waitForStart();
         visionTargets.activate();
@@ -172,52 +172,6 @@ private void setupVuforia()
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
-            angleBoi();
-            move();
-//----------------------------------
-            //This opens the claw
-            if(gamepad1.y)
-            {
-                robot.claw1.setPosition(0);
-                robot.claw2.setPosition(0);
-            }
-//----------------------------------
-            //This closes the claw
-            if(gamepad1.x)
-            {
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-            }
-//----------------------------------
-            //This moves the arm up
-            if(gamepad1.left_trigger !=0)
-            {
-                robot.arm.setPower(-.3);
-            }
-
-            //This moves the arm down
-            else if(gamepad1.right_trigger !=0)
-            {
-                robot.arm.setPower(.3);
-            }
-
-            //Otherwise, the arm shouldn't move
-            else
-            {
-                robot.arm.setPower(0);
-            }
-//----------------------------------
-            //This move the arm around
-            if(gamepad1.right_stick_y !=0)
-            {
-                robot.lift.setPower(gamepad1.right_stick_y);
-            }
-
-            //Otherwise, the list shouldn't move
-            else
-            {
-                robot.lift.setPower(0);
-            }
 //----------------------------------
             // Ask the listener for the latest information on where the robot is
             OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
@@ -239,6 +193,7 @@ private void setupVuforia()
             // Send telemetry and idle to let hardware catch up
             telemetry.update();
             idle();
+//----------------------------------
         }
     }
 }
