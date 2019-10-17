@@ -30,28 +30,28 @@ public class RevAuto extends LinearOpMode
     {
         if(angle > 0)
         {
-            while(angle > currHeading && (!(isStopRequested())))
+            while(angle >= currHeading && (!(isStopRequested())))
             {
                 telemetry.addLine().addData("Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
                 currHeading = angles.firstAngle;
-                robot.LTurn(thing);
+                robot.turnRight(thing);
             }
             imuInit();
         }
 
         else if(angle < 0)
         {
-            while(angle < currHeading && (!(isStopRequested())))
+            while(angle <= currHeading && (!(isStopRequested())))
             {
                 telemetry.addLine().addData("---Heading", currHeading);
                 telemetry.update();
                 angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 this.imu.getPosition();
                 currHeading = angles.firstAngle;
-                robot.RTurn(thing);
+                robot.turnLeft(thing);
             }
             imuInit();
         }

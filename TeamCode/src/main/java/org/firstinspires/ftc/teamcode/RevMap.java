@@ -14,11 +14,17 @@ public class RevMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
+//    public DcMotor  odYZ          = null;
+//    public DcMotor  odYX          = null;
+
     public DcMotor  lift          = null;
     public DcMotor  arm           = null;
 
     public Servo claw1 = null;
     public Servo claw2 = null;
+
+//    public double leftPower;
+//    public double rightPower;
 
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
@@ -104,7 +110,7 @@ public class RevMap
     }
 //----------------------------------------//
     //LTurn
-    public void LTurn(double power)
+    public void turnLeft(double power)
     {
         front_right.setPower(-power);
         front_left.setPower(power);
@@ -113,7 +119,7 @@ public class RevMap
     }
 //----------------------------------------//
     //RTurn
-    public void RTurn(double power)
+    public void turnRight(double power)
     {
         front_right.setPower(power);
         front_left.setPower(-power);
@@ -134,15 +140,39 @@ public class RevMap
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+//----------------------------------------//
     public void resetLift()
     {
         lift.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
         lift.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
     }
 //----------------------------------------//
-
+    public void moveRight(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
+    }
 //----------------------------------------//
-
+    public void openClaw()
+    {
+        claw1.setPosition(.5);
+        claw2.setPosition(.5);
+    }
+//----------------------------------------//
+    public void closeClaw()
+    {
+        claw1.setPosition(0);
+        claw2.setPosition(0);
+    }
+//----------------------------------------//
+    public void moveLeft(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(power);
+        back_right.setPower(power);
+        back_left.setPower(-power);
+    }
 //----------------------------------------//
 }
