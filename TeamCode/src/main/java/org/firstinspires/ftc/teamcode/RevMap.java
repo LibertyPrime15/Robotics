@@ -134,6 +134,12 @@ public class RevMap
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    public void resetLift()
+    {
+        lift.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
+        lift.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+    }
 //----------------------------------------//
 
 //----------------------------------------//

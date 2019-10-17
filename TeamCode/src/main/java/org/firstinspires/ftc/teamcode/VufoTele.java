@@ -79,30 +79,12 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void move()
-{
-    double leftPower;
-    double rightPower;
-
-    double drive = gamepad1.left_stick_y;
-    double turn = -gamepad1.left_stick_x;
-
-    leftPower = Range.clip(drive + turn,-1.0,1.0);
-    rightPower = Range.clip(drive - turn,-1.0,1.0);
-//----------------------------------
-    //This drives the robot forward
-    robot.front_right.setPower(rightPower);
-    robot.front_left.setPower(leftPower);
-    robot.back_right.setPower(rightPower);
-    robot.back_left.setPower(leftPower);
-}
-//--------------------------------------------------------------------------------------------------
 private void setupVuforia()
 {
     // Setup parameters to create localizer
     parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId); // To remove the camera view from the screen, remove the R.id.cameraMonitorViewId
     parameters.vuforiaLicenseKey = VUFORIA_KEY;
-    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
     parameters.useExtendedTracking = false;
     vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
 
@@ -124,20 +106,146 @@ private void setupVuforia()
     listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
 }
 //--------------------------------------------------------------------------------------------------
-    private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-    {
-        // Creates a matrix for determining the locations and orientations of objects
-        // Units are millimeters for x, y, and z, and degrees for u, v, and w
-        return OpenGLMatrix.translation(x, y, z).
-                multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-    }
+private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
+{
+    // Creates a matrix for determining the locations and orientations of objects
+    // Units are millimeters for x, y, and z, and degrees for u, v, and w
+    return OpenGLMatrix.translation(x, y, z).
+            multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
+}
 //--------------------------------------------------------------------------------------------------
-    private String formatMatrix(OpenGLMatrix matrix)
-    {
-        // Formats a matrix into a readable string
-        return matrix.formatAsTransform();
-    }
+private String formatMatrix(OpenGLMatrix matrix)
+{
+    // Formats a matrix into a readable string
+    return matrix.formatAsTransform();
+}
 //--------------------------------------------------------------------------------------------------
+//public void odMove(double power)
+//{
+//    if(robot.odYZ.getCurrentPosition() > 10)
+//    {
+//        while()
+//        {
+//            robot.leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+//            robot.rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//        }
+//    }
+//}
+//--------------------------------------------------------------------------------------------------
+private void drive()
+{
+    double leftPower;
+    double rightPower;
+
+    double drive = gamepad1.left_stick_y;
+    double turn  = -gamepad1.left_stick_x;
+
+    leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+    rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//----------------------------------
+    //This drives the robot forward
+    robot.front_right.setPower(rightPower);
+    robot.front_left.setPower(leftPower);
+    robot.back_right.setPower(rightPower);
+    robot.back_left.setPower(leftPower);
+    telemetry.update();
+}
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+////--------------------------------------------------------------------------------------------------
+//private void blockA()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+//private void blockB()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+//private void blockC()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+//private void blockD()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+//private void blockE()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+//private void blockF()
+//{
+//
+//}
+////--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -190,30 +298,18 @@ private void setupVuforia()
 
         waitForStart();
         visionTargets.activate();
-
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
             angleBoi();
+            drive();
 
-            double leftPower;
-            double rightPower;
 
-            double drive = gamepad1.left_stick_y;
-            double turn  = -gamepad1.left_stick_x;
 
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-//----------------------------------
-            //This drives the robot forward
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-            telemetry.update();
-//----------------------------------
-            //This opens the claw
+
+
+
             if(gamepad1.y)
             {
                 robot.claw1.setPosition(0);
@@ -256,6 +352,12 @@ private void setupVuforia()
             {
                 robot.lift.setPower(0);
             }
+
+
+
+
+
+
 //----------------------------------
             // Ask the listener for the latest information on where the robot is
             OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();

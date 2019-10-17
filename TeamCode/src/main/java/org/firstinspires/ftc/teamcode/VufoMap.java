@@ -13,11 +13,17 @@ public class VufoMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
+//    public DcMotor  odYZ          = null;
+//    public DcMotor  odYX          = null;
+
     public DcMotor  lift          = null;
     public DcMotor  arm           = null;
 
     public Servo claw1 = null;
     public Servo claw2 = null;
+
+//    public double leftPower;
+//    public double rightPower;
 
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
@@ -33,6 +39,9 @@ public class VufoMap
         back_right  = hwMap.get(DcMotor.class, "back_right");
         back_left   = hwMap.get(DcMotor.class, "back_left");
 
+//        odYZ  = hwMap.get(DcMotor.class, "odYZ");
+//        odYX   = hwMap.get(DcMotor.class, "odYX");
+
         lift  = hwMap.get(DcMotor.class, "lift");
         arm   = hwMap.get(DcMotor.class, "arm");
 
@@ -44,6 +53,9 @@ public class VufoMap
         back_right.setPower(0);
         back_left.setPower(0);
 
+//        odYZ.setPower(0);
+//        odYX.setPower(0);
+
         lift.setPower(0);
         arm.setPower(0);
 
@@ -54,6 +66,9 @@ public class VufoMap
         front_left.setDirection(DcMotor.Direction.FORWARD);
         back_right.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.FORWARD);
+
+//        odYZ.setDirection(DcMotor.Direction.FORWARD);
+//        odYX.setDirection(DcMotor.Direction.FORWARD);
 
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.REVERSE);
@@ -70,6 +85,9 @@ public class VufoMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        odYZ.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        odYX.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -132,6 +150,22 @@ public class VufoMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+//----------------------------------------//
+    public void left(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(power);
+        back_right.setPower(power);
+        back_left.setPower(-power);
+    }
+//----------------------------------------//
+    public void right(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
     }
 //----------------------------------------//
 }

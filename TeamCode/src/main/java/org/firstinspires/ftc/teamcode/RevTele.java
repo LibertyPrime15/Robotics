@@ -27,7 +27,7 @@ public class RevTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    double armSteps = 0;
+    boolean Position = false;
 
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
@@ -53,39 +53,43 @@ private void imuInit()
 //--------------------------------------------------------------------------------------------------
 private double angleBoi()
 {
-    telemetry.addLine().addData("Heading",currHeading);
-    telemetry.update();
+//    telemetry.addLine().addData("Heading",currHeading);
+//    telemetry.update();
     angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
     this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void moveArm()
+private void moveLift()
 {
-    double totDistInSteps = (((5555555 / 11.97) * 1120) * -1);
+    int totDistInSteps = 787;
 
-    if(gamepad1.a)
+    if(gamepad1.a && !Position)
     {
-        while(armSteps < totDistInSteps)
+        robot.resetLift();
+        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
         {
-            robot.arm.setPower(.5);
-            robot.arm.getCurrentPosition();
-            armSteps = robot.arm.getCurrentPosition();
+            telemetry.addLine().addData("Up Value",robot.lift.getCurrentPosition());
+            telemetry.update();
+            robot.lift.setPower(.5);
         }
+        Position = true;
     }
-    else if(gamepad1.b)
+    else if(gamepad1.b && Position)
     {
-        while(armSteps > -totDistInSteps)
+        robot.resetLift();
+        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
         {
-            robot.arm.setPower(-.5);
-            robot.arm.getCurrentPosition();
-            armSteps = robot.arm.getCurrentPosition();
+            telemetry.addLine().addData("Down Value",robot.lift.getCurrentPosition());
+            telemetry.update();
+            robot.lift.setPower(-.5);
         }
+        Position = false;
     }
     else
     {
-        robot.arm.setPower(0);
+        robot.lift.setPower(0);
     }
 }
 //--------------------------------------------------------------------------------------------------
@@ -169,6 +173,7 @@ private void drive()
         {
             angleBoi();
             drive();
+            moveLift();
 //----------------------------------
             //This opens the claw
             if(gamepad1.y)
@@ -196,23 +201,23 @@ private void drive()
                 robot.arm.setPower(.3);
             }
 
-            //Otherwise, the arm shouldn't move
+            //Otherwise, the arm won't move
             else
             {
                 robot.arm.setPower(0);
             }
 //----------------------------------
             //This move the arm around
-            if(gamepad1.right_stick_y !=0)
-            {
-                robot.lift.setPower(gamepad1.right_stick_y /2);
-            }
-
-            //Otherwise, the list shouldn't move
-            else
-            {
-                robot.lift.setPower(0);
-            }
+//            if(gamepad1.right_stick_y !=0)
+//            {
+//                robot.lift.setPower(gamepad1.right_stick_y /2);
+//            }
+//
+//            //Otherwise, the lift won't move
+//            else
+//            {
+//                robot.lift.setPower(0);
+//            }
 //----------------------------------
             telemetry.update();
         }

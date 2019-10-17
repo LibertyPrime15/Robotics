@@ -64,7 +64,7 @@ public class RevAuto extends LinearOpMode
         //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
         if (totDistInSteps < robot.front_right.getCurrentPosition())
         {
-            while(totDistInSteps <= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
+            while(totDistInSteps < robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
                 telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
                 telemetry.addData("totDistInSteps",totDistInSteps);
@@ -75,7 +75,7 @@ public class RevAuto extends LinearOpMode
         //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
         else if (totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            while (totDistInSteps >= robot.front_right.getCurrentPosition() && (!(isStopRequested())))
+            while (totDistInSteps > robot.front_right.getCurrentPosition() && (!(isStopRequested())))
             {
                 telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
                 telemetry.addData("---totDistInSteps",totDistInSteps);
