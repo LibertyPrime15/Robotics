@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static android.os.SystemClock.sleep;
+
 //@Disabled
 public class RevMap
 {
@@ -145,6 +147,12 @@ public class RevMap
     {
         lift.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
         lift.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+    }
+//----------------------------------------//
+    public void resetArm()
+    {
+        arm.setMode((DcMotor.RunMode.STOP_AND_RESET_ENCODER));
+        arm.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
     }
 //----------------------------------------//
     public void moveRight(double power)

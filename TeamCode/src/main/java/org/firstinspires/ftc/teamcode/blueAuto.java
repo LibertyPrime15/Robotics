@@ -19,19 +19,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Vufo Auto", group = "Main")
+@Autonomous(name="blue Auto", group = "Main")
 //@Disabled
-public class VufoAuto extends LinearOpMode
+public class blueAuto extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean Position = false;
+    double Circ = 11.97;
+    double Steps = 1160;
 
-    boolean check1 = false;
-    boolean check2 = false;
+    boolean armPos = false;
+    boolean Position = false;
+    boolean inView = false;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -69,51 +71,101 @@ private void imuInit()
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-private double angleBoi()
+public void moveDistance(double length)
 {
-    telemetry.addLine().addData("Heading", currHeading);
-    telemetry.update();
-    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-    this.imu.getPosition();
-    currHeading = angles.firstAngle;
-    return currHeading;
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
+
+    //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+    if (totDistInSteps < robot.front_right.getCurrentPosition())
+    {
+        while(totDistInSteps < robot.front_right.getCurrentPosition() && (!(isStopRequested())))
+        {
+            telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
+            telemetry.addData("totDistInSteps",totDistInSteps);
+            telemetry.update();
+            robot.Forward(.1);
+        }
+        sleep(100);
+    }
+    //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+    else if (totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        while (totDistInSteps > robot.front_right.getCurrentPosition() && (!(isStopRequested())))
+        {
+            telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
+            telemetry.addData("---totDistInSteps",totDistInSteps);
+            telemetry.update();
+            robot.Backward(.1);
+        }
+        sleep(100);
+    }
+    robot.resetEncoder();
+    robot.Halt();
 }
 //--------------------------------------------------------------------------------------------------
+public void moveReMastered(double length)
+{
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-    public void moveDistance(double length)
+    //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
+    if (totDistInSteps < robot.front_right.getCurrentPosition())
     {
-        double totDistInSteps = (((length / 11.97) * 1120) * -1);
-
-        //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
-        if (totDistInSteps < robot.front_right.getCurrentPosition())
+        while(totDistInSteps < robot.front_right.getCurrentPosition() && (!(isStopRequested())))
         {
-            while(totDistInSteps < robot.front_right.getCurrentPosition() && (!(isStopRequested())))
-            {
-                telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
-                telemetry.addData("totDistInSteps",totDistInSteps);
-                telemetry.update();
-                robot.Forward(.1);
-            }
+            telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
+            telemetry.addData("totDistInSteps",totDistInSteps);
+            telemetry.update();
+            robot.Forward(.1);
         }
-        //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
-        else if (totDistInSteps > robot.front_right.getCurrentPosition())
-        {
-            while (totDistInSteps > robot.front_right.getCurrentPosition() && (!(isStopRequested())))
-            {
-                telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
-                telemetry.addData("---totDistInSteps",totDistInSteps);
-                telemetry.update();
-                robot.Backward(.1);
-            }
-        }
-        robot.Halt();
     }
+    //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
+    else if (totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        while (totDistInSteps > robot.front_right.getCurrentPosition() && (!(isStopRequested())))
+        {
+            telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
+            telemetry.addData("---totDistInSteps",totDistInSteps);
+            telemetry.update();
+            robot.Backward(.1);
+        }
+    }
+    robot.Halt();
+}
+//--------------------------------------------------------------------------------------------------
+public void armUp()
+{
+    int totDistInSteps = 787;
+
+    while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
+    {
+        telemetry.update();
+        robot.arm.setPower(.5);
+    }
+    armPos = true;
+    robot.arm.setPower(0);
+    robot.resetArm();
+}
+//--------------------------------------------
+public void armDown()
+{
+    int totDistInSteps = -787;
+
+    while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
+    {
+        telemetry.update();
+        robot.arm.setPower(-.5);
+    }
+    armPos = false;
+    robot.arm.setPower(0);
+    robot.resetArm();
+}
 //--------------------------------------------------------------------------------------------------
 private void liftUp()
 {
     int totDistInSteps = 787;
 
-    while (totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested()))) {
+    while (totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+    {
         telemetry.update();
         robot.lift.setPower(.5);
     }
@@ -136,43 +188,43 @@ private void liftDown()
         robot.resetLift();
 }
 //--------------------------------------------------------------------------------------------------
-    private void turnAngle(double angle, double thing)
+private void turnAngle(double angle)
+{
+    if(angle > 0)
     {
-        if(angle > 0)
+        while(angle >= currHeading && (!(isStopRequested())))
         {
-            while(angle >= currHeading && (!(isStopRequested())))
-            {
-                telemetry.addLine().addData("Heading", currHeading);
-                telemetry.update();
-                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                this.imu.getPosition();
-                currHeading = angles.firstAngle;
-                robot.turnRight(thing);
-            }
-            imuInit();
+            telemetry.addLine().addData("Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnRight(.5);
         }
-
-        else if(angle < 0)
-        {
-            while(angle <= currHeading && (!(isStopRequested())))
-            {
-                telemetry.addLine().addData("---Heading", currHeading);
-                telemetry.update();
-                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                this.imu.getPosition();
-                currHeading = angles.firstAngle;
-                robot.turnLeft(thing);
-            }
-            imuInit();
-        }
+        imuInit();
     }
+
+    else if(angle < 0)
+    {
+        while(angle <= currHeading && (!(isStopRequested())))
+        {
+            telemetry.addLine().addData("---Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnLeft(.5);
+        }
+        imuInit();
+    }
+}
 //--------------------------------------------------------------------------------------------------
 private void setupVuforia()
 {
     // Setup parameters to create localizer
-    parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId); // To remove the camera view from the screen, remove the R.id.cameraMonitorViewId
+    parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
     parameters.vuforiaLicenseKey = VUFORIA_KEY;
-    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
     parameters.useExtendedTracking = false;
     vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
 
@@ -193,7 +245,6 @@ private void setupVuforia()
     listener = (VuforiaTrackableDefaultListener) target.getListener();
     listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
 }
-//--------------------------------------------------------------------------------------------------
 private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
 {
     // Creates a matrix for determining the locations and orientations of objects
@@ -201,56 +252,88 @@ private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, f
     return OpenGLMatrix.translation(x, y, z).
             multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
 }
-//--------------------------------------------------------------------------------------------------
 private String formatMatrix(OpenGLMatrix matrix)
 {
     // Formats a matrix into a readable string
     return matrix.formatAsTransform();
 }
-//--------------------------------------------------------------------------------------------------
-//public void odMove(double power)
-//{
-//    if(robot.odYZ.getCurrentPosition() > 10)
-//    {
-//        while()
-//        {
-//            robot.leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-//            robot.rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-//        }
-//    }
-//}
-//--------------------------------------------------------------------------------------------------
-public void legoCheck()
+public boolean vufoCrap()
 {
-    if(opModeIsActive())
-    {
-        while(check1)
-        {
-            moveDistance(36);
-            //Missing vuforia code
-        }
+    OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
 
-        if(!check1)
-        {
-            robot.Halt();
-            turnAngle(-90, .7);
-            moveDistance(10);
-            liftUp();
-            robot.openClaw();
-//            while(asdfghj)//I think we should use a button on the bot
-//                          // to tell if we've made contact or now
-//            {
-//                robot.Forward(.3);
-//            }
-            moveDistance(10);
-            moveDistance(-.5);
-            robot.closeClaw();
-            liftDown();
-            moveDistance(15);
-            turnAngle(90,.7);
-            moveDistance(100);
-        }
+    if(latestLocation != null)
+    {
+        lastKnownLocation = latestLocation;
     }
+    float[] coordinates = lastKnownLocation.getTranslation().getData();
+
+    robotX = coordinates[0];
+    robotY = coordinates[1];
+    robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+    telemetry.addData("Tracking " + target.getName(), listener.isVisible());
+    telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+    telemetry.update();
+    return listener.isVisible();
+}
+//--------------------------------------------------------------------------------------------------
+public void checkEncoder()
+{
+    while(opModeIsActive() && (!(isStopRequested())) && inView == false)
+    {
+        checkSight();
+        moveDistance(10);
+        checkSight();
+        moveDistance(10);
+        checkSight();
+    }
+    getBlock();
+}
+//--------------------------------------------------------------------------------------------------
+public void checkDistance()
+{
+    double distDriven = 0;     //In steps
+    double distGone   = 0;     //This is the distDriven in inches
+    double totField   = 13954; //This is the full field in inches
+    double distRemain = 0;     //This is the distance I have to go to get to the end of the field
+
+    while(opModeIsActive() && (!(isStopRequested())))
+    {
+        robot.Forward(.7);
+        robot.front_right.getCurrentPosition();
+        distDriven = robot.front_right.getCurrentPosition() * -1;
+    }
+    distGone = (distDriven * ((1/Circ)*Steps));
+    distRemain = totField - distGone;
+    moveDistance(distRemain);
+}
+//--------------------------------------------------------------------------------------------------
+public boolean checkSight()
+{
+    while(listener.isVisible() && (!(isStopRequested())))
+    {
+        inView = true;
+    }
+    return inView;
+}
+//--------------------------------------------------------------------------------------------------
+private void getBlock()
+{
+    robot.Halt();
+    turnAngle(90);
+    moveDistance(5);
+    liftUp();
+    robot.openClaw();
+    moveDistance(3);
+    armUp();
+    robot.openClaw();
+    armDown();
+    robot.closeClaw();
+    liftDown();
+    moveDistance(-8);
+    turnAngle(-90);
+    checkDistance();
+    robot.Halt();
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -267,54 +350,6 @@ public void legoCheck()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////--------------------------------------------------------------------------------------------------
-//private void blockA()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
-//private void blockB()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
-//private void blockC()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
-//private void blockD()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
-//private void blockE()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
-//private void blockF()
-//{
-//
-//}
-////--------------------------------------------------------------------------------------------------
 
 
 
@@ -395,9 +430,6 @@ public void legoCheck()
     {
         imuInit();
         setupVuforia();
-
-        // We don't know where the robot is, so set it to the origin
-        // If we don't include this, it would be null, which would cause errors later on
         lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 
         waitForStart();
@@ -406,56 +438,11 @@ public void legoCheck()
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-//            angleBoi();
-//            robot.moveLeft(1);
-//            sleep(3000);
-//            robot.Halt();
-//            robot.Backward(.1);
-//            sleep(1500);
-//----------------------------------
-            // Ask the listener for the latest information on where the robot is
-            OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
-
-            // The listener will sometimes return null, so we check for that to prevent errors
-            if(latestLocation != null)
-                lastKnownLocation = latestLocation;
-
-            float[] coordinates = lastKnownLocation.getTranslation().getData();
-
-            robotX = coordinates[0];
-            robotY = coordinates[1];
-            robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-            // Send information about whether the target is visible, and where the robot is
-            telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-            telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-
-            // Send telemetry and idle to let hardware catch up
-            telemetry.update();
-            idle();
+            checkEncoder();
+            vufoCrap();
+            stop();
 //----------------------------------
         }
     }
 }
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

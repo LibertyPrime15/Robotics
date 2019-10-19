@@ -27,7 +27,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //@Disabled
 public class VufoTele extends LinearOpMode
 {
-    VufoMap robot = new VufoMap();
+    RevMap robot = new RevMap();
     Orientation angles;
     BNO055IMU imu;
 
