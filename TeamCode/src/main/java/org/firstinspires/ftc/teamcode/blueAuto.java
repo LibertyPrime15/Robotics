@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
@@ -76,7 +77,7 @@ public void moveDistance(double length)
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
     //IF THE NUMBER IS A POSITIVE NUMBER WE GO FORWARD!
-    if (totDistInSteps < robot.front_right.getCurrentPosition())
+    if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
         while(totDistInSteps < robot.front_right.getCurrentPosition() && (!(isStopRequested())))
         {
@@ -115,8 +116,7 @@ public void moveReMastered(double length)
             telemetry.addData("Current Value",robot.front_right.getCurrentPosition());
             telemetry.addData("totDistInSteps",totDistInSteps);
             telemetry.update();
-            robot.Forward(.1);
-        }
+            fixMove(10);        }
     }
     //IF THE NUMBER IS A NEGATIVE NUMBER WE GO BACKWARD!
     else if (totDistInSteps > robot.front_right.getCurrentPosition())
@@ -126,15 +126,93 @@ public void moveReMastered(double length)
             telemetry.addData("---Current Value",robot.front_right.getCurrentPosition());
             telemetry.addData("---totDistInSteps",totDistInSteps);
             telemetry.update();
-            robot.Backward(.1);
+            fixMove(10);
         }
     }
     robot.Halt();
 }
 //--------------------------------------------------------------------------------------------------
+public void fixMove(double length)
+{
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
+
+    double leftPower;
+    double rightPower;
+
+    double negLeft;
+    double negRight;
+
+    double drive = 1;
+    double turn  = -.2;
+
+    leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+    rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+    negLeft    = Range.clip(drive - turn, -1.0, 1.0) ;
+    negRight   = Range.clip(drive + turn, -1.0, 1.0) ;
+
+    if(totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        {
+            if(currHeading < 2)
+            {
+                robot.front_right.setPower(1);
+                robot.front_left.setPower(1);
+                robot.back_right.setPower(1);
+                robot.back_left.setPower(1);
+            }
+            else if(currHeading > 2)
+            {
+                while(currHeading > 2)
+                {
+                    robot.front_right.setPower(rightPower);
+                    robot.front_left.setPower(leftPower);
+                    robot.back_right.setPower(rightPower);
+                    robot.back_left.setPower(leftPower);
+                }
+            }
+        }
+    }
+
+    else if(totDistInSteps < robot.front_right.getCurrentPosition())
+    {
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        {
+            if(currHeading > -2)
+            {
+                robot.front_right.setPower(1);
+                robot.front_left.setPower(1);
+                robot.back_right.setPower(1);
+                robot.back_left.setPower(1);
+            }
+            else if(currHeading < -2)
+            {
+                while(currHeading < -2)
+                {
+                    robot.front_right.setPower(negRight);
+                    robot.front_left.setPower(negLeft);
+                    robot.back_right.setPower(negRight);
+                    robot.back_left.setPower(negLeft);
+                }
+            }
+        }
+    }
+}
+//--------------------------------------------------------------------------------------------------
+private double angleBoi()
+{
+    telemetry.addLine().addData("Heading",currHeading);
+    telemetry.update();
+    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
+    this.imu.getPosition();
+    currHeading = angles.firstAngle;
+    return currHeading;
+}
+//--------------------------------------------------------------------------------------------------
 public void armUp()
 {
-    int totDistInSteps = 787;
+    int totDistInSteps = 787;//This is incorrect
 
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -148,7 +226,7 @@ public void armUp()
 //--------------------------------------------
 public void armDown()
 {
-    int totDistInSteps = -787;
+    int totDistInSteps = -787;//This is incorrect
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -321,16 +399,16 @@ private void getBlock()
 {
     robot.Halt();
     turnAngle(90);
-    moveDistance(5);
+    fixMove(5);
     liftUp();
     robot.openClaw();
-    moveDistance(3);
+    fixMove(3);
     armUp();
     robot.openClaw();
     armDown();
     robot.closeClaw();
     liftDown();
-    moveDistance(-8);
+    fixMove(-8);
     turnAngle(-90);
     checkDistance();
     robot.Halt();
