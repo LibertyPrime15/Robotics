@@ -25,9 +25,6 @@ public class RevMap
     public Servo claw1 = null;
     public Servo claw2 = null;
 
-//    public double leftPower;
-//    public double rightPower;
-
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
@@ -155,14 +152,6 @@ public class RevMap
         arm.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
     }
 //----------------------------------------//
-    public void moveRight(double power)
-    {
-        front_right.setPower(power);
-        front_left.setPower(-power);
-        back_right.setPower(-power);
-        back_left.setPower(power);
-    }
-//----------------------------------------//
     public void openClaw()
     {
         claw1.setPosition(.5);
@@ -181,6 +170,14 @@ public class RevMap
         front_left.setPower(power);
         back_right.setPower(power);
         back_left.setPower(-power);
+    }
+//----------------------------------------//
+    public void moveRight(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
     }
 //----------------------------------------//
 }
