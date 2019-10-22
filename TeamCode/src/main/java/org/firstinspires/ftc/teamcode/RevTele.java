@@ -35,7 +35,7 @@ public class RevTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean Position = false;
+    boolean Position = true;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -87,7 +87,7 @@ private void moveLift()
 {
     int totDistInSteps = 787;
 
-    if(gamepad1.a && !Position)
+    if(gamepad1.a && Position == false)
     {
         while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
         {
@@ -97,7 +97,7 @@ private void moveLift()
         Position = true;
     }
 
-    else if(gamepad1.b && Position)
+    else if(gamepad1.b && Position == true)
     {
         while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
         {
@@ -130,47 +130,6 @@ private void drive()
     robot.back_right.setPower(rightPower);
     robot.back_left.setPower(leftPower);
     telemetry.update();
-}
-//--------------------------------------------------------------------------------------------------
-private void setupVuforia()
-{
-// Setup parameters to create localizer
-parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId); // To remove the camera view from the screen, remove the R.id.cameraMonitorViewId
-parameters.vuforiaLicenseKey = VUFORIA_KEY;
-parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-parameters.useExtendedTracking = false;
-vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
-
-// These are the vision targets that we want to use
-// The string needs to be the name of the appropriate .xml file in the assets folder
-visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
-Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-
-// Setup the target to be tracked
-target = visionTargets.get(0); // 0 corresponds to the wheels target
-target.setName("Wheels Target");
-target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-
-// Set phone location on robot
-phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
-
-// Setup listener and inform it of phone information
-listener = (VuforiaTrackableDefaultListener) target.getListener();
-listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-}
-//--------------------------------------------------------------------------------------------------
-private OpenGLMatrix createMatrix(float x,float y,float z,float u,float v,float w)
-{
-    // Creates a matrix for determining the locations and orientations of objects
-    // Units are millimeters for x, y, and z, and degrees for u, v, and w
-    return OpenGLMatrix.translation(x, y, z).
-            multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-}
-//--------------------------------------------------------------------------------------------------
-private String formatMatrix(OpenGLMatrix matrix)
-{
-    // Formats a matrix into a readable string
-    return matrix.formatAsTransform();
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
@@ -223,50 +182,6 @@ private String formatMatrix(OpenGLMatrix matrix)
 
 
 
-//--------------------------------------------------------------------------------------------------
-//---------------------------------------------------//
-//---------------------------------------------------//
-//---These are my preprogrammed autonoumous routes---//
-//---------------------------------------------------//
-//---------------------------------------------------//
-//--------------------------------------------------------------------------------------------------
-private void blockA()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-private void blockB()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-private void blockC()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-private void blockD()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-private void blockE()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-private void blockF()
-{
-
-}
-//--------------------------------------------------------------------------------------------------
-//-------------------------------------------------------//
-//-------------------------------------------------------//
-//---No more preprogrammed Autonoumous Paths Past Here---//
-//-------------------------------------------------------//
-//-------------------------------------------------------//
-//--------------------------------------------------------------------------------------------------
-
 
 
 
@@ -316,14 +231,7 @@ private void blockF()
     public void runOpMode()
     {
         imuInit();
-        setupVuforia();
-
-        // We don't know where the robot is, so set it to the origin
-        // If we don't include this, it would be null, which would cause errors later on
-        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
-
         waitForStart();
-        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
@@ -348,6 +256,8 @@ private void blockF()
             //This moves the arm up
             if(gamepad1.left_trigger !=0)
             {
+                telemetry.addData("Here's a thing(",robot.arm.getCurrentPosition());
+                telemetry.update();
                 robot.arm.setPower(-.3);
             }
 
@@ -364,24 +274,6 @@ private void blockF()
             }
 //--------------------------------------------------------------------
 // Ask the listener for the latest information on where the robot is
-            OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
-
-            // The listener will sometimes return null, so we check for that to prevent errors
-            if(latestLocation != null)
-                lastKnownLocation = latestLocation;
-
-            float[] coordinates = lastKnownLocation.getTranslation().getData();
-
-            robotX = coordinates[0];
-            robotY = coordinates[1];
-            robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-            // Send information about whether the target is visible, and where the robot is
-            telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-            telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-
-            // Send telemetry and idle to let hardware catch up
-            telemetry.update();
             idle();
         }
     }
