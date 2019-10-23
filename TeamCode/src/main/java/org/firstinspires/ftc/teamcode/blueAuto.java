@@ -32,6 +32,14 @@ public class blueAuto extends LinearOpMode
     double Circ = 11.97;
     double Steps = 1160;
 
+    double drive = 0;
+    double turn  = 0;
+
+    double distAdded  = 0;//distAdded = robot.front_right.getCurrentPosition();return distAdded;
+    double distGone   = 0;//(robot.front_right.getCurrentPosition() * ((1/Circ) * 1160));
+    double distRemain = 0;//distRemain = totField - distGone;
+    double totField   = 144;//moveDistance(distRemain);
+
     boolean armPos = false;
     boolean Position = false;
     boolean inView = false;
@@ -130,15 +138,22 @@ public boolean vufoCrap()
     return listener.isVisible();
 }
 //--------------------------------------------------------------------------------------------------
+private double angleBoi()
+{
+    telemetry.addLine().addData("Heading",currHeading);
+    telemetry.update();
+    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
+    this.imu.getPosition();
+    currHeading = angles.firstAngle;
+    return currHeading;
+}
+//--------------------------------------------------------------------------------------------------
 public void moveDistance(double length)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
     double leftPower;
     double rightPower;
-
-    double drive = 0;
-    double turn  = 0;
 
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
@@ -184,16 +199,6 @@ public void moveDistance(double length)
         robot.Halt();
         robot.resetEncoder();
     }
-}
-//--------------------------------------------------------------------------------------------------
-private double angleBoi()
-{
-    telemetry.addLine().addData("Heading",currHeading);
-    telemetry.update();
-    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
-    this.imu.getPosition();
-    currHeading = angles.firstAngle;
-    return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp()
@@ -294,25 +299,30 @@ public boolean checkSight()
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
-public void checkEncoder()
+public void checkEncoder(double power)
 {
-    while(opModeIsActive() && (!(isStopRequested())) && inView == false)
+    double leftPower;
+    double rightPower;
+
+    while(opModeIsActive() && (!(isStopRequested())))
     {
-//        moveDistance(10);
-        liftUp();
-        armUp();
-//        robot.openClaw();
-        armDown();
-        robot.closeClaw();
-        liftDown();
-//        checkSight();
-//        moveDistance(10);
-//        checkSight();
-//        moveDistance(10);
-//        checkSight();
+        while(inView == false)
+        {
+            checkSight();
+            angleBoi();
+            drive = -.3;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        getBlock();
     }
     stop();
-    //getBlock();
 }
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
@@ -345,18 +355,16 @@ private void getBlock()
 //--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-    double distDriven = 0;     //In steps
-    double distGone   = 0;     //This is the distDriven in inches
-    double totField   = 13954; //This is the full field in inches
-    double distRemain = 0;     //This is the distance I have to go to get to the end of the field
+//    double distDriven = 0;     //In steps
+//    double distGone   = 0;     //This is the distDriven in inches
+//    double totField   = 13954; //This is the full field in inches
+//    double distRemain = 0;     //This is the distance I have to go to get to the end of the field
 
     while(opModeIsActive() && (!(isStopRequested())))
     {
         robot.Forward(.7);
         robot.front_right.getCurrentPosition();
-        distDriven = robot.front_right.getCurrentPosition() * -1;
     }
-    distGone = (distDriven * ((1/Circ)*Steps));
     distRemain = totField - distGone;
     moveDistance(distRemain);
 }
@@ -446,7 +454,7 @@ public void checkDistance()
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            checkEncoder();
+            checkEncoder(.4);
 //            vufoCrap();
 //----------------------------------
         }
