@@ -35,13 +35,13 @@ public class blueAuto extends LinearOpMode
     double drive = 0;
     double turn  = 0;
 
-    double distAdded  = 0;//distAdded = robot.front_right.getCurrentPosition();return distAdded;
-    double distGone   = 0;//(robot.front_right.getCurrentPosition() * ((1/Circ) * 1160));
-    double distRemain = 0;//distRemain = totField - distGone;
-    double totField   = 144;//moveDistance(distRemain);
+    double distAdded  = 0;
+    double distGone   = 0;
+    double distRemain = 0;
+    double totField   = 144;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
-    boolean armPos = false;
-    boolean Position = false;
+    boolean isExtended = false;
+    boolean isVertical = false;
     boolean inView = false;
 
     private VuforiaLocalizer vuforiaLocalizer;
@@ -82,40 +82,29 @@ private void imuInit()
 //--------------------------------------------------------------------------------------------------
 private void setupVuforia()
 {
-    // Setup parameters to create localizer
     parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
     parameters.vuforiaLicenseKey = VUFORIA_KEY;
     parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
     parameters.useExtendedTracking = false;
     vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
 
-    // These are the vision targets that we want to use
-    // The string needs to be the name of the appropriate .xml file in the assets folder
     visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
     Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
-    // Setup the target to be tracked
-    target = visionTargets.get(0); // 0 corresponds to the wheels target
+    target = visionTargets.get(0);
     target.setName("Wheels Target");
     target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-
-    // Set phone location on robot
     phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
-    // Setup listener and inform it of phone information
     listener = (VuforiaTrackableDefaultListener) target.getListener();
     listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
 }
 private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
 {
-    // Creates a matrix for determining the locations and orientations of objects
-    // Units are millimeters for x, y, and z, and degrees for u, v, and w
-    return OpenGLMatrix.translation(x, y, z).
-            multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
+    return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
 }
 private String formatMatrix(OpenGLMatrix matrix)
 {
-    // Formats a matrix into a readable string
     return matrix.formatAsTransform();
 }
 public boolean vufoCrap()
@@ -148,7 +137,7 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-public void moveDistance(double length)
+public double moveDistance(double length)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -171,6 +160,7 @@ public void moveDistance(double length)
             robot.back_left.setPower(leftPower);
         }
         robot.Halt();
+        distAdded = distAdded + robot.front_right.getCurrentPosition();
         robot.resetEncoder();
     }
 
@@ -184,14 +174,13 @@ public void moveDistance(double length)
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
 
-            telemetry.addData("I'm right here3",robot.front_right.getCurrentPosition());
-            telemetry.update();
             robot.front_right.setPower(rightPower);
             robot.front_left.setPower(leftPower);
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
         }
         robot.Halt();
+        distAdded = distAdded + robot.front_right.getCurrentPosition();
         robot.resetEncoder();
     }
     else
@@ -199,6 +188,8 @@ public void moveDistance(double length)
         robot.Halt();
         robot.resetEncoder();
     }
+    distGone = distGone + distAdded;
+    return distGone;
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp()
@@ -207,12 +198,10 @@ public void armUp()
 
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
-        telemetry.addData("Other thing", totDistInSteps);
-        telemetry.addData("thing", robot.arm.getCurrentPosition());
         telemetry.update();
         robot.arm.setPower(.5);
     }
-    armPos = true;
+    isExtended = true;
     robot.arm.setPower(0);
     robot.resetArm();
 }
@@ -226,7 +215,7 @@ public void armDown()
         telemetry.update();
         robot.arm.setPower(-.5);
     }
-    armPos = false;
+    isExtended = false;
     robot.arm.setPower(0);
     robot.resetArm();
 }
@@ -240,7 +229,7 @@ private void liftUp()
         telemetry.update();
         robot.lift.setPower(-.5);
     }
-    Position = true;
+    isVertical = true;
     robot.lift.setPower(0);
     robot.resetLift();
 }
@@ -250,13 +239,13 @@ private void liftDown()
     double totDistInSteps = 787;
 
     while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(.5);
-        }
-        Position = false;
-        robot.lift.setPower(0);
-        robot.resetLift();
+    {
+        telemetry.update();
+        robot.lift.setPower(.5);
+    }
+    isVertical = false;
+    robot.lift.setPower(0);
+    robot.resetLift();
 }
 //--------------------------------------------------------------------------------------------------
 private void turnAngle(double angle)
@@ -299,31 +288,6 @@ public boolean checkSight()
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
-public void checkEncoder(double power)
-{
-    double leftPower;
-    double rightPower;
-
-    while(opModeIsActive() && (!(isStopRequested())))
-    {
-        while(inView == false)
-        {
-            checkSight();
-            angleBoi();
-            drive = -.3;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
-        getBlock();
-    }
-    stop();
-}
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
@@ -355,22 +319,36 @@ private void getBlock()
 //--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-//    double distDriven = 0;     //In steps
-//    double distGone   = 0;     //This is the distDriven in inches
-//    double totField   = 13954; //This is the full field in inches
-//    double distRemain = 0;     //This is the distance I have to go to get to the end of the field
-
-    while(opModeIsActive() && (!(isStopRequested())))
-    {
-        robot.Forward(.7);
-        robot.front_right.getCurrentPosition();
-    }
     distRemain = totField - distGone;
     moveDistance(distRemain);
 }
 //--------------------------------------------------------------------------------------------------
+public void checkEncoder(double power)
+{
+    double leftPower;
+    double rightPower;
 
+    while(opModeIsActive() && (!(isStopRequested())))
+    {
+        while(inView == false)
+        {
+            checkSight();
+            angleBoi();
+            drive = -.3;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
 
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        getBlock();
+    }
+    stop();
+}
+//--------------------------------------------------------------------------------------------------
 
 
 
