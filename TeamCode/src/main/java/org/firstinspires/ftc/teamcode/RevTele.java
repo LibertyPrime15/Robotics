@@ -36,21 +36,6 @@ public class RevTele extends LinearOpMode
 
     float currHeading = 0;
     boolean Position = true;
-
-    private VuforiaLocalizer vuforiaLocalizer;
-    private VuforiaLocalizer.Parameters parameters;
-    private VuforiaTrackables visionTargets;
-    private VuforiaTrackable target;
-    private VuforiaTrackableDefaultListener listener;
-
-    private OpenGLMatrix lastKnownLocation;
-    private OpenGLMatrix phoneLocation;
-
-    private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
-
-    private float robotX = 0;
-    private float robotY = 0;
-    private float robotAngle = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
