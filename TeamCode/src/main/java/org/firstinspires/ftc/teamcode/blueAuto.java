@@ -32,13 +32,15 @@ public class blueAuto extends LinearOpMode
     double Circ = 11.97;
     double Steps = 1160;
 
+    //Inches -> Steps  = #Inches * (1120/11.97)
+    //Steps  -> Inches = #Steps  * (11.97/1120)
+
     double drive = 0;
     double turn  = 0;
 
-    double distAdded  = 0;
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = 144;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+    double totField   = -6000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
     boolean isExtended = false;
     boolean isVertical = false;
@@ -61,7 +63,7 @@ public class blueAuto extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---These are all of my Called Methods---//
+//---These are all of my Called Methods---//gyro.getHeading()
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
@@ -137,7 +139,7 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-public double moveDistance(double length)
+public void moveDistance(double length, double power)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -148,8 +150,10 @@ public double moveDistance(double length)
     {
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
         {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
             angleBoi();
-            drive = -.3;
+            drive = -power;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
@@ -160,7 +164,6 @@ public double moveDistance(double length)
             robot.back_left.setPower(leftPower);
         }
         robot.Halt();
-        distAdded = distAdded + robot.front_right.getCurrentPosition();
         robot.resetEncoder();
     }
 
@@ -169,7 +172,7 @@ public double moveDistance(double length)
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
             angleBoi();
-            drive = .3;
+            drive = power;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
@@ -180,7 +183,6 @@ public double moveDistance(double length)
             robot.back_left.setPower(leftPower);
         }
         robot.Halt();
-        distAdded = distAdded + robot.front_right.getCurrentPosition();
         robot.resetEncoder();
     }
     else
@@ -188,18 +190,16 @@ public double moveDistance(double length)
         robot.Halt();
         robot.resetEncoder();
     }
-    distGone = distGone + distAdded;
-    return distGone;
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp()
 {
-    double totDistInSteps = 655;
-
+    double totDistInSteps = 3275;
+//3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
         telemetry.update();
-        robot.arm.setPower(.5);
+        robot.arm.setPower(.7);
     }
     isExtended = true;
     robot.arm.setPower(0);
@@ -208,12 +208,12 @@ public void armUp()
 //--------------------------------------------
 public void armDown()
 {
-    double totDistInSteps = -655;
+    double totDistInSteps = -3275;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
         telemetry.update();
-        robot.arm.setPower(-.5);
+        robot.arm.setPower(-.7);
     }
     isExtended = false;
     robot.arm.setPower(0);
@@ -259,7 +259,7 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnRight(.5);
+            robot.turnLeft(.4);
         }
         imuInit();
     }
@@ -273,68 +273,44 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnLeft(.5);
+            robot.turnRight(.4);
         }
         imuInit();
     }
+    currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
 public boolean checkSight()
 {
-    while(listener.isVisible() && (!(isStopRequested())))
+    if(listener.isVisible())
     {
         inView = true;
+    }
+    else
+    {
+        inView = false;
     }
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//THIS IS FOR TESTING CODE//
-//--------------------------------------------------------------------------------------------------
-private void getBlock()
-{
-    robot.Halt();
-    turnAngle(90);
-    moveDistance(5);
-    liftUp();
-    robot.openClaw();
-    moveDistance(3);
-    armUp();
-    robot.openClaw();
-    armDown();
-    robot.closeClaw();
-    liftDown();
-    moveDistance(-8);
-    turnAngle(-90);
-    checkDistance();
-    robot.Halt();
-}
-//--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-    distRemain = totField - distGone;
-    moveDistance(distRemain);
+    distRemain =((totField + distGone) * (11.97/1120)) * (-1);
+    moveDistance(distRemain, 1);
 }
 //--------------------------------------------------------------------------------------------------
-public void checkEncoder(double power)
+public double checkEncoder()
 {
     double leftPower;
     double rightPower;
 
-    while(opModeIsActive() && (!(isStopRequested())))
+    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
     {
-        while(inView == false)
+        while(inView == false && (!(isStopRequested())))
         {
             checkSight();
             angleBoi();
-            drive = -.3;
+            drive = -.1;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
@@ -344,16 +320,68 @@ public void checkEncoder(double power)
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
         }
-        getBlock();
+        robot.Halt();
     }
+    distGone = robot.front_right.getCurrentPosition();
+    robot.resetEncoder();
+    return distGone;
+}
+//--------------------------------------------------------------------------------------------------
+//THIS IS FOR TESTING CODE//
+//--------------------------------------------------------------------------------------------------
+private void getBlock()//Needs to go 6000 steps remaining distance
+{
+    robot.Halt();
+    turnAngle(79);
+    robot.openClaw();
+    moveDistance(6, .3);
+    liftUp();
+    moveDistance(8,.3);
+    robot.closeClaw();
+    liftDown();
+    moveDistance(-11,.3);
+    turnAngle(85);
+    checkDistance();//----------
+    turnAngle(-80);
+    liftUp();
+    armUp();
+    moveDistance(16,.3);
+    robot.openClaw();
+    armDown();
+    moveDistance(-23.5,.3);
+    //turnAngle(80);//This is for moving the angle of the buildPlate
+    moonMove();
+    armUp();
+    moveDistance(-10,.3);
+    turnAngle(10);
+    armDown();
+    liftDown();
+    robot.closeClaw();
+    moveDistance(-25,.3);
     stop();
 }
 //--------------------------------------------------------------------------------------------------
+private void moonMove()
+{
+    double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
 
+    double leftPower = -.6;
+    double rightPower = -.3;
 
-
-
-
+    if(opModeIsActive() && (!(isStopRequested())))
+    {
+        while(totDistInSteps > robot.front_left.getCurrentPosition() && (!(isStopRequested())))
+        {
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+    }
+    robot.resetEncoder();
+}
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -432,8 +460,9 @@ public void checkEncoder(double power)
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            checkEncoder(.4);
 //            vufoCrap();
+            checkEncoder();
+            getBlock();
 //----------------------------------
         }
     }

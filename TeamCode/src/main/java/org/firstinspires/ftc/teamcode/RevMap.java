@@ -53,9 +53,6 @@ public class RevMap
         lift.setPower(0);
         arm.setPower(0);
 
-        claw1.setPosition(0);
-        claw2.setPosition(0);
-
         front_right.setDirection(DcMotor.Direction.REVERSE);
         front_left.setDirection(DcMotor.Direction.FORWARD);
         back_right.setDirection(DcMotor.Direction.REVERSE);
@@ -154,14 +151,14 @@ public class RevMap
 //----------------------------------------//
     public void openClaw()
     {
-        claw1.setPosition(.5);
-        claw2.setPosition(.5);
+        claw1.setPosition(0);
+        claw2.setPosition(0);
     }
 //----------------------------------------//
     public void closeClaw()
     {
-        claw1.setPosition(0);
-        claw2.setPosition(0);
+        claw1.setPosition(.5);
+        claw2.setPosition(.5);
     }
 //----------------------------------------//
     public void moveLeft(double power)

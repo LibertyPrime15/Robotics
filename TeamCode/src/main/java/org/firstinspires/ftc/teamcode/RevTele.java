@@ -219,8 +219,6 @@ private void drive()
 
 
 
-
-
 //--------------------------------------------------------------------------------------------------
 //------------------------------------------------------//
 //------------------------------------------------------//
@@ -256,15 +254,13 @@ private void drive()
             //This moves the arm up
             if(gamepad1.left_trigger !=0)
             {
-                telemetry.addData("Here's a thing(",robot.arm.getCurrentPosition());
-                telemetry.update();
-                robot.arm.setPower(-.3);
+                robot.arm.setPower(-.5);
             }
 
             //This moves the arm down
             else if(gamepad1.right_trigger !=0)
             {
-                robot.arm.setPower(.3);
+                robot.arm.setPower(.5);
             }
 
             //Otherwise, the arm won't move
@@ -273,8 +269,6 @@ private void drive()
                 robot.arm.setPower(0);
             }
 //--------------------------------------------------------------------
-// Ask the listener for the latest information on where the robot is
-            idle();
         }
     }
 }
