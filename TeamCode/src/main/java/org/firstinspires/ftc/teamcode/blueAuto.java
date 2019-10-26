@@ -454,11 +454,11 @@ private void moonMove()
         setupVuforia();
         lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 
-        waitForStart();
-        visionTargets.activate();
 
         telemetry.addData("Status","Initialized");
         telemetry.update();
+        waitForStart();
+        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
