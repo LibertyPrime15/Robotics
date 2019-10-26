@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import static android.os.SystemClock.sleep;
 
 //@Disabled
 public class RevMap
@@ -15,9 +12,6 @@ public class RevMap
     public DcMotor  front_left    = null;
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
-
-//    public DcMotor  odYZ          = null;
-//    public DcMotor  odYX          = null;
 
     public DcMotor  lift          = null;
     public DcMotor  arm           = null;

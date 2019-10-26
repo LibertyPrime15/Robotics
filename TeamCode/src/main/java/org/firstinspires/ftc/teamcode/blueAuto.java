@@ -456,11 +456,14 @@ private void moonMove()
 
         waitForStart();
         visionTargets.activate();
+
+        telemetry.addData("Status","Initialized");
+        telemetry.update();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-//            vufoCrap();
+            vufoCrap();
             checkEncoder();
             getBlock();
 //----------------------------------
