@@ -330,33 +330,18 @@ public double checkEncoder()
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
-    robot.Halt();
-    turnAngle(79);
-    robot.openClaw();
-    moveDistance(6, .3);
-    liftUp();
-    moveDistance(8,.3);
-    robot.closeClaw();
-    liftDown();
-    moveDistance(-11,.3);
-    turnAngle(85);
-    checkDistance();//----------
-    turnAngle(-80);
+    turnAngle(-45);
+    moveDistance(25,.5);
     liftUp();
     armUp();
-    moveDistance(16,.3);
-    robot.openClaw();
+    moveDistance(5,.5);
     armDown();
-    moveDistance(-23.5,.3);
-    //turnAngle(80);//This is for moving the angle of the buildPlate
     moonMove();
     armUp();
-    moveDistance(-10,.3);
-    turnAngle(10);
+    moveDistance(-5,.5);
     armDown();
     liftDown();
-    robot.closeClaw();
-    moveDistance(-25,.3);
+    robot.Halt();
     stop();
 }
 //--------------------------------------------------------------------------------------------------
@@ -450,19 +435,13 @@ private void moonMove()
     public void runOpMode()
     {
         imuInit();
-        setupVuforia();
-        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
-
-
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
-        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            vufoCrap();
             checkEncoder();
             getBlock();
 //----------------------------------

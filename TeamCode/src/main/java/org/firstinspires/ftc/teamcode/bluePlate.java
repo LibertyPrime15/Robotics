@@ -302,42 +302,28 @@ public void checkDistance()
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
-//    robot.Halt();
-//    turnAngle(79);
-//    robot.openClaw();
-//    moveDistance(6, .3);
-//    liftUp();
-//    moveDistance(8,.3);
-//    robot.closeClaw();
-//    liftDown();
-//    moveDistance(-11,.3);
-//    turnAngle(85);
-//    checkDistance();//----------
-//    turnAngle(-80);
-//    liftUp();
-//    armUp();
-//    moveDistance(16,.3);
-//    robot.openClaw();
-//    armDown();
-//    moveDistance(-23.5,.3);
-//    //turnAngle(80);//This is for moving the angle of the buildPlate
-//    moonMove();
-//    armUp();
-//    moveDistance(-10,.3);
-//    turnAngle(10);
-//    armDown();
-//    liftDown();
-//    robot.closeClaw();
-//    moveDistance(-25,.3);
-//    stop();
+    turnAngle(45);
+    moveDistance(25,.5);
+    liftUp();
+    armUp();
+    moveDistance(5,.5);
+    armDown();
+    moonMove();
+    armUp();
+    moveDistance(-25,.5);
+    armDown();
+    liftDown();
+    moveDistance(-5,.5);
+    robot.Halt();
+    stop();
 }
 //--------------------------------------------------------------------------------------------------
 private void moonMove()
 {
     double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
 
-    double leftPower = -.6;
-    double rightPower = -.3;
+    double leftPower = -.3;
+    double rightPower = -.6;
 
     if(opModeIsActive() && (!(isStopRequested())))
     {

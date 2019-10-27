@@ -310,7 +310,7 @@ public double checkEncoder()
         {
             checkSight();
             angleBoi();
-            drive = -.1;
+            drive = .1;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
@@ -332,7 +332,7 @@ public double checkEncoder()
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     robot.Halt();
-    turnAngle(79);
+    turnAngle(-79);
     robot.openClaw();
     moveDistance(6, .3);
     liftUp();
@@ -340,9 +340,9 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     robot.closeClaw();
     liftDown();
     moveDistance(-11,.3);
-    turnAngle(85);
+    turnAngle(-85);
     checkDistance();//----------
-    turnAngle(-80);
+    turnAngle(80);
     liftUp();
     armUp();
     moveDistance(16,.3);
@@ -353,7 +353,7 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     moonMove();
     armUp();
     moveDistance(-10,.3);
-    turnAngle(10);
+    turnAngle(-10);
     armDown();
     liftDown();
     robot.closeClaw();
@@ -365,8 +365,8 @@ private void moonMove()
 {
     double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
 
-    double leftPower = -.6;
-    double rightPower = -.3;
+    double leftPower = -.3;
+    double rightPower = -.6;
 
     if(opModeIsActive() && (!(isStopRequested())))
     {
