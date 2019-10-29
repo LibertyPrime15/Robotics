@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -19,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Plate", group = "Blue")
+@Autonomous(name="Blue Master", group = "Blue")
 //@Disabled
-public class bluePlate extends LinearOpMode
+public class blueMaster extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;
@@ -191,9 +192,9 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
-public void armUp()
+public void armUp(double length)
 {
-    double totDistInSteps = 3275;
+    double totDistInSteps = 1120 * length;
 //3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -205,9 +206,9 @@ public void armUp()
     robot.resetArm();
 }
 //--------------------------------------------
-public void armDown()
+public void armDown(double length)
 {
-    double totDistInSteps = -3275;
+    double totDistInSteps = -1120 * length;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -298,37 +299,24 @@ public void checkDistance()
     moveDistance(distRemain, 1);
 }
 //--------------------------------------------------------------------------------------------------
-//THIS IS FOR TESTING CODE//
-//--------------------------------------------------------------------------------------------------
-private void getBlock()//Needs to go 6000 steps remaining distance
+public double checkEncoder()
 {
-    turnAngle(45);
-    moveDistance(25,.5);
-    liftUp();
-    armUp();
-    moveDistance(5,.5);
-    armDown();
-    moonMove();
-    armUp();
-    moveDistance(-25,.5);
-    armDown();
-    liftDown();
-    moveDistance(-5,.5);
-    robot.Halt();
-    stop();
-}
-//--------------------------------------------------------------------------------------------------
-private void moonMove()
-{
-    double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
+    double leftPower;
+    double rightPower;
 
-    double leftPower = -.3;
-    double rightPower = -.6;
-
-    if(opModeIsActive() && (!(isStopRequested())))
+    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
     {
-        while(totDistInSteps > robot.front_left.getCurrentPosition() && (!(isStopRequested())))
+        moveDistance(24,.8);
+        turnAngle(-90);
+        while(inView == false && (!(isStopRequested())))
         {
+            checkSight();
+            angleBoi();
+            drive = -.1;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
             robot.front_right.setPower(rightPower);
             robot.front_left.setPower(leftPower);
             robot.back_right.setPower(rightPower);
@@ -336,10 +324,54 @@ private void moonMove()
         }
         robot.Halt();
     }
+    distGone = robot.front_right.getCurrentPosition();
     robot.resetEncoder();
+    return distGone;
 }
 //--------------------------------------------------------------------------------------------------
-
+//THIS IS FOR TESTING CODE//
+//--------------------------------------------------------------------------------------------------
+private void getBlock()//Needs to go 6000 steps remaining distance
+{
+    robot.Halt();
+    turnAngle(79);
+    robot.openClaw();
+    moveDistance(6, .3);
+    liftUp();
+    moveDistance(8,.3);
+    robot.closeClaw();
+    sleep(300);
+    liftDown();
+    moveDistance(-11,.3);
+    turnAngle(85);
+    checkDistance();//----------
+    turnAngle(-80);
+    liftUp();
+    armUp(3);
+    moveDistance(16,.3);
+    robot.openClaw();
+    armDown(3);
+    moveDistance(-35,.5);
+    armUp(1);
+    moveDistance(-3,.5);
+    turnAngle(90);
+    armDown(1);
+    liftDown();
+    robot.closeClaw();
+//    moveDistance(-10,.3);
+//    turnAngle(15);
+    moveDistance(-40,.5);
+    robot.Halt();
+    stop();
+}
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//----------------------------------------//
+//----------------------------------------//
+//---No More Methods Are Made Past This---//
+//----------------------------------------//
+//----------------------------------------//
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -408,13 +440,20 @@ private void moonMove()
     public void runOpMode()
     {
         imuInit();
+        setupVuforia();
+        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
+
+
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
+        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
+            vufoCrap();
+            checkEncoder();
             getBlock();
 //----------------------------------
         }

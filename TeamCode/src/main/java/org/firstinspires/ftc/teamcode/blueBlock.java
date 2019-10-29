@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Block Side", group = "Main")
+@Autonomous(name="Blue Block", group = "Blue")
 //@Disabled
 public class blueBlock extends LinearOpMode
 {
@@ -192,9 +191,9 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
-public void armUp()
+public void armUp(double length)
 {
-    double totDistInSteps = 3275;
+    double totDistInSteps = 1120 * length;
 //3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -206,9 +205,9 @@ public void armUp()
     robot.resetArm();
 }
 //--------------------------------------------
-public void armDown()
+public void armDown(double length)
 {
-    double totDistInSteps = -3275;
+    double totDistInSteps = -1120 * length;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -306,11 +305,13 @@ public double checkEncoder()
 
     if(opModeIsActive() && (!(isStopRequested())) && inView == false)
     {
+        moveDistance(24,.8);
+        turnAngle(-90);
         while(inView == false && (!(isStopRequested())))
         {
             checkSight();
             angleBoi();
-            drive = .1;
+            drive = -.1;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
@@ -332,55 +333,25 @@ public double checkEncoder()
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     robot.Halt();
-    turnAngle(-79);
+    turnAngle(79);
     robot.openClaw();
     moveDistance(6, .3);
     liftUp();
     moveDistance(8,.3);
     robot.closeClaw();
+    sleep(300);
     liftDown();
     moveDistance(-11,.3);
-    turnAngle(-85);
+    turnAngle(85);
     checkDistance();//----------
-    turnAngle(80);
     liftUp();
-    armUp();
-    moveDistance(16,.3);
+    armUp(1);
     robot.openClaw();
-    armDown();
-    moveDistance(-23.5,.3);
-    //turnAngle(80);//This is for moving the angle of the buildPlate
-    moonMove();
-    armUp();
-    moveDistance(-10,.3);
-    turnAngle(-10);
-    armDown();
-    liftDown();
-    robot.closeClaw();
-    moveDistance(-25,.3);
+    moveDistance(-40,.5);
+    robot.Halt();
     stop();
 }
 //--------------------------------------------------------------------------------------------------
-private void moonMove()
-{
-    double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
-
-    double leftPower = -.3;
-    double rightPower = -.6;
-
-    if(opModeIsActive() && (!(isStopRequested())))
-    {
-        while(totDistInSteps > robot.front_left.getCurrentPosition() && (!(isStopRequested())))
-        {
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
-        robot.Halt();
-    }
-    robot.resetEncoder();
-}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//

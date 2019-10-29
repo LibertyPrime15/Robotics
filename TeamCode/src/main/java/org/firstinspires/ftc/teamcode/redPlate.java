@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Red Plate Side", group = "Main")
+@Autonomous(name="Red Plate", group = "Red")
 //@Disabled
 public class redPlate extends LinearOpMode
 {

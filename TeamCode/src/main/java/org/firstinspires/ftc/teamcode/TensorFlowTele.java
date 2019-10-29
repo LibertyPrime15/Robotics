@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="Tensor Flow", group = "Main")
+@TeleOp(name="Tensor Flow", group = "Concept")
 //@Disabled
 public class TensorFlowTele extends LinearOpMode
 {
