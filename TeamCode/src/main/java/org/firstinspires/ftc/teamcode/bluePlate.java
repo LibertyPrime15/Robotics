@@ -302,18 +302,19 @@ public void checkDistance()
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
-    turnAngle(45);
+    turnAngle(90);
     moveDistance(25,.5);
+    turnAngle(-90);
     liftUp();
     armUp();
-    moveDistance(5,.5);
+    moveDistance(40,.5);
     armDown();
-    moonMove();
+    moveDistance(-35,.5);
     armUp();
-    moveDistance(-25,.5);
+    turnAngle(-90);
     armDown();
     liftDown();
-    moveDistance(-5,.5);
+    moveDistance(30,.5);
     robot.Halt();
     stop();
 }

@@ -346,7 +346,6 @@ public class redBlock extends LinearOpMode
         robot.closeClaw();
         sleep(300);
         armDown(-.4);
-        armDown(.1);
         liftDown();
         moveDistance(-11,.3);
         turnAngle(-86);
