@@ -8,4 +8,4 @@ My Name is LibertyPrime
 We are the FTC Team the Knights of the Round Cable
 I'm happy to help anybody who has any questions about any of this stuff:)
 
-If you want to go straight to my code - teamcode/src--
+If you want to go straight to my code - Robotics/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/
