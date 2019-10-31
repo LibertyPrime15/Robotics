@@ -19,9 +19,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Block", group = "Blue")
+@Autonomous(name="Blue TESTER", group = "Concept")
 //@Disabled
-public class blueBlock extends LinearOpMode
+public class blueTESTER extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;
@@ -40,6 +40,9 @@ public class blueBlock extends LinearOpMode
     double distGone   = 0;
     double distRemain = 0;
     double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+
+    double blockLength = 935.67;//My fake length of a single 10 inch block
+    double distMultipler = 0;
 
     boolean isExtended = false;
     boolean isVertical = false;
@@ -289,43 +292,6 @@ public boolean checkSight()
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
-public void checkDistance()
-{
-    moveDistance(distRemain, 1);
-}
-//--------------------------------------------------------------------------------------------------
-public double checkEncoder()
-{
-    double leftPower;
-    double rightPower;
-
-    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
-    {
-        moveDistance(15,.7);
-        turnAngle(-83);
-        moveDistance(5,.8);
-        while(inView == false && (!(isStopRequested())))
-        {
-            checkSight();
-            angleBoi();
-            drive = -.1;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
-        robot.Halt();
-    }
-    distGone = robot.front_right.getCurrentPosition();
-    distRemain =((totField + distGone) * (11.97/1120)) * (-1);
-    robot.resetEncoder();
-    return distRemain;
-}
-//--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
@@ -343,10 +309,11 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     liftDown();
     moveDistance(-11,.3);
     turnAngle(90);
-    moveDistance(distRemain, 1);//I'm trying something different
+    checkDistance();
+//    moveDistance(distRemain, 1);//I'm trying something different
 //    checkDistance();////////////////////////////////
-    telemetry.addData("Current Steps", robot.front_right.getCurrentPosition());
-    telemetry.update();
+//    telemetry.addData("Current Steps", robot.front_right.getCurrentPosition());
+//    telemetry.update();
     armUp(2);
     liftUp();
     robot.openClaw();
@@ -357,6 +324,36 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------
+public double checkEncoder()
+{
+    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
+    {
+        moveDistance(15,.7);
+        turnAngle(-83);
+        moveDistance(5,.8);
+        for(char timesChecked = 0; timesChecked < 6; timesChecked++)
+        {
+            checkSight();
+            if(inView == false)
+            {
+                moveDistance(5,1);
+                distMultipler = distMultipler + 1;
+            }
+            else if(inView == true)
+            {
+                break;
+            }
+        }
+    }
+    return distMultipler;
+}
+//--------------------------------------------------------------------------------------------------
+public void checkDistance()
+{
+    distGone = blockLength * distMultipler;
+    distRemain = totField + distGone;
+    moveDistance(distRemain,1);
+}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
