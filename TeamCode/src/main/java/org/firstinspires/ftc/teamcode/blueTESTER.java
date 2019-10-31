@@ -41,7 +41,7 @@ public class blueTESTER extends LinearOpMode
     double distRemain = 0;
     double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
-    double blockLength = 935.67;//My fake length of a single 10 inch block
+    double blockLength = 748.53;//My fake length of a single 8 inch block
     double distMultipler = 0;
 
     boolean isExtended = false;
@@ -167,12 +167,15 @@ public void moveDistance(double length, double power)
         }
         robot.Halt();
         robot.resetEncoder();
+        sleep(100);
     }
 
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -186,9 +189,8 @@ public void moveDistance(double length, double power)
         }
         robot.Halt();
         robot.resetEncoder();
+        sleep(100);
     }
-    robot.Halt();
-    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp(double length)
@@ -309,46 +311,52 @@ private void getBlock()
     liftDown();
     moveDistance(-11,.3);
     turnAngle(90);
-    checkDistance();///////////////////////////////////////////////////////////////
+//    checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();
     robot.openClaw();
     liftDown();
-    moveDistance(-28,1);//It isn't moving the proper distance
+    moveDistance(-40,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------
-public double checkEncoder()
+public void checkEncoder()
 {
     if(opModeIsActive() && (!(isStopRequested())) && inView == false)
     {
         moveDistance(15,.7);
         turnAngle(-83);
         moveDistance(5,.8);
-        for(char timesChecked = 0; timesChecked < 6; timesChecked++)
+        for(char timesChecked = 0; timesChecked < 10; timesChecked++)
         {
             checkSight();
-            sleep(500);
             if(inView == false)
             {
-                moveDistance(5,.7);
-                distMultipler = distMultipler + 1;
+                telemetry.update();
+                turnAngle(0);
+                moveDistance(4,.7);
+                turnAngle(0);
+//                distMultipler = distMultipler + 1;
             }
-            else if(inView == true)
+            telemetry.addData("Thing", inView);
+            telemetry.addData("Where am I", robot.front_right.getCurrentPosition());
+            telemetry.update();
+
+            if(inView == true)
             {
                 break;
             }
         }
     }
-    return distMultipler;
+//    return distMultipler;
 }
 //--------------------------------------------------------------------------------------------------
-public void checkDistance()
-{
-    distGone = blockLength * distMultipler;
-    distRemain = totField + distGone;
-    moveDistance(distRemain,1);
-}
+//public void checkDistance()
+//{
+//    distGone = blockLength * distMultipler;
+//    distRemain = (totField + distGone) * (-1);
+//    moveDistance(distRemain,1);
+//}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
