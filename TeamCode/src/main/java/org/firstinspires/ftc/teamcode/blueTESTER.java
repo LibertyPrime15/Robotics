@@ -294,7 +294,7 @@ public boolean checkSight()
 //--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
-private void getBlock()//Needs to go 6000 steps remaining distance
+private void getBlock()
 {
     robot.Halt();
     turnAngle(81);
@@ -309,17 +309,11 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     liftDown();
     moveDistance(-11,.3);
     turnAngle(90);
-    checkDistance();
-//    moveDistance(distRemain, 1);//I'm trying something different
-//    checkDistance();////////////////////////////////
-//    telemetry.addData("Current Steps", robot.front_right.getCurrentPosition());
-//    telemetry.update();
+    checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();
     robot.openClaw();
     liftDown();
-//    robot.Halt();
-//    robot.resetEncoder();
     moveDistance(-28,1);//It isn't moving the proper distance
     stop();
 }
@@ -334,9 +328,10 @@ public double checkEncoder()
         for(char timesChecked = 0; timesChecked < 6; timesChecked++)
         {
             checkSight();
+            sleep(500);
             if(inView == false)
             {
-                moveDistance(5,1);
+                moveDistance(5,.7);
                 distMultipler = distMultipler + 1;
             }
             else if(inView == true)
