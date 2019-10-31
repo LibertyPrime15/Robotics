@@ -1,6 +1,4 @@
 # Robotics
-This is where all of My Robotics Code Goes
-
 What Up Everybody
 My Name is LibertyPrime
 
