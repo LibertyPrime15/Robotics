@@ -39,7 +39,7 @@ public class blueBlock extends LinearOpMode
 
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = -6000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+    double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
     boolean isExtended = false;
     boolean isVertical = false;
@@ -184,11 +184,8 @@ public void moveDistance(double length, double power)
         robot.Halt();
         robot.resetEncoder();
     }
-    else
-    {
-        robot.Halt();
-        robot.resetEncoder();
-    }
+    robot.Halt();
+    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp(double length)
@@ -305,8 +302,9 @@ public double checkEncoder()
 
     if(opModeIsActive() && (!(isStopRequested())) && inView == false)
     {
-        moveDistance(24,.8);
-        turnAngle(-90);
+        moveDistance(15,.7);
+        turnAngle(-83);
+        moveDistance(5,.8);
         while(inView == false && (!(isStopRequested())))
         {
             checkSight();
@@ -322,8 +320,8 @@ public double checkEncoder()
             robot.back_left.setPower(leftPower);
         }
         robot.Halt();
+        distGone = robot.front_right.getCurrentPosition();
     }
-    distGone = robot.front_right.getCurrentPosition();
     robot.resetEncoder();
     return distGone;
 }
@@ -333,22 +331,26 @@ public double checkEncoder()
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     robot.Halt();
-    turnAngle(79);
+    turnAngle(81);
     robot.openClaw();
     moveDistance(6, .3);
     liftUp();
+    armUp(.5);
     moveDistance(8,.3);
+    armDown(.5);
     robot.closeClaw();
     sleep(300);
     liftDown();
     moveDistance(-11,.3);
-    turnAngle(85);
-    checkDistance();//----------
+    turnAngle(90);
+    checkDistance();////////////////////////////////
+    armUp(2);
     liftUp();
-    armUp(1);
     robot.openClaw();
-    moveDistance(-40,.5);
-    robot.Halt();
+    liftDown();
+//    robot.Halt();
+//    robot.resetEncoder();
+    moveDistance(-28,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------

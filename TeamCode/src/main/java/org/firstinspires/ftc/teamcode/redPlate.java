@@ -81,53 +81,6 @@ private void imuInit()
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-private void setupVuforia()
-{
-    parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-    parameters.vuforiaLicenseKey = VUFORIA_KEY;
-    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-    parameters.useExtendedTracking = false;
-    vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
-
-    visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
-    Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-
-    target = visionTargets.get(0);
-    target.setName("Wheels Target");
-    target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-    phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
-
-    listener = (VuforiaTrackableDefaultListener) target.getListener();
-    listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-}
-private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-{
-    return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-}
-private String formatMatrix(OpenGLMatrix matrix)
-{
-    return matrix.formatAsTransform();
-}
-public boolean vufoCrap()
-{
-    OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
-
-    if(latestLocation != null)
-    {
-        lastKnownLocation = latestLocation;
-    }
-    float[] coordinates = lastKnownLocation.getTranslation().getData();
-
-    robotX = coordinates[0];
-    robotY = coordinates[1];
-    robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-    telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-    telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-    telemetry.update();
-    return listener.isVisible();
-}
-//--------------------------------------------------------------------------------------------------
 private double angleBoi()
 {
     telemetry.addLine().addData("Heading",currHeading);
@@ -193,7 +146,7 @@ public void moveDistance(double length, double power)
 //--------------------------------------------------------------------------------------------------
 public void armUp()
 {
-    double totDistInSteps = 3275;
+    double totDistInSteps = 2500;
 //3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -207,7 +160,7 @@ public void armUp()
 //--------------------------------------------
 public void armDown()
 {
-    double totDistInSteps = -3275;
+    double totDistInSteps = -2500;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -279,93 +232,22 @@ private void turnAngle(double angle)
     currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
-public boolean checkSight()
-{
-    if(listener.isVisible())
-    {
-        inView = true;
-    }
-    else
-    {
-        inView = false;
-    }
-    return inView;
-}
-//--------------------------------------------------------------------------------------------------
-public void checkDistance()
-{
-    distRemain =((totField + distGone) * (11.97/1120)) * (-1);
-    moveDistance(distRemain, 1);
-}
-//--------------------------------------------------------------------------------------------------
-public double checkEncoder()
-{
-    double leftPower;
-    double rightPower;
-
-    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
-    {
-        while(inView == false && (!(isStopRequested())))
-        {
-            checkSight();
-            angleBoi();
-            drive = -.1;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
-        robot.Halt();
-    }
-    distGone = robot.front_right.getCurrentPosition();
-    robot.resetEncoder();
-    return distGone;
-}
-//--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
-    turnAngle(-90);
-    moveDistance(25,.5);
-    turnAngle(90);
+    turnAngle(-80);
+    moveDistance(28,1);
+    turnAngle(82);
     liftUp();
     armUp();
-    moveDistance(40,.5);
+    moveDistance(27,.6);
     armDown();
-    moveDistance(-35,.5);
-    armUp();
-    turnAngle(90);
-    armDown();
-    liftDown();
-    moveDistance(40,.5);
+    moveDistance(-23,.6);
+    turnAngle(-75);
+    moveDistance(-27,1);
     robot.Halt();
     stop();
-}
-//--------------------------------------------------------------------------------------------------
-private void moonMove()
-{
-    double totDistInSteps = 748.56;//93.57 steps/inch * 15 = 1403
-
-    double leftPower = -.6;
-    double rightPower = -.3;
-
-    if(opModeIsActive() && (!(isStopRequested())))
-    {
-        while(totDistInSteps > robot.front_left.getCurrentPosition() && (!(isStopRequested())))
-        {
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
-        robot.Halt();
-    }
-    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -444,7 +326,6 @@ private void moonMove()
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            checkEncoder();
             getBlock();
 //----------------------------------
         }
