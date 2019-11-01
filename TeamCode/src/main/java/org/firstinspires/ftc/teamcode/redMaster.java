@@ -42,6 +42,9 @@ public class redMaster extends LinearOpMode
     double distRemain = 0;
     double totField   = -6000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
+    double blockLength   = 748.53;
+    double distMultipler = 0;
+
     boolean isExtended = false;
     boolean isVertical = false;
     boolean inView = false;
@@ -67,271 +70,266 @@ public class redMaster extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    private void imuInit()
-    {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+private void imuInit()
+{
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+    parameters.loggingEnabled = true;
+    parameters.loggingTag = "IMU";
+    parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        robot.init(hardwareMap);
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+    robot.init(hardwareMap);
+    imu = hardwareMap.get(BNO055IMU.class, "imu");
+    imu.initialize(parameters);
+}
+//--------------------------------------------------------------------------------------------------
+private void setupVuforia()
+{
+    parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+    parameters.vuforiaLicenseKey = VUFORIA_KEY;
+    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+    parameters.useExtendedTracking = false;
+    vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
+
+    visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
+    Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
+
+    target = visionTargets.get(0);
+    target.setName("Wheels Target");
+    target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+    phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
+
+    listener = (VuforiaTrackableDefaultListener) target.getListener();
+    listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+}
+private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
+{
+    return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
+}
+private String formatMatrix(OpenGLMatrix matrix)
+{
+    return matrix.formatAsTransform();
+}
+public boolean vufoCrap()
+{
+    OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+
+    if(latestLocation != null)
+    {
+        lastKnownLocation = latestLocation;
     }
-    //--------------------------------------------------------------------------------------------------
-    private void setupVuforia()
-    {
-        parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        parameters.useExtendedTracking = false;
-        vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
+    float[] coordinates = lastKnownLocation.getTranslation().getData();
 
-        visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
+    robotX = coordinates[0];
+    robotY = coordinates[1];
+    robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
-        target = visionTargets.get(0);
-        target.setName("Wheels Target");
-        target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-        phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
+    telemetry.addData("Tracking " + target.getName(), listener.isVisible());
+    telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+    telemetry.update();
+    return listener.isVisible();
+}
+//--------------------------------------------------------------------------------------------------
+private double angleBoi()
+{
+    telemetry.addLine().addData("Heading",currHeading);
+    telemetry.update();
+    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
+    this.imu.getPosition();
+    currHeading = angles.firstAngle;
+    return currHeading;
+}
+//--------------------------------------------------------------------------------------------------
+public void moveDistance(double length, double power)
+{
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-        listener = (VuforiaTrackableDefaultListener) target.getListener();
-        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-    }
-    private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-    {
-        return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-    }
-    private String formatMatrix(OpenGLMatrix matrix)
-    {
-        return matrix.formatAsTransform();
-    }
-    public boolean vufoCrap()
-    {
-        OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+    double leftPower;
+    double rightPower;
 
-        if(latestLocation != null)
+    if(totDistInSteps < robot.front_right.getCurrentPosition())
+    {
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
         {
-            lastKnownLocation = latestLocation;
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            angleBoi();
+            drive = -power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
         }
-        float[] coordinates = lastKnownLocation.getTranslation().getData();
-
-        robotX = coordinates[0];
-        robotY = coordinates[1];
-        robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-        telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-        telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-        telemetry.update();
-        return listener.isVisible();
+        robot.Halt();
+        robot.resetEncoder();
     }
-    //--------------------------------------------------------------------------------------------------
-    private double angleBoi()
+
+    else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
-        telemetry.addLine().addData("Heading",currHeading);
-        telemetry.update();
-        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
-        this.imu.getPosition();
-        currHeading = angles.firstAngle;
-        return currHeading;
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        {
+            angleBoi();
+            drive = power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
     }
-    //--------------------------------------------------------------------------------------------------
-    public void moveDistance(double length, double power)
+    else
     {
-        double totDistInSteps = (((length / 11.97) * 1120) * -1);
-
-        double leftPower;
-        double rightPower;
-
-        if(totDistInSteps < robot.front_right.getCurrentPosition())
-        {
-            while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
-            {
-                telemetry.addData("distRemain",distRemain);
-                telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
-                angleBoi();
-                drive = -power;
-                turn  = .05 * currHeading;
-                leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-                rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-                robot.front_right.setPower(rightPower);
-                robot.front_left.setPower(leftPower);
-                robot.back_right.setPower(rightPower);
-                robot.back_left.setPower(leftPower);
-            }
-            robot.Halt();
-            robot.resetEncoder();
-        }
-
-        else if(totDistInSteps > robot.front_right.getCurrentPosition())
-        {
-            while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
-            {
-                angleBoi();
-                drive = power;
-                turn  = .05 * currHeading;
-                leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-                rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-                robot.front_right.setPower(rightPower);
-                robot.front_left.setPower(leftPower);
-                robot.back_right.setPower(rightPower);
-                robot.back_left.setPower(leftPower);
-            }
-            robot.Halt();
-            robot.resetEncoder();
-        }
-        else
-        {
-            robot.Halt();
-            robot.resetEncoder();
-        }
+        robot.Halt();
+        robot.resetEncoder();
     }
-    //--------------------------------------------------------------------------------------------------
-    public void armUp(double length)
-    {
-        double totDistInSteps = 1120 * length;
+}
+//--------------------------------------------------------------------------------------------------
+public void armUp(double length)
+{
+    double totDistInSteps = 1120 * length;
 //3 inches --93.567
-        while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.arm.setPower(.7);
-        }
-        isExtended = true;
-        robot.arm.setPower(0);
-        robot.resetArm();
-    }
-    //--------------------------------------------
-    public void armDown(double length)
+    while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
-        double totDistInSteps = -1120 * length;
-
-        while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.arm.setPower(-.7);
-        }
-        isExtended = false;
-        robot.arm.setPower(0);
-        robot.resetArm();
-    }
-    //--------------------------------------------------------------------------------------------------
-    private void liftUp()
-    {
-        double totDistInSteps = -787;
-
-        while(totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(-.5);
-        }
-        isVertical = true;
-        robot.lift.setPower(0);
-        robot.resetLift();
-    }
-    //--------------------------------------------
-    private void liftDown()
-    {
-        double totDistInSteps = 787;
-
-        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(.5);
-        }
-        isVertical = false;
-        robot.lift.setPower(0);
-        robot.resetLift();
-    }
-    //--------------------------------------------------------------------------------------------------
-    private void turnAngle(double angle)
-    {
-        if(angle > 0)
-        {
-            while(angle >= currHeading && (!(isStopRequested())))
-            {
-                telemetry.addLine().addData("Heading", currHeading);
-                telemetry.update();
-                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                this.imu.getPosition();
-                currHeading = angles.firstAngle;
-                robot.turnLeft(.4);
-            }
-            imuInit();
-        }
-
-        else if(angle < 0)
-        {
-            while(angle <= currHeading && (!(isStopRequested())))
-            {
-                telemetry.addLine().addData("---Heading", currHeading);
-                telemetry.update();
-                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                this.imu.getPosition();
-                currHeading = angles.firstAngle;
-                robot.turnRight(.4);
-            }
-            imuInit();
-        }
-        currHeading = 0;
-    }
-    //--------------------------------------------------------------------------------------------------
-    public boolean checkSight()
-    {
-        if(listener.isVisible())
-        {
-            inView = true;
-        }
-        else
-        {
-            inView = false;
-        }
-        return inView;
-    }
-    //--------------------------------------------------------------------------------------------------
-    public void checkDistance()
-    {
-        distRemain =((totField - (distGone - 280.7)) * (11.97/1120)) * (-1);
-        telemetry.addData("Value",robot.front_left.getCurrentPosition());
-        telemetry.addData("distRemain",distRemain);
         telemetry.update();
-        moveDistance(distRemain, 1);
+        robot.arm.setPower(.7);
     }
-    //--------------------------------------------------------------------------------------------------
-    public double checkEncoder()
-    {
-        double leftPower;
-        double rightPower;
+    isExtended = true;
+    robot.arm.setPower(0);
+    robot.resetArm();
+}
+//--------------------------------------------
+public void armDown(double length)
+{
+    double totDistInSteps = -1120 * length;
 
-        if(opModeIsActive() && (!(isStopRequested())) && inView == false)
+    while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
+    {
+        telemetry.update();
+        robot.arm.setPower(-.7);
+    }
+    isExtended = false;
+    robot.arm.setPower(0);
+    robot.resetArm();
+}
+//--------------------------------------------------------------------------------------------------
+private void liftUp()
+{
+    double totDistInSteps = -787;
+
+    while(totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+    {
+        telemetry.update();
+        robot.lift.setPower(-.5);
+    }
+    isVertical = true;
+    robot.lift.setPower(0);
+    robot.resetLift();
+}
+//--------------------------------------------
+private void liftDown()
+{
+    double totDistInSteps = 787;
+
+    while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+    {
+        telemetry.update();
+        robot.lift.setPower(.5);
+    }
+    isVertical = false;
+    robot.lift.setPower(0);
+    robot.resetLift();
+}
+//--------------------------------------------------------------------------------------------------
+private void turnAngle(double angle)
+{
+    if(angle > 0)
+    {
+        while(angle >= currHeading && (!(isStopRequested())))
         {
-//            moveDistance(24,.8);
-//            turnAngle(-90);
+            telemetry.addLine().addData("Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnLeft(.4);
+        }
+        imuInit();
+    }
+
+    else if(angle < 0)
+    {
+        while(angle <= currHeading && (!(isStopRequested())))
+        {
+            telemetry.addLine().addData("---Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnRight(.4);
+        }
+        imuInit();
+    }
+    currHeading = 0;
+}
+//--------------------------------------------------------------------------------------------------
+public boolean checkSight()
+{
+    if(listener.isVisible())
+    {
+        inView = true;
+    }
+    else
+    {
+        inView = false;
+    }
+    return inView;
+}
+//--------------------------------------------------------------------------------------------------
+public void checkDistance()
+{
+    distGone = blockLength * distMultipler;
+    distRemain = (totField + distGone) * (-1);
+    moveDistance(distRemain,1);
+}
+//--------------------------------------------------------------------------------------------------
+public void checkEncoder()
+{
+    while(opModeIsActive() && (!(isStopRequested())))
+    {
+        moveDistance(14,.7);
+        turnAngle(-80);
+        moveDistance(18,.5);
+        checkSight();
+        if(inView == false)
+        {
             while(inView == false && (!(isStopRequested())))
             {
                 checkSight();
-                angleBoi();
-                drive = .1;
-                turn  = .05 * currHeading;
-                leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-                rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-                robot.front_right.setPower(rightPower);
-                robot.front_left.setPower(leftPower);
-                robot.back_right.setPower(rightPower);
-                robot.back_left.setPower(leftPower);
+                sleep(1000);
+                if(inView == true)
+                {
+                    getBlock();
+                }
+                else if(inView == false)
+                {
+                    moveDistance(5,.5);
+                }
             }
-            robot.Halt();
         }
-        distGone = robot.front_left.getCurrentPosition();
-        robot.resetEncoder();
-        return distGone;
     }
-    //--------------------------------------------------------------------------------------------------
+}
+//--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
     private void getBlock()//Needs to go 6000 steps remaining distance
@@ -459,7 +457,6 @@ public class redMaster extends LinearOpMode
 //----------------------------------
             vufoCrap();
             checkEncoder();
-            getBlock();
 //----------------------------------
         }
     }

@@ -141,7 +141,7 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-public void moveDistance(double length, double power)
+public double moveDistance(double length, double power)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -191,6 +191,12 @@ public void moveDistance(double length, double power)
         robot.resetEncoder();
         sleep(100);
     }
+
+    if(length == 5)
+    {
+        distMultipler = distMultipler +1;
+    }
+    return distMultipler;
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp(double length)
@@ -294,12 +300,39 @@ public boolean checkSight()
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
+public void checkEncoder()
+{
+    while(opModeIsActive() && (!(isStopRequested())))
+    {
+        moveDistance(14,.7);
+        turnAngle(-80);
+        moveDistance(18,.5);
+        checkSight();
+        if(inView == false)
+        {
+            while(inView == false && (!(isStopRequested())))
+            {
+                checkSight();
+                sleep(1000);
+                if(inView == true)
+                {
+                    getBlock();
+                }
+                else if(inView == false)
+                {
+                    moveDistance(5,.5);
+                }
+            }
+        }
+    }
+}
+//--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
 private void getBlock()
 {
     robot.Halt();
-    turnAngle(81);
+    turnAngle(90);
     robot.openClaw();
     moveDistance(6, .3);
     liftUp();
@@ -310,8 +343,8 @@ private void getBlock()
     sleep(300);
     liftDown();
     moveDistance(-11,.3);
-    turnAngle(90);
-//    checkDistance();///////////////////////////////////////////////////////////////
+    turnAngle(85);///////////////////
+    checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();
     robot.openClaw();
@@ -320,43 +353,12 @@ private void getBlock()
     stop();
 }
 //--------------------------------------------------------------------------------------------------
-public void checkEncoder()
+public void checkDistance()
 {
-    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
-    {
-        moveDistance(15,.7);
-        turnAngle(-83);
-        moveDistance(5,.8);
-        for(char timesChecked = 0; timesChecked < 10; timesChecked++)
-        {
-            checkSight();
-            if(inView == false)
-            {
-                telemetry.update();
-                turnAngle(0);
-                moveDistance(4,.7);
-                turnAngle(0);
-//                distMultipler = distMultipler + 1;
-            }
-            telemetry.addData("Thing", inView);
-            telemetry.addData("Where am I", robot.front_right.getCurrentPosition());
-            telemetry.update();
-
-            if(inView == true)
-            {
-                break;
-            }
-        }
-    }
-//    return distMultipler;
+    distGone = blockLength * distMultipler;
+    distRemain = (totField + distGone);
+    moveDistance(distRemain,1);
 }
-//--------------------------------------------------------------------------------------------------
-//public void checkDistance()
-//{
-//    distGone = blockLength * distMultipler;
-//    distRemain = (totField + distGone) * (-1);
-//    moveDistance(distRemain,1);
-//}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -446,7 +448,6 @@ public void checkEncoder()
 //----------------------------------
             vufoCrap();
             checkEncoder();
-            getBlock();
 //----------------------------------
         }
     }

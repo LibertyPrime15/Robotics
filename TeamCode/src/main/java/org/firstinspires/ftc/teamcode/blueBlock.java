@@ -41,6 +41,9 @@ public class blueBlock extends LinearOpMode
     double distRemain = 0;
     double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
+    double blockLength   = 748.53;
+    double distMultipler = 0;
+
     boolean isExtended = false;
     boolean isVertical = false;
     boolean inView = false;
@@ -291,39 +294,36 @@ public boolean checkSight()
 //--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-    moveDistance(distRemain, 1);
+    distGone = blockLength * distMultipler;
+    distRemain = (totField + distGone) * (-1);
+    moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
-public double checkEncoder()
+public void checkEncoder()
 {
-    double leftPower;
-    double rightPower;
-
-    if(opModeIsActive() && (!(isStopRequested())) && inView == false)
+    while(opModeIsActive() && (!(isStopRequested())))
     {
-        moveDistance(15,.7);
-        turnAngle(-83);
-        moveDistance(5,.8);
-        while(inView == false && (!(isStopRequested())))
+        moveDistance(14,.7);
+        turnAngle(-80);
+        moveDistance(18,.5);
+        checkSight();
+        if(inView == false)
         {
-            checkSight();
-            angleBoi();
-            drive = -.1;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
-
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
+            while(inView == false && (!(isStopRequested())))
+            {
+                checkSight();
+                sleep(1000);
+                if(inView == true)
+                {
+                    getBlock();
+                }
+                else if(inView == false)
+                {
+                    moveDistance(5,.5);
+                }
+            }
         }
-        robot.Halt();
     }
-    distGone = robot.front_right.getCurrentPosition();
-    distRemain =((totField + distGone) * (11.97/1120)) * (-1);
-    robot.resetEncoder();
-    return distRemain;
 }
 //--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
