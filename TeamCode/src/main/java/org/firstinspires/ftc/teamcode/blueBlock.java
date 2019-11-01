@@ -294,7 +294,7 @@ public boolean checkSight()
 //--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-    distGone = blockLength * distMultipler;
+    distGone = 5 * distMultipler;
     distRemain = (totField + distGone) * (-1);
     moveDistance(distRemain,1);
 }

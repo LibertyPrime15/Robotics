@@ -40,13 +40,14 @@ public class blueTESTER extends LinearOpMode
     double distGone   = 0;
     double distRemain = 0;
     double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+    double testField  = -842.105;//This is 9 inches in steps - THe distance from the bot on the XZ Axis
 
-    double blockLength = 748.53;//My fake length of a single 8 inch block
-    double distMultipler = 0;
+    double blockLength   = 748.53;//My fake length of a single 8 inch block
+    double distMultipler = -6;
 
     boolean isExtended = false;
     boolean isVertical = false;
-    boolean inView = false;
+    boolean inView     = false;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -141,7 +142,7 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-public double moveDistance(double length, double power)
+public void moveDistance(double length, double power)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
@@ -150,10 +151,12 @@ public double moveDistance(double length, double power)
 
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+    addMultiplier();
+    while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
         {
             telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("distMultiplier", distMultipler);
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -167,15 +170,16 @@ public double moveDistance(double length, double power)
         }
         robot.Halt();
         robot.resetEncoder();
-        sleep(100);
     }
 
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
+        addMultiplier();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            telemetry.addData("distRemain",distRemain);
-            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----distMultiplier", distMultipler);
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -189,14 +193,7 @@ public double moveDistance(double length, double power)
         }
         robot.Halt();
         robot.resetEncoder();
-        sleep(100);
     }
-
-    if(length == 5)
-    {
-        distMultipler = distMultipler +1;
-    }
-    return distMultipler;
 }
 //--------------------------------------------------------------------------------------------------
 public void armUp(double length)
@@ -266,7 +263,7 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnLeft(.4);
+            robot.turnLeft(.6);
         }
         imuInit();
     }
@@ -280,7 +277,7 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnRight(.4);
+            robot.turnRight(.6);
         }
         imuInit();
     }
@@ -292,36 +289,35 @@ public boolean checkSight()
     if(listener.isVisible())
     {
         inView = true;
+        getBlock();
     }
     else
     {
         inView = false;
+        moveDistance(6.6,.6);
     }
     return inView;
+}
+//--------------------------------------------------------------------------------------------------
+public double addMultiplier()
+{
+    distMultipler = distMultipler + 1;
+    return distMultipler;
 }
 //--------------------------------------------------------------------------------------------------
 public void checkEncoder()
 {
     while(opModeIsActive() && (!(isStopRequested())))
     {
-        moveDistance(14,.7);
-        turnAngle(-80);
-        moveDistance(18,.5);
-        checkSight();
+        moveDistance(17.2,1);
+        turnAngle(-76);
+        moveDistance(7.5,1);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
             {
                 checkSight();
                 sleep(1000);
-                if(inView == true)
-                {
-                    getBlock();
-                }
-                else if(inView == false)
-                {
-                    moveDistance(5,.5);
-                }
             }
         }
     }
@@ -332,37 +328,38 @@ public void checkEncoder()
 private void getBlock()
 {
     robot.Halt();
-    turnAngle(90);
+    turnAngle(84);
     robot.openClaw();
-    moveDistance(6, .3);
+    moveDistance(3.5, .6);
     liftUp();
     armUp(.5);
-    moveDistance(8,.3);
+    moveDistance(4,.6);
     armDown(.5);
     robot.closeClaw();
     sleep(300);
     liftDown();
-    moveDistance(-11,.3);
-    turnAngle(85);///////////////////
+    moveDistance(-7.4,.8);
+    turnAngle(74);///////////////////
     checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();
     robot.openClaw();
-    liftDown();
-    moveDistance(-40,1);//It isn't moving the proper distance
+//    liftDown();
+//    armDown(2);
+    moveDistance(-30,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------
 public void checkDistance()
 {
-    distGone = blockLength * distMultipler;
-    distRemain = (totField + distGone);
+    distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
+    distRemain = ((testField + distGone) * (11.97/1120)) * (-1);
     moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---No More Methods Are Made Past This---//
+//---No More Methods Are Made Past This---//-2596.49
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
