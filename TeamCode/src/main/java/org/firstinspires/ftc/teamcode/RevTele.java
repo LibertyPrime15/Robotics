@@ -68,35 +68,35 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void moveLift()
-{
-    int totDistInSteps = 787;
-
-    if(gamepad1.a && Position == false)
-    {
-        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(.5);
-        }
-        Position = true;
-    }
-
-    else if(gamepad1.b && Position == true)
-    {
-        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(-.5);
-        }
-        Position = false;
-    }
-    else
-    {
-        robot.lift.setPower(0);
-        robot.resetLift();
-    }
-}
+//private void moveLift()
+//{
+//    int totDistInSteps = 787;
+//
+//    if(gamepad1.a && Position == false)
+//    {
+//        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//        {
+//            telemetry.update();
+//            robot.lift.setPower(.5);
+//        }
+//        Position = true;
+//    }
+//
+//    else if(gamepad1.b && Position == true)
+//    {
+//        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//        {
+//            telemetry.update();
+//            robot.lift.setPower(-.5);
+//        }
+//        Position = false;
+//    }
+//    else
+//    {
+//        robot.lift.setPower(0);
+//        robot.resetLift();
+//    }
+//}
 //--------------------------------------------------------------------------------------------------
 private void drive()
 {
@@ -220,7 +220,7 @@ private void drive()
         {
             angleBoi();
             drive();
-            moveLift();
+//            moveLift();
 //----------------------------------
             //This closes the claw
             if(gamepad1.y)
@@ -252,6 +252,19 @@ private void drive()
             else
             {
                 robot.arm.setPower(0);
+            }
+//----------------------------------
+            if(gamepad1.right_stick_y !=0)
+            {
+                robot.lift.setPower(-.5);
+            }
+            else if(gamepad1.left_stick_y !=0)
+            {
+                robot.lift.setPower(.5);
+            }
+            else
+            {
+                robot.lift.setPower(0);
             }
 //--------------------------------------------------------------------
         }
