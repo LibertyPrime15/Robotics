@@ -39,7 +39,7 @@ public class blueBlock extends LinearOpMode
 
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+    double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
     double testField  = -842.105;//This is 9 inches in steps - THe distance from the bot on the XZ Axis
 
     double blockLength   = 748.53;//My fake length of a single 8 inch block
@@ -286,7 +286,7 @@ private void turnAngle(double angle)
 //--------------------------------------------------------------------------------------------------
 public boolean checkSight()
 {
-    if(listener.isVisible())
+    if(listener.isVisible()  && (!(isStopRequested())))
     {
         inView = true;
         getBlock();
@@ -294,7 +294,8 @@ public boolean checkSight()
     else
     {
         inView = false;
-        moveDistance(6.6,.6);
+        moveDistance(6.7,.6);
+        sleep(1000);
     }
     return inView;
 }
@@ -309,15 +310,15 @@ public void checkEncoder()
 {
     while(opModeIsActive() && (!(isStopRequested())))
     {
-        moveDistance(17.2,1);
+        moveDistance(14,1);
         turnAngle(-76);
-        moveDistance(7.5,1);
+        moveDistance(5,1);
+//        moveDistance(7.5,1);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
             {
                 checkSight();
-                sleep(1000);
             }
         }
     }
@@ -326,7 +327,7 @@ public void checkEncoder()
 public void checkDistance()
 {
     distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
-    distRemain = ((testField + distGone) * (11.97/1120)) * (-1);
+    distRemain = ((totField + distGone) * (11.97/1120)) * (-1);
     moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
@@ -335,23 +336,21 @@ private void getBlock()
     robot.Halt();
     turnAngle(84);
     robot.openClaw();
-    moveDistance(3.5, .6);
+    moveDistance(3, .6);
     liftUp();
     armUp(.5);
-    moveDistance(4,.6);
+    moveDistance(5,.6);
     armDown(.5);
     robot.closeClaw();
     sleep(300);
     liftDown();
-    moveDistance(-7.4,.8);
+    moveDistance(-10,.8);
     turnAngle(74);///////////////////
     checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();
     robot.openClaw();
-//    liftDown();
-//    armDown(2);
-    moveDistance(-30,1);//It isn't moving the proper distance
+    moveDistance(-17,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------

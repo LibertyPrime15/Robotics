@@ -334,17 +334,19 @@ public double checkEncoder()
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     robot.Halt();
-    turnAngle(79);
+    turnAngle(84);
     robot.openClaw();
-    moveDistance(6, .3);
+    moveDistance(3.5, .6);
     liftUp();
-    moveDistance(8,.3);
+    armUp(.5);
+    moveDistance(4,.6);
+    armDown(.5);
     robot.closeClaw();
     sleep(300);
     liftDown();
-    moveDistance(-11,.3);
-    turnAngle(85);
-    checkDistance();//----------
+    moveDistance(-7.4,.8);
+    turnAngle(74);///////////////////
+    checkDistance();//---------------
     turnAngle(-80);
     liftUp();
     armUp(3);

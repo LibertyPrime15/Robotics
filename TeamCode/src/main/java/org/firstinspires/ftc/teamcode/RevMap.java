@@ -52,7 +52,7 @@ public class RevMap
         back_right.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.FORWARD);
 
-        lift.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.REVERSE);
         arm.setDirection(DcMotor.Direction.REVERSE);
 
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

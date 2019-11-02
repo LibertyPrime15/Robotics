@@ -39,7 +39,7 @@ public class redBlock extends LinearOpMode
 
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
+    double totField   = -5800;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
     double testField  = -842.105;//This is 9 inches in steps - THe distance from the bot on the XZ Axis
 
     double blockLength   = 748.53;//My fake length of a single 8 inch block
@@ -63,7 +63,7 @@ public class redBlock extends LinearOpMode
     private float robotX = 0;
     private float robotY = 0;
     private float robotAngle = 0;
-    //--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -294,7 +294,8 @@ public boolean checkSight()
     else
     {
         inView = false;
-        moveDistance(6.6,.6);
+        moveDistance(-6.6,.6);
+        sleep(1000);
     }
     return inView;
 }
@@ -309,15 +310,13 @@ public void checkEncoder()
 {
     while(opModeIsActive() && (!(isStopRequested())))
     {
-        moveDistance(17.2,1);
+        moveDistance(14,1);
         turnAngle(-76);
-        moveDistance(7.5,1);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
             {
                 checkSight();
-                sleep(1000);
             }
         }
     }
@@ -326,7 +325,7 @@ public void checkEncoder()
 public void checkDistance()
 {
     distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
-    distRemain = ((testField + distGone) * (11.97/1120)) * (-1);
+    distRemain = ((totField + distGone) * (11.97/1120)) * (-1);
     moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
@@ -335,34 +334,23 @@ public void checkDistance()
     private void getBlock()//Needs to go 6000 steps remaining distance
     {
         robot.Halt();
-        turnAngle(86);
+        turnAngle(81);
         robot.openClaw();
-        moveDistance(6, .3);
+        moveDistance(5, .3);
         liftUp();
-        armUp(.4);
-        moveDistance(8,.3);
+        armUp(.5);
+        moveDistance(7,.3);
         robot.closeClaw();
         sleep(300);
-        armDown(-.4);
+        armDown(-.5);
         liftDown();
         moveDistance(-11,.3);
-        turnAngle(-86);
+        turnAngle(-85);
         checkDistance();//----------
-        turnAngle(80);
+        armUp(2);
         liftUp();
-        armUp(3);
-        moveDistance(16,.3);
         robot.openClaw();
-        armDown(3);
-        moveDistance(-35,.5);
-        armUp(1);
-        moveDistance(-3,.5);
-        turnAngle(90);
-        armDown(1);
-        liftDown();
-        robot.closeClaw();
-        moveDistance(40,.5);
-        robot.Halt();
+        moveDistance(-17,1);//It isn't moving the proper distance
         stop();
     }
 //--------------------------------------------------------------------------------------------------

@@ -52,35 +52,35 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void moveLift()
-{
-    int totDistInSteps = 787;
-
-    if(gamepad2.a && Position == false)
-    {
-        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(.5);
-        }
-        Position = true;
-    }
-
-    else if(gamepad2.b && Position == true)
-    {
-        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-        {
-            telemetry.update();
-            robot.lift.setPower(-.5);
-        }
-        Position = false;
-    }
-    else
-    {
-        robot.lift.setPower(0);
-        robot.resetLift();
-    }
-}
+//private void moveLift()
+//{
+//    int totDistInSteps = 787;
+//
+//    if(gamepad2.a && Position == false)
+//    {
+//        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//        {
+//            telemetry.update();
+//            robot.lift.setPower(.5);
+//        }
+//        Position = true;
+//    }
+//
+//    else if(gamepad2.b && Position == true)
+//    {
+//        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//        {
+//            telemetry.update();
+//            robot.lift.setPower(-.5);
+//        }
+//        Position = false;
+//    }
+//    else
+//    {
+//        robot.lift.setPower(0);
+//        robot.resetLift();
+//    }
+//}
 //--------------------------------------------------------------------------------------------------
 private void drive()
 {
@@ -207,7 +207,7 @@ private void drive()
 //----------------------------------
 //----------------------------------Game Pad two past this point
 //----------------------------------
-            moveLift();
+//            moveLift();//Game pad 2
             //This closes the claw
             if(gamepad2.y)
             {
@@ -216,7 +216,7 @@ private void drive()
             }
 //----------------------------------
             //This opens the claw
-            if(gamepad1.x)
+            if(gamepad2.x)
             {
                 robot.claw1.setPosition(.5);
                 robot.claw2.setPosition(.5);
@@ -225,13 +225,13 @@ private void drive()
             //This moves the arm up
             if(gamepad2.left_trigger !=0)
             {
-                robot.arm.setPower(-.5);
+                robot.arm.setPower(-.8);
             }
 
             //This moves the arm down
             else if(gamepad2.right_trigger !=0)
             {
-                robot.arm.setPower(.5);
+                robot.arm.setPower(.8);
             }
 
             //Otherwise, the arm won't move
@@ -239,7 +239,23 @@ private void drive()
             {
                 robot.arm.setPower(0);
             }
+//----------------------------------
+            if(gamepad2.right_stick_y !=0)
+            {
+                robot.lift.setPower(-.5);
+            }
+            else if(gamepad2.left_stick_y !=0)
+            {
+                robot.lift.setPower(.5);
+            }
+            else
+            {
+                robot.lift.setPower(0);
+            }
 //--------------------------------------------------------------------
+//----------------------------------MANUAL OVERRIDE
+
+//----------------------------------
         }
     }
 }

@@ -295,7 +295,7 @@ public boolean checkSight()
     else
     {
         inView = false;
-        moveDistance(6.6,.6);
+        moveDistance(-6.6,.6);
     }
     return inView;
 }
@@ -312,7 +312,7 @@ public void checkEncoder()
     {
         moveDistance(17.2,1);
         turnAngle(-76);
-        moveDistance(7.5,1);
+        moveDistance(-7.5,1);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
@@ -335,7 +335,6 @@ public void checkDistance()
 //--------------------------------------------------------------------------------------------------
     private void getBlock()//Needs to go 6000 steps remaining distance
     {
-        moveDistance(-3,.3);
         robot.Halt();
         turnAngle(86);
         robot.openClaw();
@@ -346,11 +345,10 @@ public void checkDistance()
         robot.closeClaw();
         sleep(300);
         armDown(-.4);
-        armDown(.1);
         liftDown();
         moveDistance(-11,.3);
         turnAngle(-86);
-        checkDistance();//----------
+        checkDistance();//---------------
         turnAngle(80);
         liftUp();
         armUp(3);

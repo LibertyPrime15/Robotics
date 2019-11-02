@@ -234,7 +234,7 @@ private void turnAngle(double angle)
 //--------------------------------------------------------------------------------------------------
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
-    turnAngle(80);
+    turnAngle(84);
     moveDistance(30,1);
     turnAngle(-84);
     liftUp();
@@ -244,7 +244,6 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     moveDistance(-27,.6);
     turnAngle(30);
     armUp();
-    moveDistance(-5,.5);
     turnAngle(48);
     moveDistance(-26,1);
     robot.Halt();
