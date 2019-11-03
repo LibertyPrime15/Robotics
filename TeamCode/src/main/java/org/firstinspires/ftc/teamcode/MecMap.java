@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //@Disabled
-public class leagueMap
+public class MecMap
 {
     /* Public OpMode members */
     public DcMotor  front_right   = null;
@@ -13,25 +15,10 @@ public class leagueMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
-    public Servo arm1 = null;
-    public Servo arm2 = null;
-    public Servo arm3 = null;
-    public Servo arm4 = null;
-    public Servo arm5 = null;
-
-    public Servo arm6 = null;
-    public Servo arm7 = null;
-    public Servo arm8 = null;
-    public Servo arm9 = null;
-    public Servo arm10 = null;
-
-    public Servo arm11 = null;
-    public Servo arm12 = null;
-
     public ElapsedTime runtime = new ElapsedTime();
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap  =  null;
-    public leagueMap(){}
+    public MecMap(){}
 
     public void init(HardwareMap ahwMap)
     {
@@ -41,21 +28,6 @@ public class leagueMap
         front_left  = hwMap.get(DcMotor.class, "front_left");
         back_right  = hwMap.get(DcMotor.class, "back_right");
         back_left   = hwMap.get(DcMotor.class, "back_left");
-
-        arm1  = hwMap.get(Servo.class, "arm1");
-        arm2  = hwMap.get(Servo.class, "arm2");
-        arm3  = hwMap.get(Servo.class, "arm3");
-        arm4  = hwMap.get(Servo.class, "arm4");
-        arm5  = hwMap.get(Servo.class, "arm5");
-
-        arm6  = hwMap.get(Servo.class, "arm6");
-        arm7  = hwMap.get(Servo.class, "arm7");
-        arm8  = hwMap.get(Servo.class, "arm8");
-        arm9  = hwMap.get(Servo.class, "arm9");
-        arm10 = hwMap.get(Servo.class, "arm10");
-
-        arm11 = hwMap.get(Servo.class, "arm11");
-        arm12 = hwMap.get(Servo.class, "arm12");
 
         front_right.setPower(0);
         front_left.setPower(0);
@@ -76,7 +48,6 @@ public class leagueMap
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 //----------------------------------------//
     //Stop
@@ -86,6 +57,42 @@ public class leagueMap
         front_left.setPower(0);
         back_right.setPower(0);
         back_left.setPower(0);
+    }
+//----------------------------------------//
+    //Forward
+    public void Forward(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(-power);
+        back_right.setPower(-power);
+        back_left.setPower(-power);
+    }
+//----------------------------------------//
+    //Backward
+    public void Backward(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(power);
+        back_right.setPower(power);
+        back_left.setPower(power);
+    }
+//----------------------------------------//
+    //LTurn
+    public void LTurn(double power)
+    {
+        front_right.setPower(-power);
+        front_left.setPower(power);
+        back_right.setPower(-power);
+        back_left.setPower(power);
+    }
+//----------------------------------------//
+    //RTurn
+    public void RTurn(double power)
+    {
+        front_right.setPower(power);
+        front_left.setPower(-power);
+        back_right.setPower(power);
+        back_left.setPower(-power);
     }
 //----------------------------------------//
     //Reset all of the encoder values
