@@ -241,10 +241,11 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     armUp();
     moveDistance(25,.6);
     armDown();
-    moveDistance(-27,.6);
-    turnAngle(30);
+    moveDistance(-25,.6);
+    turnAngle(25);
     armUp();
-    turnAngle(48);
+    moveDistance(2,.6);
+    turnAngle(53);
     moveDistance(-26,1);
     robot.Halt();
     stop();

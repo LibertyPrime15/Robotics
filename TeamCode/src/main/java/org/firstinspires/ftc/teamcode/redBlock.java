@@ -338,11 +338,11 @@ public void checkDistance()
         robot.openClaw();
         moveDistance(5, .3);
         liftUp();
-        armUp(.5);
+        armUp(.7);
         moveDistance(7,.3);
         robot.closeClaw();
         sleep(300);
-        armDown(-.5);
+        armDown(-.7);
         liftDown();
         moveDistance(-11,.3);
         turnAngle(-85);

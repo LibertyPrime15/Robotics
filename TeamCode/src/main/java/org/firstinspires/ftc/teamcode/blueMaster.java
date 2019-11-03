@@ -346,7 +346,7 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     liftDown();
     moveDistance(-7.4,.8);
     turnAngle(74);///////////////////
-    checkDistance();//---------------
+    checkDistance();//----------
     turnAngle(-80);
     liftUp();
     armUp(3);

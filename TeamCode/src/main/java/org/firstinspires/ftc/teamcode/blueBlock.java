@@ -312,7 +312,7 @@ public void checkEncoder()
     {
         moveDistance(14,1);
         turnAngle(-76);
-        moveDistance(5,1);
+        moveDistance(4.8,1);
 //        moveDistance(7.5,1);
         if(inView == false)
         {
@@ -336,15 +336,14 @@ private void getBlock()
     robot.Halt();
     turnAngle(84);
     robot.openClaw();
-    moveDistance(3, .6);
     liftUp();
-    armUp(.5);
+    armUp(.7);
     moveDistance(5,.6);
-    armDown(.5);
+    armDown(.7);
     robot.closeClaw();
     sleep(300);
     liftDown();
-    moveDistance(-10,.8);
+    moveDistance(-7,.8);
     turnAngle(74);///////////////////
     checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
