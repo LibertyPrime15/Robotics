@@ -23,10 +23,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //@Disabled
 public class blueBlock extends LinearOpMode
 {
+    //Call my hardware map
     RevMap robot = new RevMap();
+    //Declare the variables needed for the imu/gyro
     Orientation angles;
     BNO055IMU imu;
 
+    //Declare the variable I'm gonna use the gyro
     float currHeading = 0;
     double Circ = 11.97;
     double Steps = 1160;
@@ -34,32 +37,36 @@ public class blueBlock extends LinearOpMode
     //Inches -> Steps  = #Inches * (1120/11.97)
     //Steps  -> Inches = #Steps  * (11.97/1120)
 
+    //These variables are for driving in a straight line
     double drive = 0;
     double turn  = 0;
 
+    //These variables are for moving the remaining distance across the field since our position changes every time
     double distGone   = 0;
     double distRemain = 0;
     double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
-    double testField  = -842.105;//This is 9 inches in steps - THe distance from the bot on the XZ Axis
 
-    double blockLength   = 748.53;//My fake length of a single 8 inch block
     double distMultipler = -6;
 
+    //These are booleans for determining whether the arm and lift are in certain positions
     boolean isExtended = false;
     boolean isVertical = false;
+    //This is a boolean that lets me know if vuforia is detecting the object
     boolean inView     = false;
 
+    //These are all variables needed for vuforia to work - they come with
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
     private VuforiaTrackables visionTargets;
     private VuforiaTrackable target;
     private VuforiaTrackableDefaultListener listener;
-
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
 
+    //This is our vuforia key needed for the program to run
     private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
 
+    //These are variables I'm in the process of using for
     private float robotX = 0;
     private float robotY = 0;
     private float robotAngle = 0;
@@ -70,6 +77,7 @@ public class blueBlock extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
+//This method is for reseting the imu - must be called after every time a turn is used
 private void imuInit()
 {
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -85,6 +93,7 @@ private void imuInit()
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
+//This method is used for setting up Vuforia and runs everytime the program initializes
 private void setupVuforia()
 {
     parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -132,6 +141,7 @@ public boolean vufoCrap()
     return listener.isVisible();
 }
 //--------------------------------------------------------------------------------------------------
+//This program returns our current angular heading
 private double angleBoi()
 {
     telemetry.addLine().addData("Heading",currHeading);
@@ -142,6 +152,7 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
+//This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
 public void moveDistance(double length, double power)
 {
     double totDistInSteps = (((length / 11.97) * 1120) * -1);
@@ -196,6 +207,7 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
+//This moves the arm up in autonomous
 public void armUp(double length)
 {
     double totDistInSteps = 1120 * length;
@@ -210,6 +222,7 @@ public void armUp(double length)
     robot.resetArm();
 }
 //--------------------------------------------
+//This moves the arm down in autonomous
 public void armDown(double length)
 {
     double totDistInSteps = -1120 * length;
@@ -224,6 +237,7 @@ public void armDown(double length)
     robot.resetArm();
 }
 //--------------------------------------------------------------------------------------------------
+//This moves the lift up in autonomous
 private void liftUp()
 {
     double totDistInSteps = -787;
@@ -238,6 +252,7 @@ private void liftUp()
     robot.resetLift();
 }
 //--------------------------------------------
+//This moves the lift down in autonomous
 private void liftDown()
 {
     double totDistInSteps = 787;
@@ -252,6 +267,7 @@ private void liftDown()
     robot.resetLift();
 }
 //--------------------------------------------------------------------------------------------------
+//This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
 private void turnAngle(double angle)
 {
     if(angle > 0)
@@ -284,6 +300,7 @@ private void turnAngle(double angle)
     currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
+//This checks to see if the skystone is in view
 public boolean checkSight()
 {
     if(listener.isVisible()  && (!(isStopRequested())))
@@ -300,16 +317,19 @@ public boolean checkSight()
     return inView;
 }
 //--------------------------------------------------------------------------------------------------
+//This method adds a multiplier of 1 every time a move distance, this is for moving the remaining distance of the field depending on which skystone is detected
 public double addMultiplier()
 {
     distMultipler = distMultipler + 1;
     return distMultipler;
 }
 //--------------------------------------------------------------------------------------------------
+//This method runs actual atonomous code and calls the methods that run actual atonomous code
 public void checkEncoder()
 {
     while(opModeIsActive() && (!(isStopRequested())))
     {
+        //This moves the robot out of its start position and prepares for scanning
         moveDistance(14,1);
         turnAngle(-76);
         moveDistance(4.8,1);
@@ -323,6 +343,7 @@ public void checkEncoder()
     }
 }
 //--------------------------------------------------------------------------------------------------
+//This moves the remaining distance of the field
 public void checkDistance()
 {
     distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
@@ -330,6 +351,7 @@ public void checkDistance()
     moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
+//This method is the actual autonomous in its entirety running right here and all of its method calls
 private void getBlock()
 {
     robot.Halt();
