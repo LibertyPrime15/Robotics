@@ -121,6 +121,7 @@ private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, f
 }
 private String formatMatrix(OpenGLMatrix matrix)
 {
+    //I don't like how java reformats this line so I'm putting in a comment line
     return matrix.formatAsTransform();
 }
 public boolean vufoCrap()
@@ -209,64 +210,64 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
-//This moves the arm up in autonomous
-public void armUp(double length)
+//This method moves a certain distance in inches SIDEWAYS at a certain speed - when moving it will move perfectly straight
+public void moveSide(double length, double power)
 {
-    double totDistInSteps = 1120 * length;
-//3 inches --93.567
-    while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
-    {
-        telemetry.update();
-        robot.arm.setPower(.7);
-    }
-    isExtended = true;
-    robot.arm.setPower(0);
-    robot.resetArm();
-}
-//--------------------------------------------
-//This moves the arm down in autonomous
-public void armDown(double length)
-{
-    double totDistInSteps = -1120 * length;
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
 
-    while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
+    double leftPower;
+    double rightPower;
+
+    if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
-        telemetry.update();
-        robot.arm.setPower(-.7);
+        addMultiplier();
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("distMultiplier", distMultipler);
+            angleBoi();
+            drive = -power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
     }
-    isExtended = false;
-    robot.arm.setPower(0);
-    robot.resetArm();
+
+    else if(totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        addMultiplier();
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----distMultiplier", distMultipler);
+            angleBoi();
+            drive = power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
 }
 //--------------------------------------------------------------------------------------------------
-//This moves the lift up in autonomous
-private void liftUp()
+public void skystonePosition()
 {
-    double totDistInSteps = -787;
-
-    while(totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-    {
-        telemetry.update();
-        robot.lift.setPower(-.5);
-    }
-    isVertical = true;
-    robot.lift.setPower(0);
-    robot.resetLift();
-}
-//--------------------------------------------
-//This moves the lift down in autonomous
-private void liftDown()
-{
-    double totDistInSteps = 787;
-
-    while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-    {
-        telemetry.update();
-        robot.lift.setPower(.5);
-    }
-    isVertical = false;
-    robot.lift.setPower(0);
-    robot.resetLift();
+    //This is where I'm going to be retrieving the relative coordinates of the skystone block
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
@@ -356,29 +357,11 @@ public void checkDistance()
 //This method is the actual autonomous in its entirety running right here and all of its method calls
 private void getBlock()
 {
-    robot.Halt();
-    turnAngle(84);
-    robot.openClaw();
-    liftUp();
-    armUp(.7);
-    moveDistance(5,.6);
-    armDown(.7);
-    robot.closeClaw();
-    sleep(300);
-    liftDown();
-    moveDistance(-7,.8);
-    turnAngle(74);///////////////////
-    checkDistance();///////////////////////////////////////////////////////////////
-    armUp(2);
-    liftUp();
-    robot.openClaw();
-    moveDistance(-17,1);//It isn't moving the proper distance
-    stop();
+//    OpenGLMatrix createMatrix();
+//    telemetry.addData("Relative Coordinates", OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w)));
+//    telemetry.update();
 }
 //--------------------------------------------------------------------------------------------------
-//THIS IS FOR TESTING CODE//
-//--------------------------------------------------------------------------------------------------
-
 
 
 
@@ -386,7 +369,7 @@ private void getBlock()
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
-//---No More Methods Are Made Past This---//-2596.49
+//---No More Methods Are Made Past This---//
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
@@ -460,6 +443,10 @@ private void getBlock()
         imuInit();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
+
+
+
+
 
 
         telemetry.addData("Status","Initialized");
