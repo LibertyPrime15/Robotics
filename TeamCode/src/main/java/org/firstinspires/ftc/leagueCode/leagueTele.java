@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.leagueCode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,11 +10,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="Duo Tele", group = "Main")
+@TeleOp(name="League Tele", group = "League")
 //@Disabled
-public class DuoTele extends LinearOpMode
+public class leagueTele extends LinearOpMode
 {
-    RevMap robot = new RevMap();
+    leagueMap robot = new leagueMap();
     Orientation angles;
     BNO055IMU imu;
 
@@ -43,43 +43,11 @@ private void imuInit()
 //--------------------------------------------------------------------------------------------------
 private double angleBoi()
 {
-    telemetry.addLine().addData("Heading",currHeading);
-    telemetry.update();
     angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
     this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
 }
-//--------------------------------------------------------------------------------------------------
-//private void moveLift()
-//{
-//    int totDistInSteps = 787;
-//
-//    if(gamepad2.a && Position == false)
-//    {
-//        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-//        {
-//            telemetry.update();
-//            robot.lift.setPower(.5);
-//        }
-//        Position = true;
-//    }
-//
-//    else if(gamepad2.b && Position == true)
-//    {
-//        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-//        {
-//            telemetry.update();
-//            robot.lift.setPower(-.5);
-//        }
-//        Position = false;
-//    }
-//    else
-//    {
-//        robot.lift.setPower(0);
-//        robot.resetLift();
-//    }
-//}
 //--------------------------------------------------------------------------------------------------
 private void drive()
 {
@@ -87,7 +55,7 @@ private void drive()
     double rightPower;
 
     double drive = gamepad1.left_stick_y;
-    double turn  = -gamepad1.left_stick_x;
+    double turn  = -gamepad1.right_stick_x;
 
     leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
     rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -100,20 +68,35 @@ private void drive()
     telemetry.update();
 }
 //--------------------------------------------------------------------------------------------------
+private void sideDrive()
+{
+    imuInit();
+    while (opModeIsActive() && (!(isStopRequested())))
+    {
+        double leftPower;
+        double rightPower;
+
+        double drive = gamepad1.left_stick_x;
+        double angle = currHeading * .05;
+
+        leftPower  = Range.clip(drive + angle,-1.0,1.0);
+        rightPower = Range.clip(drive - angle,-1.0,1.0);
+//----------------------------------
+        robot.front_right.setPower(-rightPower);
+        robot.front_left.setPower(leftPower);
+        robot.back_right.setPower(rightPower);
+        robot.back_left.setPower(-leftPower);
+        telemetry.update();
+//----------------------------------
+    }
+}
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
 
 
 
@@ -201,60 +184,11 @@ private void drive()
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
+//--------------------------------------------------------------------
             angleBoi();
             drive();
-//----------------------------------
-//----------------------------------Game Pad two past this point
-//----------------------------------
-//            moveLift();//Game pad 2
-            //This closes the claw
-            if(gamepad2.y)
-            {
-                robot.claw1.setPosition(0);
-                robot.claw2.setPosition(0);
-            }
-//----------------------------------
-            //This opens the claw
-            if(gamepad2.x)
-            {
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-            }
-//----------------------------------
-            //This moves the arm up
-            if(gamepad2.left_trigger !=0)
-            {
-                robot.arm.setPower(-.8);
-            }
-
-            //This moves the arm down
-            else if(gamepad2.right_trigger !=0)
-            {
-                robot.arm.setPower(.8);
-            }
-
-            //Otherwise, the arm won't move
-            else
-            {
-                robot.arm.setPower(0);
-            }
-//----------------------------------
-            if(gamepad2.right_stick_y !=0)
-            {
-                robot.lift.setPower(-.5);
-            }
-            else if(gamepad2.left_stick_y !=0)
-            {
-                robot.lift.setPower(.5);
-            }
-            else
-            {
-                robot.lift.setPower(0);
-            }
+            sideDrive();
 //--------------------------------------------------------------------
-//----------------------------------MANUAL OVERRIDE
-
-//----------------------------------
         }
     }
 }

@@ -28,7 +28,7 @@ import java.util.Locale;
 
 @TeleOp(name="Rev Tele", group = "Main")
 //@Disabled
-public class RevTele extends LinearOpMode
+public class teleSolo extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;

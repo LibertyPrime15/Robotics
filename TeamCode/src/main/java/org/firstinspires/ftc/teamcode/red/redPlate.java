@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.red;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -19,10 +18,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Red Master", group = "Red")
+@Autonomous(name="Red Plate", group = "Red")
 //@Disabled
-public class redMaster extends LinearOpMode
+public class redPlate extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;
@@ -40,15 +41,11 @@ public class redMaster extends LinearOpMode
 
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = -4000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
-    double testField  = -842.105;//This is 9 inches in steps - THe distance from the bot on the XZ Axis
-
-    double blockLength   = 748.53;//My fake length of a single 8 inch block
-    double distMultipler = -6;
+    double totField   = -6000;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps
 
     boolean isExtended = false;
     boolean isVertical = false;
-    boolean inView     = false;
+    boolean inView = false;
 
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
@@ -64,7 +61,7 @@ public class redMaster extends LinearOpMode
     private float robotX = 0;
     private float robotY = 0;
     private float robotAngle = 0;
-    //--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -86,53 +83,6 @@ private void imuInit()
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-private void setupVuforia()
-{
-    parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-    parameters.vuforiaLicenseKey = VUFORIA_KEY;
-    parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-    parameters.useExtendedTracking = false;
-    vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
-
-    visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
-    Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-
-    target = visionTargets.get(0);
-    target.setName("Wheels Target");
-    target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-    phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
-
-    listener = (VuforiaTrackableDefaultListener) target.getListener();
-    listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-}
-private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-{
-    return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-}
-private String formatMatrix(OpenGLMatrix matrix)
-{
-    return matrix.formatAsTransform();
-}
-public boolean vufoCrap()
-{
-    OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
-
-    if(latestLocation != null)
-    {
-        lastKnownLocation = latestLocation;
-    }
-    float[] coordinates = lastKnownLocation.getTranslation().getData();
-
-    robotX = coordinates[0];
-    robotY = coordinates[1];
-    robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-
-    telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-    telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-    telemetry.update();
-    return listener.isVisible();
-}
-//--------------------------------------------------------------------------------------------------
 private double angleBoi()
 {
     telemetry.addLine().addData("Heading",currHeading);
@@ -152,12 +102,10 @@ public void moveDistance(double length, double power)
 
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
-        addMultiplier();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
         {
             telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("distMultiplier", distMultipler);
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -175,12 +123,8 @@ public void moveDistance(double length, double power)
 
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
-        addMultiplier();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            telemetry.addData("----distRemain",distRemain);
-            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("----distMultiplier", distMultipler);
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -195,11 +139,16 @@ public void moveDistance(double length, double power)
         robot.Halt();
         robot.resetEncoder();
     }
+    else
+    {
+        robot.Halt();
+        robot.resetEncoder();
+    }
 }
 //--------------------------------------------------------------------------------------------------
-public void armUp(double length)
+public void armUp()
 {
-    double totDistInSteps = 1120 * length;
+    double totDistInSteps = 2500;
 //3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -211,9 +160,9 @@ public void armUp(double length)
     robot.resetArm();
 }
 //--------------------------------------------
-public void armDown(double length)
+public void armDown()
 {
-    double totDistInSteps = -1120 * length;
+    double totDistInSteps = -2500;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -264,7 +213,7 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnLeft(.6);
+            robot.turnLeft(.4);
         }
         imuInit();
     }
@@ -278,101 +227,30 @@ private void turnAngle(double angle)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnRight(.6);
+            robot.turnRight(.4);
         }
         imuInit();
     }
     currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
-public boolean checkSight()
-{
-    if(listener.isVisible())
-    {
-        inView = true;
-        getBlock();
-    }
-    else
-    {
-        inView = false;
-        moveDistance(-6.6,.6);
-    }
-    return inView;
-}
-//--------------------------------------------------------------------------------------------------
-public double addMultiplier()
-{
-    distMultipler = distMultipler + 1;
-    return distMultipler;
-}
-//--------------------------------------------------------------------------------------------------
-public void checkEncoder()
-{
-    while(opModeIsActive() && (!(isStopRequested())))
-    {
-        moveDistance(17.2,1);
-        turnAngle(-76);
-        moveDistance(-7.5,1);
-        if(inView == false)
-        {
-            while(inView == false && (!(isStopRequested())))
-            {
-                checkSight();
-                sleep(1000);
-            }
-        }
-    }
-}
-//--------------------------------------------------------------------------------------------------
-public void checkDistance()
-{
-    distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
-    distRemain = ((testField + distGone) * (11.97/1120)) * (-1);
-    moveDistance(distRemain,1);
-}
-//--------------------------------------------------------------------------------------------------
 //THIS IS FOR TESTING CODE//
 //--------------------------------------------------------------------------------------------------
-    private void getBlock()//Needs to go 6000 steps remaining distance
-    {
-        robot.Halt();
-        turnAngle(86);
-        robot.openClaw();
-        moveDistance(6, .3);
-        liftUp();
-        armUp(.4);
-        moveDistance(8,.3);
-        robot.closeClaw();
-        sleep(300);
-        armDown(-.4);
-        liftDown();
-        moveDistance(-11,.3);
-        turnAngle(-86);
-        checkDistance();//---------------
-        turnAngle(80);
-        liftUp();
-        armUp(3);
-        moveDistance(16,.3);
-        robot.openClaw();
-        armDown(3);
-        moveDistance(-35,.5);
-        armUp(1);
-        moveDistance(-3,.5);
-        turnAngle(90);
-        armDown(1);
-        liftDown();
-        robot.closeClaw();
-        moveDistance(40,.5);
-        robot.Halt();
-        stop();
-    }
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-//----------------------------------------//
-//----------------------------------------//
-//---No More Methods Are Made Past This---//
-//----------------------------------------//
-//----------------------------------------//
+private void getBlock()//Needs to go 6000 steps remaining distance
+{
+    turnAngle(-80);
+    moveDistance(28,1);
+    turnAngle(82);
+    liftUp();
+    armUp();
+    moveDistance(27,.6);
+    armDown();
+    moveDistance(-23,.6);
+    turnAngle(-80);
+    moveDistance(-27,1);
+    robot.Halt();
+    stop();
+}
 //--------------------------------------------------------------------------------------------------
 
 
@@ -438,24 +316,19 @@ public void checkDistance()
 
 
 
-    //--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
         imuInit();
-        setupVuforia();
-        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
-
-
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
-        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            vufoCrap();
-            checkEncoder();
+            getBlock();
 //----------------------------------
         }
     }
