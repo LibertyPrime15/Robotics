@@ -33,8 +33,14 @@ public class leagueTestAuto extends LinearOpMode
 
     //Declare the variable I'm gonna use the gyro
     float currHeading = 0;
-    double Circ = 11.97;
-    double Steps = 1160;
+    double Circ = 11.97;////RUBBER WHEELS
+//    double Circ = 00.00;///MECANUM WHEELS
+
+
+
+    double Steps = 1120;///40:1 Gear Ratio
+//    double Steps = 560;////20:1 Gear Ratio
+//    double Steps = 1680;///60:1 Gear Ratio
 
     //Inches -> Steps  = #Inches * (1120/11.97)
     //Steps  -> Inches = #Steps  * (11.97/1120)
@@ -44,17 +50,17 @@ public class leagueTestAuto extends LinearOpMode
     double turn  = 0;
 
     //These variables are for moving the remaining distance across the field since our position changes every time
-    double distGone   = 0;
-    double distRemain = 0;
-    double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
-
-    double distMultipler = -6;
+//    double distGone   = 0;
+//    double distRemain = 0;
+//    double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
+//
+//    double distMultipler = -6;
 
     //These are booleans for determining whether the arm and lift are in certain positions
-    boolean isExtended = false;
-    boolean isVertical = false;
-    //This is a boolean that lets me know if vuforia is detecting the object
-    boolean inView     = false;
+//    boolean isExtended = false;
+//    boolean isVertical = false;
+//    //This is a boolean that lets me know if vuforia is detecting the object
+//    boolean inView     = false;
 
     //These are all variables needed for vuforia to work - they come with
     private VuforiaLocalizer vuforiaLocalizer;
@@ -158,19 +164,19 @@ private double angleBoi()
 //This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
 public void moveDistance(double length, double power)
 {
-    double totDistInSteps = (((length / 11.97) * 1120) * -1);
+    double totDistInSteps = (((length / Circ) * Steps) * -1);
 
     double leftPower;
     double rightPower;
 
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
-    addMultiplier();
+//    addMultiplier();
     while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
         {
-            telemetry.addData("distRemain",distRemain);
+//            telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("distMultiplier", distMultipler);
+//            telemetry.addData("distMultiplier", distMultipler);
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -188,12 +194,12 @@ public void moveDistance(double length, double power)
 
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
-        addMultiplier();
+//        addMultiplier();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
-            telemetry.addData("----distRemain",distRemain);
+//            telemetry.addData("----distRemain",distRemain);
             telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("----distMultiplier", distMultipler);
+//            telemetry.addData("----distMultiplier", distMultipler);
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -211,63 +217,44 @@ public void moveDistance(double length, double power)
 }
 //--------------------------------------------------------------------------------------------------
 //This method moves a certain distance in inches SIDEWAYS at a certain speed - when moving it will move perfectly straight
-public void moveSide(double length, double power)
+public void moveSide(int time, boolean direction, double power)
 {
-    double totDistInSteps = (((length / 11.97) * 1120) * -1);
+    double totDistInSteps = (((time / Circ) * Steps) * -1);
 
     double leftPower;
     double rightPower;
 
-    if(totDistInSteps < robot.front_right.getCurrentPosition())
+    if(direction)
     {
-        addMultiplier();
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
-        {
-            telemetry.addData("distRemain",distRemain);
-            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("distMultiplier", distMultipler);
-            angleBoi();
-            drive = -power;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+        angleBoi();
+        drive = -power;
+        turn  = .05 * currHeading;
+        leftPower    = Range.clip(drive + turn, -1.0, 1.0);
+        rightPower   = Range.clip(drive - turn, -1.0, 1.0);
 
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
+        robot.front_right.setPower(rightPower);
+        robot.front_left.setPower(leftPower);
+        robot.back_right.setPower(rightPower);
+        robot.back_left.setPower(leftPower);
+        sleep(time);
         robot.Halt();
-        robot.resetEncoder();
     }
 
-    else if(totDistInSteps > robot.front_right.getCurrentPosition())
+    else if(!direction)
     {
-        addMultiplier();
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
-        {
-            telemetry.addData("----distRemain",distRemain);
-            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
-            telemetry.addData("----distMultiplier", distMultipler);
-            angleBoi();
-            drive = power;
-            turn  = .05 * currHeading;
-            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+        angleBoi();
+        drive = -power;
+        turn  = .05 * currHeading;
+        leftPower    = Range.clip(drive + turn, -1.0, 1.0);
+        rightPower   = Range.clip(drive - turn, -1.0, 1.0);
 
-            robot.front_right.setPower(rightPower);
-            robot.front_left.setPower(leftPower);
-            robot.back_right.setPower(rightPower);
-            robot.back_left.setPower(leftPower);
-        }
+        robot.front_right.setPower(rightPower);
+        robot.front_left.setPower(leftPower);
+        robot.back_right.setPower(rightPower);
+        robot.back_left.setPower(leftPower);
+        sleep(time);
         robot.Halt();
-        robot.resetEncoder();
     }
-}
-//--------------------------------------------------------------------------------------------------
-public void skystonePosition()
-{
-    //This is where I'm going to be retrieving the relative coordinates of the skystone block
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
@@ -304,66 +291,100 @@ private void turnAngle(double angle)
 }
 //--------------------------------------------------------------------------------------------------
 //This checks to see if the skystone is in view
-public boolean checkSight()
-{
-    if(listener.isVisible()  && (!(isStopRequested())))
-    {
-        inView = true;
-        getBlock();
-    }
-    else
-    {
-        inView = false;
-        moveDistance(6.7,.6);
-        sleep(1000);
-    }
-    return inView;
-}
+//public boolean checkSight()
+//{
+//    if(listener.isVisible()  && (!(isStopRequested())))
+//    {
+//        inView = true;
+//        getBlock();
+//    }
+//    else
+//    {
+//        inView = false;
+//        moveDistance(6.7,.6);
+//        sleep(1000);
+//    }
+//    return inView;
+//}
 //--------------------------------------------------------------------------------------------------
 //This method adds a multiplier of 1 every time a move distance, this is for moving the remaining distance of the field depending on which skystone is detected
-public double addMultiplier()
-{
-    distMultipler = distMultipler + 1;
-    return distMultipler;
-}
+//public double addMultiplier()
+//{
+//    distMultipler = distMultipler + 1;
+//    return distMultipler;
+//}
 //--------------------------------------------------------------------------------------------------
 //This method runs actual atonomous code and calls the methods that run actual atonomous code
-public void checkEncoder()
+//public void checkEncoder()
+//{
+//    while(opModeIsActive() && (!(isStopRequested())))
+//    {
+//        if(inView == false)
+//        {
+//            while(inView == false && (!(isStopRequested())))
+//            {
+//                checkSight();
+//            }
+//        }
+//    }
+//}
+//--------------------------------------------------------------------------------------------------
+//This moves the remaining distance of the field
+//public void checkDistance()
+//{
+//    distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
+//    distRemain = ((totField + distGone) * (11.97/1120)) * (-1);
+//    moveDistance(distRemain,1);
+//}
+//--------------------------------------------------------------------------------------------------
+//This method is the actual autonomous in its entirety running right here and all of its method calls
+//private void getBlock()
+//{
+//    OpenGLMatrix createMatrix();
+//    telemetry.addData("Relative Coordinates", OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w)));
+//    telemetry.update();
+//}
+//--------------------------------------------------------------------------------------------------
+private void autoAdjust()//This is for auto adjusting the robot to align with the skystone
 {
-    while(opModeIsActive() && (!(isStopRequested())))
+    float x = 0;
+    if(x > 0)
     {
-        //This moves the robot out of its start position and prepares for scanning
-        moveDistance(14,1);
-        turnAngle(-76);
-        moveDistance(4.8,1);
-        if(inView == false)
+        while(x > 0 && (!(isStopRequested())))
         {
-            while(inView == false && (!(isStopRequested())))
-            {
-                checkSight();
-            }
+
+        }
+    }
+
+    else if(x < 0)
+    {
+        while(x < 0 && (!(isStopRequested())))
+        {
+
         }
     }
 }
 //--------------------------------------------------------------------------------------------------
-//This moves the remaining distance of the field
-public void checkDistance()
+private void sideMove()//This is for moving to the side constantly
 {
-    distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
-    distRemain = ((totField + distGone) * (11.97/1120)) * (-1);
-    moveDistance(distRemain,1);
+    float x = 0;
+    if(x > 0)
+    {
+        while(x > 0 && (!(isStopRequested())))
+        {
+
+        }
+    }
+
+    else if(x < 0)
+    {
+        while(x < 0 && (!(isStopRequested())))
+        {
+
+        }
+    }
 }
 //--------------------------------------------------------------------------------------------------
-//This method is the actual autonomous in its entirety running right here and all of its method calls
-private void getBlock()
-{
-//    OpenGLMatrix createMatrix();
-//    telemetry.addData("Relative Coordinates", OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w)));
-//    telemetry.update();
-}
-//--------------------------------------------------------------------------------------------------
-
-
 
 
 //--------------------------------------------------------------------------------------------------
@@ -458,7 +479,7 @@ private void getBlock()
         {
 //----------------------------------
             vufoCrap();
-            checkEncoder();
+//            checkEncoder();
 //----------------------------------
         }
     }
