@@ -104,7 +104,6 @@ public class leagueMap
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//------------------------------
     }
 //----------------------------------------//
     //Stop

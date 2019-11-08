@@ -258,9 +258,7 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
          */
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(mmBotWidth/2,0,0)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 0, 0));
+                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.YZY,AngleUnit.DEGREES, -90, 0, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
         /**
@@ -298,9 +296,11 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
         /** Start tracking the data sets we care about. */
         stonesAndChips.activate();
 
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
 
-            for (VuforiaTrackable trackable : allTrackables) {
+            for (VuforiaTrackable trackable : allTrackables)
+            {
                 /**
                  * getUpdatedRobotLocation() will return null if no new information is available since
                  * the last time that call was made, or if the trackable is not currently visible.
@@ -309,17 +309,22 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
+                if (robotLocationTransform != null)
+                {
                     lastLocation = robotLocationTransform;
                 }
             }
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
-            if (lastLocation != null) {
+            if (lastLocation != null)
+            {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
                 telemetry.addData("Pos", format(lastLocation));
-            } else {
+            }
+
+            else
+            {
                 telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
@@ -330,7 +335,8 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
      * A simple utility that extracts positioning information from a transformation matrix
      * and formats it in a form palatable to a human being.
      */
-    String format(OpenGLMatrix transformationMatrix) {
+    String format(OpenGLMatrix transformationMatrix)
+    {
         return transformationMatrix.formatAsTransform();
     }
 }

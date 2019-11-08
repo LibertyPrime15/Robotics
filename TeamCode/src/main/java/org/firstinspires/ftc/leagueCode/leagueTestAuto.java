@@ -10,10 +10,12 @@ import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
@@ -78,7 +80,9 @@ public class leagueTestAuto extends LinearOpMode
     private float robotX = 0;
     private float robotY = 0;
     private float robotAngle = 0;
-//--------------------------------------------------------------------------------------------------
+
+    VuforiaLocalizer vuforia;
+    //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -385,8 +389,6 @@ private void sideMove()//This is for moving to the side constantly
     }
 }
 //--------------------------------------------------------------------------------------------------
-
-
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//

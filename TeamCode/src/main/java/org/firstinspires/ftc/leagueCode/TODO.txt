@@ -1,0 +1,15 @@
+----------------------
+Autonomous
+----------------------
+moveSide Method
+Vuforia Numbers
+distance Multiplier
+New path written
+adjusting to the block's position
+sideMove method for constant side movement      //I can't use encoders for this yet
+
+----------------------
+TeleOp
+----------------------
+Test all of your crap bro
+Figure out how to drive Diagonal with Mecanum wheels
