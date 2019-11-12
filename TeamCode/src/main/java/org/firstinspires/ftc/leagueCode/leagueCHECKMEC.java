@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="League Tele", group = "League")
+@TeleOp(name="League CHECKMEC", group = "Concept")
 //@Disabled
 public class leagueCHECKMEC extends LinearOpMode
 {
@@ -54,8 +54,8 @@ private void drive()
     double leftPower;
     double rightPower;
 
-    double drive = gamepad1.left_stick_y;
-    double turn  = -gamepad1.right_stick_x;
+    double drive = -gamepad1.left_stick_y;
+    double turn  = gamepad1.left_stick_x;
 
     leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
     rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -165,28 +165,20 @@ private void drive()
             angleBoi();
             drive();
 
-            if(gamepad1.left_stick_x < 0)
+            if(gamepad1.left_trigger != 0)
             {
-                robot.front_right.setPower(-gamepad1.left_stick_x);
-                robot.front_left.setPower(gamepad1.left_stick_x);
-                robot.back_right.setPower(gamepad1.left_stick_x);
-                robot.back_left.setPower(-gamepad1.left_stick_x);
+                robot.front_right.setPower(-1);
+                robot.front_left.setPower(1);
+                robot.back_right.setPower(1);
+                robot.back_left.setPower(-1);
             }
             //This moves the robot to the right
-            else if(gamepad1.left_stick_x > 0)
+            else if(gamepad1.right_trigger != 0)
             {
-                robot.front_right.setPower(-gamepad1.left_stick_x);
-                robot.front_left.setPower(gamepad1.left_stick_x);
-                robot.back_right.setPower(gamepad1.left_stick_x);
-                robot.back_left.setPower(-gamepad1.left_stick_x);
-            }
-            //Set the power = 0 if you're not touching the dumb button
-            else
-            {
-                robot.front_right.setPower(0);
-                robot.front_left.setPower(0);
-                robot.back_right.setPower(0);
-                robot.back_left.setPower(0);
+                robot.front_right.setPower(1);
+                robot.front_left.setPower(-1);
+                robot.back_right.setPower(-1);
+                robot.back_left.setPower(1);
             }
 //--------------------------------------------------------------------
         }

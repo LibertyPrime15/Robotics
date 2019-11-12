@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="League Tele", group = "League")
+@TeleOp(name="League TeleTEST", group = "Concept")
 //@Disabled
 public class leagueTele extends LinearOpMode
 {
@@ -55,7 +55,7 @@ private void drive()
     double rightPower;
 
     double drive = gamepad1.left_stick_y;
-    double turn  = -gamepad1.right_stick_x;
+    double turn  = -gamepad1.left_stick_x;
 
     leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
     rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -76,7 +76,7 @@ private void sideDrive()
         double leftPower;
         double rightPower;
 
-        double drive = gamepad1.left_stick_x;
+        double drive = gamepad1.right_stick_x;
         double angle = currHeading * .05;
 
         leftPower  = Range.clip(drive + angle,-1.0,1.0);
@@ -91,6 +91,12 @@ private void sideDrive()
     }
     currHeading = 0;
 }
+//--------------------------------------------------------------------------------------------------
+public void completeMove()
+{
+
+}
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//

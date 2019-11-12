@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.RevMap;
 public class leagueTestAuto extends LinearOpMode
 {
     //Call my hardware map
-    RevMap robot = new RevMap();
+    leagueMap robot = new leagueMap();
     //Declare the variables needed for the imu/gyro
     Orientation angles;
     BNO055IMU imu;
@@ -349,45 +349,45 @@ private void turnAngle(double angle)
 //    telemetry.update();
 //}
 //--------------------------------------------------------------------------------------------------
-private void autoAdjust()//This is for auto adjusting the robot to align with the skystone
-{
-    float x = 0;
-    if(x > 0)
-    {
-        while(x > 0 && (!(isStopRequested())))
-        {
-
-        }
-    }
-
-    else if(x < 0)
-    {
-        while(x < 0 && (!(isStopRequested())))
-        {
-
-        }
-    }
-}
+//private void autoAdjust()//This is for auto adjusting the robot to align with the skystone
+//{
+//    float x = 0;
+//    if(x > 0)
+//    {
+//        while(x > 0 && (!(isStopRequested())))
+//        {
+//
+//        }
+//    }
+//
+//    else if(x < 0)
+//    {
+//        while(x < 0 && (!(isStopRequested())))
+//        {
+//
+//        }
+//    }
+//}
 //--------------------------------------------------------------------------------------------------
-private void sideMove()//This is for moving to the side constantly
-{
-    float x = 0;
-    if(x > 0)
-    {
-        while(x > 0 && (!(isStopRequested())))
-        {
-
-        }
-    }
-
-    else if(x < 0)
-    {
-        while(x < 0 && (!(isStopRequested())))
-        {
-
-        }
-    }
-}
+//private void sideMove()//This is for moving to the side constantly
+//{
+//    float x = 0;
+//    if(x > 0)
+//    {
+//        while(x > 0 && (!(isStopRequested())))
+//        {
+//
+//        }
+//    }
+//
+//    else if(x < 0)
+//    {
+//        while(x < 0 && (!(isStopRequested())))
+//        {
+//
+//        }
+//    }
+//}
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
