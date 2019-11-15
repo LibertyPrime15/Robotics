@@ -361,13 +361,13 @@ private void getBlock()
     robot.openClaw();
     liftUp();
     armUp(.7);
-    moveDistance(5,.6);
+    moveDistance(7,.6);
     armDown(.7);
     robot.closeClaw();
     sleep(300);
     liftDown();
-    moveDistance(-7,.8);
-    turnAngle(74);///////////////////
+    moveDistance(-5,.8);
+    turnAngle(70);///////////////////
     checkDistance();///////////////////////////////////////////////////////////////
     armUp(2);
     liftUp();

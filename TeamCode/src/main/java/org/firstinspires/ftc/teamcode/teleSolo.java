@@ -26,8 +26,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
-@TeleOp(name="Rev Tele", group = "Main")
+@TeleOp(name="teleSolo", group = "Main")
 //@Disabled
+//--------------------------------------------------------------------------------------------------
+//----------------------------------------------------//
+//----------------------------------------------------//
+//--This is where I start the program declare stuffs--//
+//----------------------------------------------------//
+//----------------------------------------------------//
+//--------------------------------------------------------------------------------------------------
 public class teleSolo extends LinearOpMode
 {
     RevMap robot = new RevMap();
@@ -36,6 +43,12 @@ public class teleSolo extends LinearOpMode
 
     float currHeading = 0;
     boolean Position = true;
+
+    int liftSteps = 770;
+    double armSteps  = 1120 * .7;
+
+    boolean automaticArm = false;
+    boolean manualArm    = true;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -66,55 +79,6 @@ private double angleBoi()
     this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
-}
-//--------------------------------------------------------------------------------------------------
-//private void moveLift()
-//{
-//    int totDistInSteps = 787;
-//
-//    if(gamepad1.a && Position == false)
-//    {
-//        while(totDistInSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-//        {
-//            telemetry.update();
-//            robot.lift.setPower(.5);
-//        }
-//        Position = true;
-//    }
-//
-//    else if(gamepad1.b && Position == true)
-//    {
-//        while(-totDistInSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-//        {
-//            telemetry.update();
-//            robot.lift.setPower(-.5);
-//        }
-//        Position = false;
-//    }
-//    else
-//    {
-//        robot.lift.setPower(0);
-//        robot.resetLift();
-//    }
-//}
-//--------------------------------------------------------------------------------------------------
-private void drive()
-{
-    double leftPower;
-    double rightPower;
-
-    double drive = gamepad1.left_stick_y;
-    double turn  = -gamepad1.left_stick_x;
-
-    leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-    rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-//----------------------------------
-    //This drives the robot forward
-    robot.front_right.setPower(rightPower);
-    robot.front_left.setPower(leftPower);
-    robot.back_right.setPower(rightPower);
-    robot.back_left.setPower(leftPower);
-    telemetry.update();
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
@@ -219,54 +183,266 @@ private void drive()
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
-            drive();
-//            moveLift();
+//--------------------------------------------------------------------------------------------------
+            //This is the block of code for driving and turning the robot
+            double leftPower;
+            double rightPower;
+
+            double drive = gamepad1.left_stick_y;
+            double turn  = -gamepad1.left_stick_x;
+
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------
-            //This closes the claw
-            if(gamepad1.y)
+            //This drives the robot forward
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+//--------------------------------------------------------------------------------------------------
+            if(gamepad1.a && automaticArm)
             {
+                robot.resetLift();
+                robot.resetArm();
+                while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.lift.setPower(-.8);
+                }
+                robot.resetLift();
+                robot.lift.setPower(0);
+
+//-------------------------------------------
                 robot.claw1.setPosition(0);
                 robot.claw2.setPosition(0);
+//-------------------------------------------
+                while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.arm.setPower(.7);
+                }
+                robot.arm.setPower(0);
+                robot.resetLift();
+
+                automaticArm = true;
             }
-//----------------------------------
-            //This opens the claw
-            if(gamepad1.x)
+//-----------------------------------------------------------------------
+            else if(gamepad1.b && !automaticArm)
             {
+                robot.resetLift();
+                robot.resetArm();
+                while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.arm.setPower(-.7);
+                }
+                robot.arm.setPower(0);
+                robot.resetArm();
+//-------------------------------------------
                 robot.claw1.setPosition(.5);
                 robot.claw2.setPosition(.5);
-            }
-//----------------------------------
-            //This moves the arm up
-            if(gamepad1.left_trigger !=0)
-            {
-                robot.arm.setPower(-.5);
-            }
-
-            //This moves the arm down
-            else if(gamepad1.right_trigger !=0)
-            {
-                robot.arm.setPower(.5);
-            }
-
-            //Otherwise, the arm won't move
-            else
-            {
-                robot.arm.setPower(0);
-            }
-//----------------------------------
-            if(gamepad1.right_stick_y !=0)
-            {
-                robot.lift.setPower(-.5);
-            }
-            else if(gamepad1.left_stick_y !=0)
-            {
-                robot.lift.setPower(.5);
-            }
-            else
-            {
+//-------------------------------------------
+                while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.lift.setPower(.8);
+                }
                 robot.lift.setPower(0);
+                robot.resetLift();
+
+                automaticArm = false;
             }
-//--------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            while(manualArm && automaticArm)
+            {
+                if(the arm can only move down)
+            }
+
+            while(manualArm && !automaticArm)
+            {
+                if(then the arm can only move down)
+            }
+
+
+            while(!manualArm && automaticArm)
+            {
+                if(then the arm can move up)
+            }
+
+            while(!manualArm && !automaticArm)
+            {
+                if(then the arm can only move up)
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if(robot.lift.getCurrentPosition() > 100 && automaticArm && manualArm)
+            {
+                while(robot.lift.getCurrentPosition() > 100 && (!(isStopRequested())))
+                {
+                    //--------------------------------------------------------------------------------------------------
+                    //This closes the claw
+                    if(gamepad1.x)
+                    {
+                        robot.claw1.setPosition(0);
+                        robot.claw2.setPosition(0);
+                    }
+            //----------------------------------
+                    //This opens the claw
+                    else if(gamepad1.y)
+                    {
+                        robot.claw1.setPosition(.5);
+                        robot.claw2.setPosition(.5);
+                    }
+            //--------------------------------------------------------------------------------------------------
+                    //This moves the arm up
+                    if(gamepad1.right_trigger!=0)
+                    {
+                        robot.arm.setPower(1);
+                    }
+            //----------------------------------
+                    else if(gamepad1.left_trigger!=0)
+                    {
+                        robot.arm.setPower(-1);
+                    }
+            //----------------------------------
+                    else
+                    {
+                        robot.arm.setPower(0);
+                    }
+            //--------------------------------------------------------------------------------------------------
+                    if(gamepad1.right_stick_y > 0)
+                    {
+                        robot.lift.setPower(gamepad1.right_stick_y);
+                        manualArm = true;
+                    }
+                    else if(gamepad1.left_stick_y < 0)
+                    {
+                        robot.lift.setPower(gamepad1.right_stick_y);
+                        manualArm = false;
+                    }
+            //----------------------------------
+                    else
+                    {
+                        robot.lift.setPower(0);
+                    }
+            //--------------------------------------------------------------------------------------------------
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+            else if(robot.lift.getCurrentPosition() < -100 && !automaticArm)
+            {
+                while(robot.lift.getCurrentPosition() < -100)
+                {
+                    robot.lift.setPower(.7);
+                }
+            }
         }
     }
 }

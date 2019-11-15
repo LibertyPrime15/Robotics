@@ -13,8 +13,8 @@ public class leagueMap
     public DcMotor  back_left     = null;
     public DcMotor  back_right    = null;
 
-//    public DcMotor  motor1  = null;
-//    public DcMotor  motor2  = null;
+    public DcMotor  intake1  = null;
+    public DcMotor  intake2  = null;
 //    public DcMotor  motor3  = null;
 //    public DcMotor  motor4  = null;
 //
@@ -45,8 +45,8 @@ public class leagueMap
         back_right  = hwMap.get(DcMotor.class, "back_right");
         back_left   = hwMap.get(DcMotor.class, "back_left");
 
-//        motor1   = hwMap.get(DcMotor.class, "motor1");
-//        motor2   = hwMap.get(DcMotor.class, "motor2");
+        intake1   = hwMap.get(DcMotor.class, "intake1");
+        intake2   = hwMap.get(DcMotor.class, "intake2");
 //        motor3   = hwMap.get(DcMotor.class, "motor3");
 //        motor4   = hwMap.get(DcMotor.class, "motor4");
 //
@@ -70,8 +70,8 @@ public class leagueMap
         back_right.setPower(0);
         back_left.setPower(0);
 
-//        motor1.setPower(0);
-//        motor2.setPower(0);
+        intake1.setPower(0);
+        intake2.setPower(0);
 //        motor3.setPower(0);
 //        motor4.setPower(0);
 //------------------------------
@@ -80,8 +80,8 @@ public class leagueMap
         back_right.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.FORWARD);
 
-//        motor1.setDirection(DcMotor.Direction.REVERSE);
-//        motor2.setDirection(DcMotor.Direction.FORWARD);
+        intake1.setDirection(DcMotor.Direction.REVERSE);
+        intake2.setDirection(DcMotor.Direction.FORWARD);
 //        motor3.setDirection(DcMotor.Direction.REVERSE);
 //        motor4.setDirection(DcMotor.Direction.FORWARD);
 //------------------------------
@@ -90,8 +90,8 @@ public class leagueMap
         back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-//        motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        motor4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //------------------------------
@@ -100,8 +100,8 @@ public class leagueMap
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

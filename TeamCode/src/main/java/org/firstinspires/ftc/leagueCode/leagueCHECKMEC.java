@@ -54,7 +54,7 @@ private void drive()
     double leftPower;
     double rightPower;
 
-    double drive = -gamepad1.left_stick_y;
+    double drive = (-gamepad1.left_stick_y * 70)/100;
     double turn  = gamepad1.left_stick_x;
 
     leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
@@ -179,6 +179,22 @@ private void drive()
                 robot.front_left.setPower(-1);
                 robot.back_right.setPower(-1);
                 robot.back_left.setPower(1);
+            }
+//------------------------------------------------
+            if(gamepad1.a)
+            {
+                robot.intake1.setPower(-.5);
+                robot.intake2.setPower(-.5);
+            }
+            else if(gamepad1.b)
+            {
+                robot.intake1.setPower(.5);
+                robot.intake2.setPower(.5);
+            }
+            else if(gamepad1.x)
+            {
+                robot.intake1.setPower(0);
+                robot.intake2.setPower(0);
             }
 //--------------------------------------------------------------------
         }
