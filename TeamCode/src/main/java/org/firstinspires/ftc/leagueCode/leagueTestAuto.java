@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="BLUE LEAGUE TESTER", group = "Concept")
+@Autonomous(name="League Blue", group = "Concept")
 //@Disabled
 public class leagueTestAuto extends LinearOpMode
 {

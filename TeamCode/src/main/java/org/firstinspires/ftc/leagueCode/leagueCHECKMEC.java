@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="League CHECKMEC", group = "Concept")
+@TeleOp(name="League Tele", group = "Concept")
 //@Disabled
 public class leagueCHECKMEC extends LinearOpMode
 {
@@ -47,25 +47,6 @@ private double angleBoi()
     this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
-}
-//--------------------------------------------------------------------------------------------------
-private void drive()
-{
-    double leftPower;
-    double rightPower;
-
-    double drive = (-gamepad1.left_stick_y * 70)/100;
-    double turn  = gamepad1.left_stick_x;
-
-    leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-    rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-//----------------------------------
-    //This drives the robot forward
-    robot.front_right.setPower(rightPower);
-    robot.front_left.setPower(leftPower);
-    robot.back_right.setPower(rightPower);
-    robot.back_left.setPower(leftPower);
-    telemetry.update();
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
@@ -163,7 +144,20 @@ private void drive()
         {
 //--------------------------------------------------------------------
             angleBoi();
-            drive();
+            double leftPower;
+            double rightPower;
+
+            double drive = (-gamepad1.left_stick_y * 70)/100;
+            double turn  = gamepad1.left_stick_x;
+
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//----------------------------------
+            //This drives the robot forward
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
 
             if(gamepad1.left_trigger != 0)
             {

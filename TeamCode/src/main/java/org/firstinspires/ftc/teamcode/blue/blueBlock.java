@@ -334,7 +334,7 @@ public void checkEncoder()
         //This moves the robot out of its start position and prepares for scanning
         moveDistance(14,1);
         turnAngle(-76);
-        moveDistance(4.8,1);
+        moveDistance(4.3,1);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
