@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="League Tele", group = "Concept")
+@TeleOp(name="leagueSolo", group = "Concept")
 //@Disabled
-public class leagueCHECKMEC extends LinearOpMode
+public class leagueTele extends LinearOpMode
 {
     leagueMap robot = new leagueMap();
     Orientation angles;
@@ -143,7 +143,7 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //--------------------------------------------------------------------
-            angleBoi();
+//            angleBoi();
             double leftPower;
             double rightPower;
 

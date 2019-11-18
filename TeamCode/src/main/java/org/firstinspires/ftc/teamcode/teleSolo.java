@@ -25,13 +25,14 @@ public class teleSolo extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean Position = true;
+    boolean Position  = true;
 
     double liftSteps = 770;
     double armSteps  = 1120 * .7;
 
     boolean armIsExtended = false;
-    boolean armDown = false;
+    boolean liftDown      = false;
+    boolean servosAreClosed = false;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -183,48 +184,14 @@ private double angleBoi()
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
-            //This section extends the arm and opens the servos on X or Y
-            if(gamepad1.left_trigger !=0 && !armIsExtended)
-            {
-                robot.resetArm();
-//-------------------------------------------
-                robot.claw1.setPosition(0);
-                robot.claw2.setPosition(0);
-//-------------------------------------------
-                while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
-                {
-                    robot.arm.setPower(.7);
-                }
-                robot.arm.setPower(0);
-                robot.resetArm();
-                armIsExtended = true;
-            }
-//-----------------------------------------------------------------------
-            else if(gamepad1.right_trigger !=0 && armIsExtended)
-            {
-                robot.resetLift();
-                robot.resetArm();
-                while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
-                {
-                    robot.arm.setPower(-.7);
-                }
-                robot.arm.setPower(0);
-                robot.resetArm();
-//-------------------------------------------
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-//-------------------------------------------
-                armIsExtended = false;
-            }
-//--------------------------------------------------------------------------------------------------
             //This keeps the lift always flipped up so that it won't fall over and break the program
-            if(robot.lift.getCurrentPosition() < 100 && !armDown)//Less then 100 = armUp
+            if(robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
             {
                 telemetry.addLine("The arm is Up exactly as it should be muy guy");
                 telemetry.update();
             }
 //----------------------------------
-            else if(robot.lift.getCurrentPosition() > 30 && !armDown)//Greater than 200 = armDown
+            else if(robot.lift.getCurrentPosition() > 30 && !liftDown)//Greater than 200 = liftDown
             {
                 while(robot.lift.getCurrentPosition() > 5 && (!isStopRequested()))
                 {
@@ -234,139 +201,98 @@ private double angleBoi()
                 }
             }
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//-------------------------------------------------------//
+//-------------------------------------------------------//
+//-------------Below are my Gamepad controls-------------//
+//-------------------------------------------------------//
+//-------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-            //This closes the claw
-            if(gamepad1.left_bumper)
+            //This section extends the arm and opens the servos ---------- BBBBBBBBBBBBBBBBBBBBB
+            if(gamepad1.b && !armIsExtended && liftDown)
+            {
+                robot.resetArm();
+                robot.claw1.setPosition(0);
+                servosAreClosed = false;
+
+                while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.arm.setPower(.7);
+                }
+                robot.arm.setPower(0);
+                robot.resetArm();
+                armIsExtended = true;
+            }
+//-----------------------------------------------------------------------
+            else if(gamepad1.b && armIsExtended && !liftDown)
+            {
+                robot.resetLift();
+                robot.resetArm();
+
+                while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
+                {
+                    robot.arm.setPower(-.7);
+                }
+                robot.arm.setPower(0);
+                robot.resetArm();
+//--------------------
+                robot.claw1.setPosition(.5);
+                robot.claw2.setPosition(.5);
+                servosAreClosed = true;
+//--------------------
+                armIsExtended = false;
+            }
+//--------------------------------------------------------------------------------------------------
+            //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            if(gamepad1.x && !servosAreClosed)
             {
                 robot.claw1.setPosition(0);
                 robot.claw2.setPosition(0);
+                servosAreClosed = true;
             }
-//----------------------------------
+//--------------------
             //This opens the claw
-            else if(gamepad1.right_bumper)
+            else if(gamepad1.x && servosAreClosed)
             {
                 robot.claw1.setPosition(.5);
                 robot.claw2.setPosition(.5);
+                servosAreClosed = false;
             }
 //--------------------------------------------------------------------------------------------------
-            //This moves the arm up
+            //This moves the arm up --------------- RIGHTTTTTTTTTTTT STICKKKKKKKKKKKKKKKK YYYYYYYYY
             if(gamepad1.right_stick_y!=0)
             {
                 robot.arm.setPower(-gamepad1.right_stick_y);
             }
-//----------------------------------
+//--------------------
             else
             {
                 robot.arm.setPower(0);
             }
 //--------------------------------------------------------------------------------------------------
-            if(gamepad1.x)
-            {
-                robot.lift.setPower(.8);
-            }
-//----------------------------------
-            else if(gamepad1.y)
-            {
-                robot.lift.setPower(-.8);
-            }
-//----------------------------------
-            else
-            {
-                robot.resetLift();
-                robot.lift.setPower(0);
-            }
-//--------------------------------------------------------------------------------------------------
-            if(gamepad1.a && armDown)
+            //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+            if(gamepad1.a && liftDown)
             {
                 while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                 {
                     robot.lift.setPower(-.8);
                 }
-                armDown = false;
+                liftDown = false;
                 robot.resetLift();
                 robot.lift.setPower(0);
             }
-//----------------------------------
-            else if(gamepad1.b && !armDown)
+//--------------------
+            //moves the lift down
+            else if(gamepad1.a && !liftDown)
             {
                 while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                 {
                     robot.lift.setPower(.8);
                 }
-                armDown = true;
+                liftDown = true;
                 robot.resetLift();
                 robot.lift.setPower(0);
             }
-//----------------------------------
+//--------------------
             else
             {
                 robot.lift.setPower(0);
