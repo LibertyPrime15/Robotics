@@ -50,38 +50,6 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
-private void holonomicDrive()
-{
-    if(gamepad1.dpad_right && gamepad1.dpad_up)//Drives diagonally at +45
-    {
-        robot.front_right.setPower(1);
-        robot.front_left.setPower(-1);
-        robot.back_right.setPower(-1);
-        robot.back_left.setPower(1);
-    }
-    else if(gamepad1.dpad_right && gamepad1.dpad_down)//Drives diagonally at -45
-    {
-        robot.front_right.setPower(1);
-        robot.front_left.setPower(-1);
-        robot.back_right.setPower(-1);
-        robot.back_left.setPower(1);
-    }
-    else if(gamepad1.dpad_left && gamepad1.dpad_up)//Drives diagonally at 135
-    {
-        robot.front_right.setPower(1);
-        robot.front_left.setPower(-1);
-        robot.back_right.setPower(-1);
-        robot.back_left.setPower(1);
-    }
-    else if(gamepad1.dpad_left && gamepad1.dpad_down)//Drives diagonally at -135
-    {
-        robot.front_right.setPower(1);
-        robot.front_left.setPower(-1);
-        robot.back_right.setPower(-1);
-        robot.back_left.setPower(1);
-    }
-}
-//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
@@ -180,6 +148,28 @@ private void holonomicDrive()
                 robot.front_left.setPower(-1);
                 robot.back_right.setPower(-1);
                 robot.back_left.setPower(1);
+            }
+//--------------------------------------------------------------------------------------------------
+            //This is holonomic Drive ---- We can drive diagonally ---- USING THE DDDDD PAAADDDDDDDD
+            if(gamepad1.dpad_right && gamepad1.dpad_up)//Drives diagonally at +45 ---- Done
+            {
+                robot.front_right.setPower(-1);
+                robot.back_left.setPower(-1);
+            }
+            else if(gamepad1.dpad_right && gamepad1.dpad_down)//Drives diagonally at -45 ---- Done
+            {
+                robot.front_left.setPower(-1);
+                robot.back_right.setPower(-1);
+            }
+            else if(gamepad1.dpad_left && gamepad1.dpad_up)//Drives diagonally at +135 ---- Done
+            {
+                robot.front_left.setPower(1);
+                robot.back_right.setPower(1);
+            }
+            else if(gamepad1.dpad_left && gamepad1.dpad_down)//Drives diagonally at -135 ---- Done
+            {
+                robot.front_right.setPower(-1);
+                robot.back_left.setPower(-1);
             }
 //--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
