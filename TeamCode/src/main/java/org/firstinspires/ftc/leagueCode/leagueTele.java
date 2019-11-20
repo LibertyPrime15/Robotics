@@ -19,6 +19,7 @@ public class leagueTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
+    boolean intakeSpinningInward = false;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -49,40 +50,44 @@ private double angleBoi()
     return currHeading;
 }
 //--------------------------------------------------------------------------------------------------
+private void holonomicDrive()
+{
+    if(gamepad1.dpad_right && gamepad1.dpad_up)//Drives diagonally at +45
+    {
+        robot.front_right.setPower(1);
+        robot.front_left.setPower(-1);
+        robot.back_right.setPower(-1);
+        robot.back_left.setPower(1);
+    }
+    else if(gamepad1.dpad_right && gamepad1.dpad_down)//Drives diagonally at -45
+    {
+        robot.front_right.setPower(1);
+        robot.front_left.setPower(-1);
+        robot.back_right.setPower(-1);
+        robot.back_left.setPower(1);
+    }
+    else if(gamepad1.dpad_left && gamepad1.dpad_up)//Drives diagonally at 135
+    {
+        robot.front_right.setPower(1);
+        robot.front_left.setPower(-1);
+        robot.back_right.setPower(-1);
+        robot.back_left.setPower(1);
+    }
+    else if(gamepad1.dpad_left && gamepad1.dpad_down)//Drives diagonally at -135
+    {
+        robot.front_right.setPower(1);
+        robot.front_left.setPower(-1);
+        robot.back_right.setPower(-1);
+        robot.back_left.setPower(1);
+    }
+}
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -143,13 +148,14 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //--------------------------------------------------------------------
-//            angleBoi();
+            angleBoi();
+
             double leftPower;
             double rightPower;
 
-            double drive = (-gamepad1.left_stick_y * 70)/100;
-            double turn  = gamepad1.left_stick_x;
-
+            double drive = (-gamepad1.left_stick_y * 60)/100;
+            double turn  = gamepad1.right_stick_x;
+//----------------------------------
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------
@@ -158,8 +164,9 @@ private double angleBoi()
             robot.front_left.setPower(leftPower);
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
-
-            if(gamepad1.left_trigger != 0)
+//--------------------------------------------------------------------------------------------------
+            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
+            if(gamepad1.left_stick_x < 0)//Moves the bot to the left
             {
                 robot.front_right.setPower(-1);
                 robot.front_left.setPower(1);
@@ -167,30 +174,34 @@ private double angleBoi()
                 robot.back_left.setPower(-1);
             }
             //This moves the robot to the right
-            else if(gamepad1.right_trigger != 0)
+            else if(gamepad1.left_stick_x > 0)//Moves the bot to the right
             {
                 robot.front_right.setPower(1);
                 robot.front_left.setPower(-1);
                 robot.back_right.setPower(-1);
                 robot.back_left.setPower(1);
             }
-//------------------------------------------------
-            if(gamepad1.a)
+//--------------------------------------------------------------------------------------------------
+            //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
+            if(gamepad1.a && !intakeSpinningInward)
             {
                 robot.intake1.setPower(-.5);
                 robot.intake2.setPower(-.5);
+                intakeSpinningInward = true;
             }
-            else if(gamepad1.b)
+            else if(gamepad1.a && intakeSpinningInward)
             {
                 robot.intake1.setPower(.5);
                 robot.intake2.setPower(.5);
+                intakeSpinningInward = false;
             }
-            else if(gamepad1.x)
+            else if(gamepad1.b)
             {
                 robot.intake1.setPower(0);
                 robot.intake2.setPower(0);
+                intakeSpinningInward = false;
             }
-//--------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
         }
     }
 }

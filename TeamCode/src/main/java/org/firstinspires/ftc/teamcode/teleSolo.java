@@ -211,9 +211,6 @@ private double angleBoi()
             if(gamepad1.b && !armIsExtended && liftDown)
             {
                 robot.resetArm();
-                robot.claw1.setPosition(0);
-                servosAreClosed = false;
-
                 while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
                 {
                     robot.arm.setPower(.7);
@@ -225,19 +222,13 @@ private double angleBoi()
 //-----------------------------------------------------------------------
             else if(gamepad1.b && armIsExtended && !liftDown)
             {
-                robot.resetLift();
                 robot.resetArm();
-
                 while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
                 {
                     robot.arm.setPower(-.7);
                 }
                 robot.arm.setPower(0);
                 robot.resetArm();
-//--------------------
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-                servosAreClosed = true;
 //--------------------
                 armIsExtended = false;
             }
