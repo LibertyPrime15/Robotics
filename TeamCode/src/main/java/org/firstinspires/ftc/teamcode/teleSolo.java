@@ -25,7 +25,7 @@ public class teleSolo extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean Position  = true;
+    boolean liftStartesDown  = false;
 
     double liftSteps = 770;
     double armSteps  = 1120 * .7;
@@ -249,6 +249,19 @@ private double angleBoi()
                 servosAreClosed = false;
             }
 //--------------------------------------------------------------------------------------------------
+            //This tells the robot if the arm starts up or down
+            if(gamepad1.dpad_down)
+            {
+                liftStartesDown = true;
+                liftDown = true;
+            }
+//--------------------
+            else if(gamepad1.dpad_up)
+            {
+                liftStartesDown = false;
+                liftDown = false;
+            }
+//--------------------------------------------------------------------------------------------------
             //This moves the arm up --------------- RIGHTTTTTTTTTTTT STICKKKKKKKKKKKKKKKK YYYYYYYYY
             if(gamepad1.right_stick_y!=0)
             {
@@ -260,34 +273,72 @@ private double angleBoi()
                 robot.arm.setPower(0);
             }
 //--------------------------------------------------------------------------------------------------
-            //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
-            if(gamepad1.a && liftDown)
+            //if the lift didn't start in the down position, but rather the up position
+            if(!liftStartesDown)
             {
-                while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+                if(gamepad1.a && liftDown)
                 {
-                    robot.lift.setPower(-.8);
+                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    {
+                        robot.lift.setPower(-.8);
+                    }
+                    liftDown = false;
+                    robot.resetLift();
+                    robot.lift.setPower(0);
                 }
-                liftDown = false;
-                robot.resetLift();
-                robot.lift.setPower(0);
-            }
 //--------------------
-            //moves the lift down
-            else if(gamepad1.a && !liftDown)
-            {
-                while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                //moves the lift down
+                else if(gamepad1.a && !liftDown)
                 {
-                    robot.lift.setPower(.8);
+                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    {
+                        robot.lift.setPower(.8);
+                    }
+                    liftDown = true;
+                    robot.resetLift();
+                    robot.lift.setPower(0);
                 }
-                liftDown = true;
-                robot.resetLift();
-                robot.lift.setPower(0);
-            }
 //--------------------
-            else
-            {
-                robot.lift.setPower(0);
+                else
+                {
+                    robot.lift.setPower(0);
+                }
             }
+//-------------------------------------------------------
+            //if the lift didn't start in the down position, but rather the up position
+            if(liftStartesDown)
+            {
+                //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+                if(gamepad1.a && liftDown)
+                {
+                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    {
+                        robot.lift.setPower(.8);
+                    }//-----------------------------
+                    liftDown = false;
+                    robot.resetLift();
+                    robot.lift.setPower(0);
+                }
+//--------------------
+                //moves the lift down
+                else if(gamepad1.a && !liftDown)
+                {
+                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    {
+                        robot.lift.setPower(-.8);
+                    }
+                    liftDown = true;
+                    robot.resetLift();
+                    robot.lift.setPower(0);
+                }
+//--------------------
+                else
+                {
+                    robot.lift.setPower(0);
+                }
+            }
+
 //--------------------------------------------------------------------------------------------------
         }
     }
