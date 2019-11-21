@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.leagueCode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,8 +16,8 @@ public class leagueMap
 
     public DcMotor  intake1  = null;
     public DcMotor  intake2  = null;
-//    public DcMotor  motor3  = null;
-//    public DcMotor  motor4  = null;
+    public DcMotor  liftPrimary  = null;
+    public DcMotor  liftSecondary  = null;
 //
 //    public Servo arm1 = null;
 //    public Servo arm2 = null;
@@ -47,8 +48,8 @@ public class leagueMap
 
         intake1   = hwMap.get(DcMotor.class, "intake1");
         intake2   = hwMap.get(DcMotor.class, "intake2");
-//        motor3   = hwMap.get(DcMotor.class, "motor3");
-//        motor4   = hwMap.get(DcMotor.class, "motor4");
+        liftPrimary   = hwMap.get(DcMotor.class, "liftPrimary");
+        liftSecondary   = hwMap.get(DcMotor.class, "liftSecondary");
 //
 //        arm1  = hwMap.get(Servo.class, "arm1");
 //        arm2  = hwMap.get(Servo.class, "arm2");
@@ -72,18 +73,18 @@ public class leagueMap
 
         intake1.setPower(0);
         intake2.setPower(0);
-//        motor3.setPower(0);
-//        motor4.setPower(0);
+        liftPrimary.setPower(0);
+        liftSecondary.setPower(0);
 //------------------------------
-        front_right.setDirection(DcMotor.Direction.REVERSE);
-        front_left.setDirection(DcMotor.Direction.FORWARD);
-        back_right.setDirection(DcMotor.Direction.REVERSE);
-        back_left.setDirection(DcMotor.Direction.FORWARD);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
+        front_left.setDirection(DcMotor.Direction.REVERSE);
+        back_right.setDirection(DcMotor.Direction.FORWARD);
+        back_left.setDirection(DcMotor.Direction.REVERSE);
 
         intake1.setDirection(DcMotor.Direction.REVERSE);
         intake2.setDirection(DcMotor.Direction.FORWARD);
-//        motor3.setDirection(DcMotor.Direction.REVERSE);
-//        motor4.setDirection(DcMotor.Direction.FORWARD);
+        liftPrimary.setDirection(DcMotor.Direction.REVERSE);
+        liftSecondary.setDirection(DcMotor.Direction.FORWARD);
 //------------------------------
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -92,8 +93,7 @@ public class leagueMap
 
         intake1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motor4.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftPrimary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //------------------------------
         front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -102,8 +102,8 @@ public class leagueMap
 
         intake1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motor4.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftPrimary.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftSecondary.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 //----------------------------------------//
     //Stop

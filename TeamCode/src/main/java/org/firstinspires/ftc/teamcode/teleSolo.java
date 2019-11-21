@@ -32,7 +32,7 @@ public class teleSolo extends LinearOpMode
 
     boolean armIsExtended = false;
     boolean liftDown      = false;
-    boolean servosAreClosed = false;
+    boolean servosAreOpen = false;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -167,6 +167,10 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
+            telemetry.addData("Thing",robot.lift.getCurrentPosition());
+            telemetry.addData("LiftStartsDown= ",liftStartesDown);
+            telemetry.addData("LiftDown ",liftDown);
+            telemetry.update();
 //--------------------------------------------------------------------------------------------------
             //This is the block of code for driving and turning the robot
             double leftPower;
@@ -207,8 +211,8 @@ private double angleBoi()
 //-------------------------------------------------------//
 //-------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-            //This section extends the arm and opens the servos ---------- BBBBBBBBBBBBBBBBBBBBB
-            if(gamepad1.b && !armIsExtended && liftDown)
+            //This section extends the arm ---------------- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+            if(gamepad1.b && !armIsExtended)
             {
                 robot.resetArm();
                 while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
@@ -220,7 +224,7 @@ private double angleBoi()
                 armIsExtended = true;
             }
 //-----------------------------------------------------------------------
-            else if(gamepad1.b && armIsExtended && !liftDown)
+            else if(gamepad1.b && armIsExtended)
             {
                 robot.resetArm();
                 while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
@@ -233,20 +237,48 @@ private double angleBoi()
                 armIsExtended = false;
             }
 //--------------------------------------------------------------------------------------------------
-            //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            if(gamepad1.x && !servosAreClosed)
+            //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//            if(gamepad1.x && !servosAreOpen)
+//            {
+//                robot.claw1.setPosition(0);
+//                robot.claw2.setPosition(0);
+//                servosAreOpen = true;
+//            }
+////--------------------
+//            //This opens the claw
+//            else if(gamepad1.y && servosAreOpen)
+//            {
+//                robot.claw1.setPosition(.5);
+//                robot.claw2.setPosition(.5);
+//                servosAreOpen = false;
+//            }
+            if(gamepad1.x && servosAreOpen)
             {
-                robot.claw1.setPosition(0);
-                robot.claw2.setPosition(0);
-                servosAreClosed = true;
+                if(robot.claw1.getPosition() <= 0)
+                {
+                    robot.claw1.setPosition(.5);
+                    robot.claw2.setPosition(.5);
+                }
+                else
+                {
+                    robot.claw1.setPosition(-.5);
+                    robot.claw2.setPosition(-.5);
+                }
+                servosAreOpen = false;
             }
-//--------------------
-            //This opens the claw
-            else if(gamepad1.x && servosAreClosed)
+            else if(((gamepad1.x && !servosAreOpen)) || ((!gamepad1.x && servosAreOpen)))
             {
-                robot.claw1.setPosition(.5);
-                robot.claw2.setPosition(.5);
-                servosAreClosed = false;
+                telemetry.addData("Can Toggle = ",servosAreOpen);
+                telemetry.update();
+            }
+            else if(!gamepad1.x && !servosAreOpen)
+            {
+                servosAreOpen = true; // this resets it for the next cycle only if the button was pressed, then released
+            }
+            else
+            {
+                telemetry.addData("Servos Are Open = ",servosAreOpen);
+                telemetry.update();
             }
 //--------------------------------------------------------------------------------------------------
             //This tells the robot if the arm starts up or down
@@ -312,9 +344,9 @@ private double angleBoi()
                 //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
                 if(gamepad1.a && liftDown)
                 {
-                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
-                        robot.lift.setPower(.8);
+                        robot.lift.setPower(-.8);
                     }//-----------------------------
                     liftDown = false;
                     robot.resetLift();
@@ -324,9 +356,9 @@ private double angleBoi()
                 //moves the lift down
                 else if(gamepad1.a && !liftDown)
                 {
-                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
-                        robot.lift.setPower(-.8);
+                        robot.lift.setPower(.8);
                     }
                     liftDown = true;
                     robot.resetLift();
@@ -338,11 +370,6 @@ private double angleBoi()
                     robot.lift.setPower(0);
                 }
             }
-
-//--------------------------------------------------------------------------------------------------
-        }
-    }
-}
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//
@@ -350,3 +377,6 @@ private double angleBoi()
 //-------------------------------------------//
 //-------------------------------------------//
 //--------------------------------------------------------------------------------------------------
+        }
+    }
+}
