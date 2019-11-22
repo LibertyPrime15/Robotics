@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,6 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.io.File;
 
 @TeleOp(name="teleSolo", group = "Main")
 //@Disabled
@@ -26,6 +29,10 @@ public class teleSolo extends LinearOpMode
 
     float currHeading = 0;
     boolean liftStartesDown  = false;
+
+    private String soundPath = "/FIRST/blocks/sounds";
+    private File goldFile   = new File("/sdcard" + soundPath + "/gold.wav");
+    private File silverFile = new File("/sdcard" + soundPath + "/silver.wav");
 
     double liftSteps = 770;
     double armSteps  = 1120 * .7;
@@ -152,6 +159,52 @@ private double angleBoi()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //--------------------------------------------------------------------------------------------------
 //------------------------------------------------------//
 //------------------------------------------------------//
@@ -161,6 +214,12 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
+        boolean goldFound   = goldFile.exists();
+        boolean silverFound = silverFile.exists();
+
+        telemetry.addData("gold sound",   goldFound ?   "Found" : "NOT Found \nCopy gold.wav to " + soundPath  );
+        telemetry.addData("silver sound", silverFound ? "Found" : "NOT Found \nCopy silver.wav to " + soundPath );
+
         imuInit();
         waitForStart();
 //--------------------------------------------------------------------------------------------------
@@ -207,7 +266,7 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------------------//
 //-------------------------------------------------------//
-//-------------Below are my Gamepad controls-------------//
+//-------------Below are my Gamepad controls for ! CONTROLLER-------------//
 //-------------------------------------------------------//
 //-------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
@@ -369,6 +428,26 @@ private double angleBoi()
                 {
                     robot.lift.setPower(0);
                 }
+            }
+//--------------------------------------------------------------------------------------------------
+//-------------------------------------------//
+//-------------------------------------------//
+//---There is No More Code FOR CONTROLLER 1 Past This Point---//
+//-------------------------------------------//
+//-------------------------------------------//
+//--------------------------------------------------------------------------------------------------
+            if (silverFound && gamepad1.a)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, silverFile);
+                telemetry.addData("Playing", "Silver File");
+                telemetry.update();
+            }
+
+            if (goldFound && gamepad1.b)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, goldFile);
+                telemetry.addData("Playing", "Gold File");
+                telemetry.update();
             }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
