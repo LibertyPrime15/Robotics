@@ -221,18 +221,6 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
-//            if(gamepad1.a && !intakeSpinningInward)
-//            {
-//                robot.intake1.setPower(-.5);
-//                robot.intake2.setPower(-.5);
-//                intakeSpinningInward = true;
-//            }
-//            else if(gamepad1.a && intakeSpinningInward)
-//            {
-//                robot.intake1.setPower(.5);
-//                robot.intake2.setPower(.5);
-//                intakeSpinningInward = false;
-//            }
             if(gamepad1.x && canToggle)
             {
                 if(robot.intake1.getPower() <= 0)

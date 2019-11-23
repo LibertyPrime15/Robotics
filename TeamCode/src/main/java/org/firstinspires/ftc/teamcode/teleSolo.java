@@ -30,9 +30,10 @@ public class teleSolo extends LinearOpMode
     float currHeading = 0;
     boolean liftStartesDown  = false;
 
-    private String soundPath = "/FIRST/blocks/sounds";
-    private File goldFile   = new File("/sdcard" + soundPath + "/gold.wav");
-    private File silverFile = new File("/sdcard" + soundPath + "/silver.wav");
+//    private boolean niFile;
+//    private boolean knightsFile;
+//    private boolean deadFile;
+//    private boolean shrubberyFile;
 
     double liftSteps = 770;
     double armSteps  = 1120 * .7;
@@ -214,13 +215,31 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        boolean goldFound   = goldFile.exists();
-        boolean silverFound = silverFile.exists();
+//        int niID        = hardwareMap.appContext.getResources().getIdentifier("ni", "raw", hardwareMap.appContext.getPackageName());
+//        int knightsID  = hardwareMap.appContext.getResources().getIdentifier("knights",   "raw", hardwareMap.appContext.getPackageName());
+//        int deadID      = hardwareMap.appContext.getResources().getIdentifier("dead", "raw", hardwareMap.appContext.getPackageName());
+//        int shrubberyID = hardwareMap.appContext.getResources().getIdentifier("shrubbery",   "raw", hardwareMap.appContext.getPackageName());
+//
+//        if (niID != 0)
+//            niFile   = SoundPlayer.getInstance().preload(hardwareMap.appContext, niID);
+//
+//        if (knightsID != 0)
+//            knightsFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, knightsID);
+//
+//        if (deadID != 0)
+//            deadFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, deadID);
+//
+//        if (shrubberyID != 0)
+//            shrubberyFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, shrubberyID);
 
-        telemetry.addData("gold sound",   goldFound ?   "Found" : "NOT Found \nCopy gold.wav to " + soundPath  );
-        telemetry.addData("silver sound", silverFound ? "Found" : "NOT Found \nCopy silver.wav to " + soundPath );
 
         imuInit();
+
+//        telemetry.addData("niFile",      niFile ?   "Found" : "NOT found\n Add ni.wav to /src/main/res/raw" );
+//        telemetry.addData("knightsFile", knightsFile ? "Found" : "Not found\n Add knights.wav to /src/main/res/raw" );
+//        telemetry.addData("deadID",      deadFile ?   "Found" : "NOT found\n Add dead.wav to /src/main/res/raw" );
+//        telemetry.addData("shrubberyID", shrubberyFile ? "Found" : "Not found\n Add shrubbery.wav to /src/main/res/raw" );
+
         waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
@@ -248,13 +267,13 @@ private double angleBoi()
             robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
             //This keeps the lift always flipped up so that it won't fall over and break the program
-            if(robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
+            if(robot.lift.getCurrentPosition() < 100 && !liftDown && !liftStartesDown)//Less then 100 = armUp
             {
                 telemetry.addLine("The arm is Up exactly as it should be muy guy");
                 telemetry.update();
             }
 //----------------------------------
-            else if(robot.lift.getCurrentPosition() > 30 && !liftDown)//Greater than 200 = liftDown
+            else if(robot.lift.getCurrentPosition() > 5 && !liftDown && !liftStartesDown)//Greater than 200 = liftDown
             {
                 while(robot.lift.getCurrentPosition() > 5 && (!isStopRequested()))
                 {
@@ -297,20 +316,6 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//            if(gamepad1.x && !servosAreOpen)
-//            {
-//                robot.claw1.setPosition(0);
-//                robot.claw2.setPosition(0);
-//                servosAreOpen = true;
-//            }
-////--------------------
-//            //This opens the claw
-//            else if(gamepad1.y && servosAreOpen)
-//            {
-//                robot.claw1.setPosition(.5);
-//                robot.claw2.setPosition(.5);
-//                servosAreOpen = false;
-//            }
             if(gamepad1.x && servosAreOpen)
             {
                 if(robot.claw1.getPosition() <= 0)
@@ -436,19 +441,31 @@ private double angleBoi()
 //-------------------------------------------//
 //-------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-            if (silverFound && gamepad1.a)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, silverFile);
-                telemetry.addData("Playing", "Silver File");
-                telemetry.update();
-            }
-
-            if (goldFound && gamepad1.b)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, goldFile);
-                telemetry.addData("Playing", "Gold File");
-                telemetry.update();
-            }
+//            if(gamepad2.a)
+//            {
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, niID);
+//                telemetry.addData("Playing", "Ni File");
+//                telemetry.update();
+//            }
+//
+//            else if(gamepad2.b)
+//            {
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, knightsID);
+//                telemetry.addData("Playing", "Knights File");
+//                telemetry.update();
+//            }
+//            else if(gamepad2.x)
+//            {
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, deadID);
+//                telemetry.addData("Playing", "Dead File");
+//                telemetry.update();
+//            }
+//            else if(gamepad2.y)
+//            {
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, shrubberyID);
+//                telemetry.addData("Playing", "Shrubbery File");
+//                telemetry.update();
+//            }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//
