@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="Linear Tele", group = "Main")
+@TeleOp(name="Linear Tele", group = "Concept")
 //Last Year's Robot
-//@Disabled
+@Disabled
 public class LinearTele extends LinearOpMode
 {
     LinearMap robot = new LinearMap();

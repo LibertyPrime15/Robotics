@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="League Blue", group = "Concept")
+@Autonomous(name="League Blue", group = "A")
 //@Disabled
 public class leagueTestAuto extends LinearOpMode
 {
@@ -37,10 +37,8 @@ public class leagueTestAuto extends LinearOpMode
     float currHeading = 0;
     double Circ = 11.97;////RUBBER WHEELS
 //    double Circ = 00.00;///MECANUM WHEELS
-
-
-
-    double Steps = 1120;///40:1 Gear Ratio
+    double Steps = 560;///40:1 Gear Ratio
+    double Compensation = 1.5;
 //    double Steps = 560;////20:1 Gear Ratio
 //    double Steps = 1680;///60:1 Gear Ratio
 
@@ -221,43 +219,59 @@ public void moveDistance(double length, double power)
 }
 //--------------------------------------------------------------------------------------------------
 //This method moves a certain distance in inches SIDEWAYS at a certain speed - when moving it will move perfectly straight
-public void moveSide(int time, boolean direction, double power)
+public void moveSide(double distance, double power)
 {
-    double totDistInSteps = (((time / Circ) * Steps) * -1);
+    double totDistInSteps = (((Circ / Steps) * (distance * Compensation)) * -1);
+    double averageEncoderRight = 0;
+    double averageEncoderLeft  = 0;
 
-    double leftPower;
-    double rightPower;
+    double topRight;
+    double topLeft;
+    double bottomRight;
+    double bottomLeft;
 
-    if(direction)
+    if(totDistInSteps > 0)//DRIVE TO THE RIGHT
     {
-        angleBoi();
-        drive = -power;
-        turn  = .05 * currHeading;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0);
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0);
+        while(totDistInSteps > averageEncoderRight && opModeIsActive() && (!(isStopRequested())))
+        {
+            angleBoi();
+            drive = -power;
+            turn  = .05 * currHeading;
+            averageEncoderRight = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition()) / 2;
 
-        robot.front_right.setPower(rightPower);
-        robot.front_left.setPower(leftPower);
-        robot.back_right.setPower(rightPower);
-        robot.back_left.setPower(leftPower);
-        sleep(time);
-        robot.Halt();
+            topRight    = Range.clip(drive + turn, -1.0, 1.0);
+            topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+            bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+            bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+            robot.front_right.setPower(topRight);
+            robot.front_left.setPower(topLeft);
+            robot.back_right.setPower(bottomRight);
+            robot.back_left.setPower(bottomLeft);
+        }
     }
 
-    else if(!direction)
+    else if(totDistInSteps < 0)//DRIVE TO THE LEFT
     {
-        angleBoi();
-        drive = -power;
-        turn  = .05 * currHeading;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0);
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0);
+        while(totDistInSteps < averageEncoderLeft && opModeIsActive() && (!(isStopRequested())))
+        {
+            angleBoi();
+            drive = -power;
+            turn  = .05 * currHeading;
+            averageEncoderLeft = (((robot.front_left.getCurrentPosition() + robot.back_left.getCurrentPosition()) / 2) * -1);
 
-        robot.front_right.setPower(rightPower);
-        robot.front_left.setPower(leftPower);
-        robot.back_right.setPower(rightPower);
-        robot.back_left.setPower(leftPower);
-        sleep(time);
-        robot.Halt();
+            telemetry.addData("Average Encoder Value Left",averageEncoderLeft);
+            telemetry.update();
+            topRight    = Range.clip(drive + turn, -1.0, 1.0);
+            topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+            bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+            bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+            robot.front_right.setPower(topRight);
+            robot.front_left.setPower(topLeft);
+            robot.back_right.setPower(bottomRight);
+            robot.back_left.setPower(bottomLeft);
+        }
     }
 }
 //--------------------------------------------------------------------------------------------------

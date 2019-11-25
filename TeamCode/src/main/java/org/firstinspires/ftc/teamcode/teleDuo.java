@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="teleDuo", group = "Main")
+@TeleOp(name="teleDuo", group = "B")
 //@Disabled
 public class teleDuo extends LinearOpMode
 {

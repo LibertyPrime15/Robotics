@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.io.File;
 
-@TeleOp(name="teleSolo", group = "Main")
+@TeleOp(name="teleSolo", group = "B")
 //@Disabled
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------------------//
@@ -267,19 +267,22 @@ private double angleBoi()
             robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
             //This keeps the lift always flipped up so that it won't fall over and break the program
-            if(robot.lift.getCurrentPosition() < 100 && !liftDown && !liftStartesDown)//Less then 100 = armUp
+            if(!liftStartesDown)
             {
-                telemetry.addLine("The arm is Up exactly as it should be muy guy");
-                telemetry.update();
-            }
-//----------------------------------
-            else if(robot.lift.getCurrentPosition() > 5 && !liftDown && !liftStartesDown)//Greater than 200 = liftDown
-            {
-                while(robot.lift.getCurrentPosition() > 5 && (!isStopRequested()))
+                if(robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
                 {
-                    robot.lift.setPower(-1);
-                    telemetry.addData("Realigning the Arm",robot.lift.getCurrentPosition());
+                    telemetry.addLine("The arm is Up exactly as it should be muy guy");
                     telemetry.update();
+                }
+//----------------------------------
+                else if(robot.lift.getCurrentPosition() > 5 && !liftDown)//Greater than 200 = liftDown
+                {
+                    while(robot.lift.getCurrentPosition() > 5 && (!isStopRequested()))
+                    {
+                        robot.lift.setPower(-1);
+                        telemetry.addData("Realigning the Arm",robot.lift.getCurrentPosition());
+                        telemetry.update();
+                    }
                 }
             }
 //--------------------------------------------------------------------------------------------------
@@ -321,12 +324,12 @@ private double angleBoi()
                 if(robot.claw1.getPosition() <= 0)
                 {
                     robot.claw1.setPosition(.5);
-                    robot.claw2.setPosition(.5);
+                    robot.claw2.setPosition(-.5);
                 }
                 else
                 {
                     robot.claw1.setPosition(-.5);
-                    robot.claw2.setPosition(-.5);
+                    robot.claw2.setPosition(.5);
                 }
                 servosAreOpen = false;
             }
@@ -351,12 +354,6 @@ private double angleBoi()
                 liftStartesDown = true;
                 liftDown = true;
             }
-//--------------------
-            else if(gamepad1.dpad_up)
-            {
-                liftStartesDown = false;
-                liftDown = false;
-            }
 //--------------------------------------------------------------------------------------------------
             //This moves the arm up --------------- RIGHTTTTTTTTTTTT STICKKKKKKKKKKKKKKKK YYYYYYYYY
             if(gamepad1.right_stick_y!=0)
@@ -378,28 +375,59 @@ private double angleBoi()
                     while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
                         robot.lift.setPower(-.8);
+                        leftPower = Range.clip(drive + turn,-1.0,1.0);
+                        rightPower = Range.clip(drive - turn,-1.0,1.0);
+                        //This drives the robot forward
+                        robot.front_right.setPower(rightPower);
+                        robot.front_left.setPower(leftPower);
+                        robot.back_right.setPower(rightPower);
+                        robot.back_left.setPower(leftPower);
+                        if (gamepad1.right_stick_y != 0)
+                        {
+                            robot.arm.setPower(-gamepad1.right_stick_y);
+                        }
+                        else
+                        {
+                            robot.arm.setPower(0);
+                        }
                     }
                     liftDown = false;
                     robot.resetLift();
                     robot.lift.setPower(0);
                 }
-//--------------------
-                //moves the lift down
-                else if(gamepad1.a && !liftDown)
+            }
+            //moves the lift down
+            else if(gamepad1.a && !liftDown && !liftStartesDown)
+            {
+                while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                 {
-                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    robot.lift.setPower(.8);
+                    if(gamepad1.left_stick_y !=0)
                     {
-                        robot.lift.setPower(.8);
+                        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+                        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+                        //This drives the robot forward
+                        robot.front_right.setPower(rightPower);
+                        robot.front_left.setPower(leftPower);
+                        robot.back_right.setPower(rightPower);
+                        robot.back_left.setPower(leftPower);
                     }
-                    liftDown = true;
-                    robot.resetLift();
-                    robot.lift.setPower(0);
+                    if(gamepad1.right_stick_y !=0)
+                    {
+                        robot.arm.setPower(-gamepad1.right_stick_y);
+                    }
+                    else
+                    {
+                        robot.arm.setPower(0);
+                    }
                 }
-//--------------------
-                else
-                {
-                    robot.lift.setPower(0);
-                }
+                liftDown = true;
+                robot.resetLift();
+                robot.lift.setPower(0);
+            }
+            else
+            {
+                robot.lift.setPower(0);
             }
 //-------------------------------------------------------
             //if the lift didn't start in the down position, but rather the up position
@@ -411,24 +439,31 @@ private double angleBoi()
                     while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
                         robot.lift.setPower(-.8);
-                    }//-----------------------------
-                    liftDown = false;
-                    robot.resetLift();
-                    robot.lift.setPower(0);
-                }
-//--------------------
-                //moves the lift down
-                else if(gamepad1.a && !liftDown)
-                {
-                    while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-                    {
-                        robot.lift.setPower(.8);
+                        if(gamepad1.left_stick_y !=0)
+                        {
+                            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+                            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//----------------------------------
+                            //This drives the robot forward
+                            robot.front_right.setPower(rightPower);
+                            robot.front_left.setPower(leftPower);
+                            robot.back_right.setPower(rightPower);
+                            robot.back_left.setPower(leftPower);
+                        }
+                        if(gamepad1.right_stick_y !=0)
+                        {
+                            robot.arm.setPower(-gamepad1.right_stick_y);
+                        }
+                        else
+                        {
+                            robot.arm.setPower(0);
+                        }
                     }
-                    liftDown = true;
+                    liftDown = false;
+                    liftStartesDown = false;
                     robot.resetLift();
                     robot.lift.setPower(0);
                 }
-//--------------------
                 else
                 {
                     robot.lift.setPower(0);

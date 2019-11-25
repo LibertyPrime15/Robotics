@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Red Block", group = "Red")
+@Autonomous(name="Red Block", group = "C")
 //@Disabled
 public class redBlock extends LinearOpMode
 {
@@ -331,31 +331,30 @@ public void checkDistance()
     moveDistance(distRemain,1);
 }
 //--------------------------------------------------------------------------------------------------
-//THIS IS FOR TESTING CODE//
-//--------------------------------------------------------------------------------------------------
     private void getBlock()//Needs to go 6000 steps remaining distance
     {
         robot.Halt();
         turnAngle(81);
         robot.openClaw();
-        moveDistance(5, .3);
+        moveDistance(4, .5);
         liftUp();
-        armUp(.7);
-        moveDistance(7,.3);
+        armUp(.9);
+        moveDistance(8,.8);
+        armDown(.9);
         robot.closeClaw();
-        sleep(300);
-        armDown(-.7);
         liftDown();
-        moveDistance(-11,.3);
+        moveDistance(-1,.8);
         turnAngle(-85);
-        checkDistance();//----------
+        checkDistance();//------------
         armUp(2);
         liftUp();
         robot.openClaw();
-        moveDistance(-17,1);//It isn't moving the proper distance
+        sleep(100);
+        moveDistance(-.5,7.);
+        turnAngle(-2);
+        moveDistance(-17,1);
         stop();
     }
-//--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//

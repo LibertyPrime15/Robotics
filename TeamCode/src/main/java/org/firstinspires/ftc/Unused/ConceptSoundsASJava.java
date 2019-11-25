@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="Concept: Sound Resources", group="Concept")
-//@Disabled
+@Disabled
 public class ConceptSoundsASJava extends LinearOpMode
 {
 

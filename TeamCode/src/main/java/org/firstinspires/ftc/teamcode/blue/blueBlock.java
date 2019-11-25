@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Blue Block", group = "Blue")
+@Autonomous(name="Blue Block", group = "B")
 //@Disabled
 public class blueBlock extends LinearOpMode
 {
@@ -357,32 +357,26 @@ public void checkDistance()
 private void getBlock()
 {
     robot.Halt();
-    turnAngle(84);
+    turnAngle(81);
     robot.openClaw();
     liftUp();
-    armUp(.7);
-    moveDistance(7,.6);
-    armDown(.7);
+    armUp(.9);
+    moveDistance(7,1);
+    armDown(.9);
     robot.closeClaw();
-    sleep(300);
+    sleep(100);
     liftDown();
-    moveDistance(-5,.8);
-    turnAngle(70);///////////////////
-    checkDistance();///////////////////////////////////////////////////////////////
+    moveDistance(-2.2,1);
+    turnAngle(68);
+    checkDistance();
+    sleep(200);
     armUp(2);
     liftUp();
     robot.openClaw();
-    moveDistance(-17,1);//It isn't moving the proper distance
+    sleep(100);
+    moveDistance(-10,1);//It isn't moving the proper distance
     stop();
 }
-//--------------------------------------------------------------------------------------------------
-//THIS IS FOR TESTING CODE//
-//--------------------------------------------------------------------------------------------------
-
-
-
-
-
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//

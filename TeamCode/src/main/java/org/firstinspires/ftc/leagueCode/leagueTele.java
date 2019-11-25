@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name="leagueSolo", group = "Concept")
+@TeleOp(name="leagueSolo", group = "A")
 //@Disabled
 public class leagueTele extends LinearOpMode
 {
@@ -19,8 +19,7 @@ public class leagueTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean intakeSpinningInward = false;
-    boolean canToggle = true;
+    boolean isSpinningInward = false;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -221,35 +220,51 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
-            if(gamepad1.x && canToggle)
-            {
-                if(robot.intake1.getPower() <= 0)
-                {
-                    robot.intake1.setPower(.5);
-                    robot.intake2.setPower(.5);
-                }
-                else
-                {
-                    robot.intake1.setPower(-.5);
-                    robot.intake2.setPower(-.5);
-                }
-                canToggle = false;
-            }
-            else if(((gamepad1.x && !canToggle)) || ((!gamepad1.x && canToggle)))
-            {
-                telemetry.addData("Can Toggle = ",canToggle);
-                telemetry.update();
-            }
-            else if(!gamepad1.x && !canToggle)
-            {
-                canToggle = true; // this resets it for the next cycle only if the button was pressed, then released
-            }
-            else if(gamepad1.b)
+            if(gamepad1.b)
             {
                 robot.intake1.setPower(0);
                 robot.intake2.setPower(0);
-                robot.intake1.getPower();
-                intakeSpinningInward = false;
+            }
+            else
+            {
+                if(gamepad1.x && !isSpinningInward)//If it is not moving or is spinning outward
+                {
+                    if(robot.intake1.getPower() >= 0)//If it is not moving or spinning inward - spin inward
+                    {
+                        robot.intake1.setPower(-.5);
+                        robot.intake2.setPower(-.5);
+                        isSpinningInward = true;
+                    }
+                    else
+                    {
+                        robot.intake1.setPower(.5);
+                        robot.intake2.setPower(.5);
+                    }
+                }
+                else if(!gamepad1.x && isSpinningInward)
+                {
+                    isSpinningInward = false; // this resets it for the next cycle only if the button was pressed, then released
+                }
+                else if(!gamepad1.x && !isSpinningInward)
+                {
+                    isSpinningInward = true;
+                }
+            }
+//--------------------------------------------------------------------------------------------------
+            if(gamepad1.right_trigger !=0)
+            {
+                robot.liftPrimary.setPower(1);
+                robot.liftSecondary.setPower(1);
+            }
+            else if(gamepad1.left_trigger !=0)
+            {
+                robot.liftPrimary.setPower(-1);
+                robot.liftSecondary.setPower(-1);
+            }
+            else
+            {
+                robot.liftPrimary.setPower(0);
+                robot.liftSecondary.setPower(0);
             }
 //--------------------------------------------------------------------------------------------------
         }

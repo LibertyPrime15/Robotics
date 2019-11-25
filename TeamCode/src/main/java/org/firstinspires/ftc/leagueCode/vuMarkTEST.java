@@ -23,8 +23,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@TeleOp(name="VuMarkTEST", group ="Concept")
-//@Disabled
+@TeleOp(name="VuMarkTEST", group ="A")
+@Disabled
 public class vuMarkTEST extends LinearOpMode
 {
     RevMap robot = new RevMap();

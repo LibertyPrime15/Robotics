@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Red Plate", group = "Red")
+@Autonomous(name="Red Plate", group = "C")
 //@Disabled
 public class redPlate extends LinearOpMode
 {
@@ -146,9 +146,9 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
-public void armUp()
+public void armUp(double length)
 {
-    double totDistInSteps = 2500;
+    double totDistInSteps = 1120 * length;
 //3 inches --93.567
     while (totDistInSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -160,9 +160,9 @@ public void armUp()
     robot.resetArm();
 }
 //--------------------------------------------
-public void armDown()
+public void armDown(double length)
 {
-    double totDistInSteps = -2500;
+    double totDistInSteps = -1120 * length;
 
     while(totDistInSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
     {
@@ -239,14 +239,17 @@ private void turnAngle(double angle)
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     turnAngle(-80);
-    moveDistance(28,1);
+    moveDistance(26,1);
     turnAngle(82);
     liftUp();
-    armUp();
-    moveDistance(27,.6);
-    armDown();
-    moveDistance(-23,.6);
-    turnAngle(-80);
+    armUp(1.5);
+    moveDistance(30,.6);
+    armDown(1.1);
+    moveDistance(-27,.6);
+    turnAngle(-25);
+    armUp(1.5);
+    moveDistance(-1,.6);
+    turnAngle(-50);
     moveDistance(-27,1);
     robot.Halt();
     stop();

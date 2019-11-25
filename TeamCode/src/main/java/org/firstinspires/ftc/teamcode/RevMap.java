@@ -146,13 +146,13 @@ public class RevMap
     public void openClaw()
     {
         claw1.setPosition(0);
-        claw2.setPosition(0);
+        claw2.setPosition(.5);
     }
 //----------------------------------------//
     public void closeClaw()
     {
         claw1.setPosition(.5);
-        claw2.setPosition(.5);
+        claw2.setPosition(0);
     }
 //----------------------------------------//
     public void moveLeft(double power)
