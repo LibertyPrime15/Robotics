@@ -245,18 +245,12 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
-            telemetry.addData("Thing",robot.lift.getCurrentPosition());
-            telemetry.addData("LiftStartsDown= ",liftStartesDown);
-            telemetry.addData("LiftDown ",liftDown);
-            telemetry.update();
 //--------------------------------------------------------------------------------------------------
-            //This is the block of code for driving and turning the robot
+//            This is the block of code for driving and turning the robot
             double leftPower;
             double rightPower;
-
-            double drive = gamepad1.left_stick_y;
-            double turn  = -gamepad1.left_stick_x;
-
+            double drive = gamepad1.right_stick_y;
+            double turn  = -gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------

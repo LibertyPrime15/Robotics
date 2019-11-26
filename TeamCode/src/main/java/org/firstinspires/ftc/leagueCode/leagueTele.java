@@ -197,58 +197,33 @@ private double angleBoi()
                 robot.back_left.setPower(0);
             }
 //--------------------------------------------------------------------------------------------------
-            //This is holonomic Drive ---- We can drive diagonally ---- USING THE DDDDD PAAADDDDDDDD
-            if(gamepad1.dpad_right && gamepad1.dpad_up)//Drives diagonally at +45 ---- Done
-            {
-                robot.front_right.setPower(1);
-                robot.back_left.setPower(1);
-            }
-            else if(gamepad1.dpad_right && gamepad1.dpad_down)//Drives diagonally at -45 ---- Done
-            {
-                robot.front_left.setPower(-1);
-                robot.back_right.setPower(-1);
-            }
-            else if(gamepad1.dpad_left && gamepad1.dpad_up)//Drives diagonally at +135 ---- Done
-            {
-                robot.front_left.setPower(1);
-                robot.back_right.setPower(1);
-            }
-            else if(gamepad1.dpad_left && gamepad1.dpad_down)//Drives diagonally at -135 ---- Done
-            {
-                robot.front_right.setPower(-1);
-                robot.back_left.setPower(-1);
-            }
-//--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
             if(gamepad1.b)
             {
                 robot.intake1.setPower(0);
                 robot.intake2.setPower(0);
             }
-            else
+            if(gamepad1.x && !isSpinningInward)//If it is not moving or is spinning outward
             {
-                if(gamepad1.x && !isSpinningInward)//If it is not moving or is spinning outward
+                if(robot.intake1.getPower() >= 0)//If it is not moving or spinning inward - spin inward
                 {
-                    if(robot.intake1.getPower() >= 0)//If it is not moving or spinning inward - spin inward
-                    {
-                        robot.intake1.setPower(-.5);
-                        robot.intake2.setPower(-.5);
-                        isSpinningInward = true;
-                    }
-                    else
-                    {
-                        robot.intake1.setPower(.5);
-                        robot.intake2.setPower(.5);
-                    }
-                }
-                else if(!gamepad1.x && isSpinningInward)
-                {
-                    isSpinningInward = false; // this resets it for the next cycle only if the button was pressed, then released
-                }
-                else if(!gamepad1.x && !isSpinningInward)
-                {
+                    robot.intake1.setPower(-.5);
+                    robot.intake2.setPower(-.5);
                     isSpinningInward = true;
                 }
+                else
+                {
+                    robot.intake1.setPower(.5);
+                    robot.intake2.setPower(.5);
+                }
+            }
+            else if(!gamepad1.x && isSpinningInward)
+            {
+                isSpinningInward = false; // this resets it for the next cycle only if the button was pressed, then released
+            }
+            else if(!gamepad1.x && !isSpinningInward)
+            {
+                isSpinningInward = true;
             }
 //--------------------------------------------------------------------------------------------------
             if(gamepad1.right_trigger !=0)
