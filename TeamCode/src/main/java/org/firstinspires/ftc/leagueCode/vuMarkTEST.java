@@ -73,44 +73,6 @@ private double angleBoi()
     currHeading = angles.firstAngle;
     return currHeading;
 }
-////--------------------------------------------------------------------------------------------------
-//private void autoAlign(double power)
-//{
-//    double leftPower;
-//    double rightPower;
-//    if(rX > 0)
-//    {
-//        while(rX > 0)
-//        {
-//            angleBoi();
-//            drive = -power;
-//            turn  = .05 * currHeading;
-//            leftPower    = Range.clip(drive + turn, -1.0, 1.0);
-//            rightPower   = Range.clip(drive - turn, -1.0, 1.0);
-//
-//            robot.front_right.setPower(rightPower);
-//            robot.front_left.setPower(leftPower);
-//            robot.back_right.setPower(rightPower);
-//            robot.back_left.setPower(leftPower);
-//        }
-//    }
-//    else if(rX < 0)
-//    {
-//        while(rX < 0)
-//        {
-//            angleBoi();
-//            drive = -power;
-//            turn  = .05 * currHeading;
-//            leftPower    = Range.clip(drive + turn, -1.0, 1.0);
-//            rightPower   = Range.clip(drive - turn, -1.0, 1.0);
-//
-//            robot.front_right.setPower(rightPower);
-//            robot.front_left.setPower(leftPower);
-//            robot.back_right.setPower(rightPower);
-//            robot.back_left.setPower(leftPower);
-//        }
-//    }
-//}
 //--------------------------------------------------------------------------------------------------
 
 

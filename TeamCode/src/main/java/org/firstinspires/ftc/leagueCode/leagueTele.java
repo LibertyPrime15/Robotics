@@ -200,8 +200,8 @@ private double angleBoi()
             //This is holonomic Drive ---- We can drive diagonally ---- USING THE DDDDD PAAADDDDDDDD
             if(gamepad1.dpad_right && gamepad1.dpad_up)//Drives diagonally at +45 ---- Done
             {
-                robot.front_right.setPower(-1);
-                robot.back_left.setPower(-1);
+                robot.front_right.setPower(1);
+                robot.back_left.setPower(1);
             }
             else if(gamepad1.dpad_right && gamepad1.dpad_down)//Drives diagonally at -45 ---- Done
             {
@@ -253,13 +253,13 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
             if(gamepad1.right_trigger !=0)
             {
-                robot.liftPrimary.setPower(1);
-                robot.liftSecondary.setPower(1);
+                robot.liftPrimary.setPower(Math.abs(gamepad1.right_trigger));
+                robot.liftPrimary.setPower(Math.abs(gamepad1.right_trigger));
             }
             else if(gamepad1.left_trigger !=0)
             {
-                robot.liftPrimary.setPower(-1);
-                robot.liftSecondary.setPower(-1);
+                robot.liftPrimary.setPower(-1 *(gamepad1.left_trigger));
+                robot.liftSecondary.setPower(-1 *(gamepad1.left_trigger));
             }
             else
             {
