@@ -270,24 +270,25 @@ private double angleBoi()
             robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
             //This keeps the lift always flipped up so that it won't fall over and break the program
-            if(!liftStartesDown)
-            {
+//            if(!liftStartesDown)
+//            {
                 if(robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
                 {
                     telemetry.addLine("The arm is Up exactly as it should be muy guy");
                     telemetry.update();
                 }
 //----------------------------------
-                else if(robot.lift.getCurrentPosition() > 5 && !liftDown)//Greater than 200 = liftDown
+                else if(robot.lift.getCurrentPosition() > 45 && !liftDown)//Greater than 200 = liftDown
                 {
-                    while(robot.lift.getCurrentPosition() > 5 && (!isStopRequested()))
+                    while(robot.lift.getCurrentPosition() > 45 && (!isStopRequested()))
                     {
-                        robot.lift.setPower(-1);
+                        robot.lift.setPower(-.85);
                         telemetry.addData("Realigning the Arm",robot.lift.getCurrentPosition());
                         telemetry.update();
                     }
+                    robot.lift.setPower(0);
                 }
-            }
+//            }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------------------//
 //-------------------------------------------------------//
@@ -338,11 +339,11 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //This tells the robot if the arm starts up or down
-            if(gamepad1.dpad_down)
-            {
-                liftStartesDown = true;
-                liftDown = true;
-            }
+//            if(gamepad1.dpad_down)
+//            {
+//                liftStartesDown = true;
+//                liftDown = true;
+//            }
 //--------------------------------------------------------------------------------------------------
             //This moves the arm up --------------- RIGHTTTTTTTTTTTT STICKKKKKKKKKKKKKKKK YYYYYYYYY
             if(gamepad1.right_stick_y!=0)
@@ -363,7 +364,7 @@ private double angleBoi()
                     //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
                     if(gamepad1.a && liftDown)
                     {
-                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                        while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                         {
                             robot.lift.setPower(-.8);
                             drive = gamepad1.right_stick_y;
@@ -376,12 +377,13 @@ private double angleBoi()
                             robot.back_right.setPower(rightPower);
                             robot.back_left.setPower(leftPower);
                         }
+                        liftDown = false;
                         robot.resetLift();
                         robot.lift.setPower(0);
                     }
 //                }
                 //moves the lift down
-                else if (gamepad1.a && !liftDown)
+                else if(gamepad1.a && !liftDown)
                 {
                     while (liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
@@ -396,6 +398,7 @@ private double angleBoi()
                         robot.back_right.setPower(rightPower);
                         robot.back_left.setPower(leftPower);
                     }
+                    liftDown = true;
                     robot.resetLift();
                     robot.lift.setPower(0);
                 }
