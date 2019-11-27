@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -10,9 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import java.io.File;
-
-@TeleOp(name="teleSolo", group = "B")
+@TeleOp(name="raymondSolo", group = "B")
 //@Disabled
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------------------//
@@ -21,7 +20,7 @@ import java.io.File;
 //----------------------------------------------------//
 //----------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-public class teleSolo extends LinearOpMode
+public class raymondSolo extends LinearOpMode
 {
     RevMap robot = new RevMap();
     Orientation angles;
@@ -30,10 +29,11 @@ public class teleSolo extends LinearOpMode
     float currHeading = 0;
     boolean liftStartesDown  = false;
 
-//    private boolean niFile;
-//    private boolean knightsFile;
-//    private boolean deadFile;
-//    private boolean shrubberyFile;
+    private boolean niFile;
+    private boolean knightsFile;
+    private boolean deadFile;
+    private boolean shrubberyFile;
+    private boolean neatFile;
 
     double liftSteps = 770;
     double armSteps  = 1120 * .7;
@@ -215,42 +215,51 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-//        int niID        = hardwareMap.appContext.getResources().getIdentifier("ni", "raw", hardwareMap.appContext.getPackageName());
-//        int knightsID  = hardwareMap.appContext.getResources().getIdentifier("knights",   "raw", hardwareMap.appContext.getPackageName());
-//        int deadID      = hardwareMap.appContext.getResources().getIdentifier("dead", "raw", hardwareMap.appContext.getPackageName());
-//        int shrubberyID = hardwareMap.appContext.getResources().getIdentifier("shrubbery",   "raw", hardwareMap.appContext.getPackageName());
-//
-//        if (niID != 0)
-//            niFile   = SoundPlayer.getInstance().preload(hardwareMap.appContext, niID);
-//
-//        if (knightsID != 0)
-//            knightsFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, knightsID);
-//
-//        if (deadID != 0)
-//            deadFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, deadID);
-//
-//        if (shrubberyID != 0)
-//            shrubberyFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, shrubberyID);
+        int niID        = hardwareMap.appContext.getResources().getIdentifier("ni",       "raw", hardwareMap.appContext.getPackageName());
+        int knightsID   = hardwareMap.appContext.getResources().getIdentifier("knights",  "raw", hardwareMap.appContext.getPackageName());
+        int deadID      = hardwareMap.appContext.getResources().getIdentifier("dead",     "raw", hardwareMap.appContext.getPackageName());
+        int shrubberyID = hardwareMap.appContext.getResources().getIdentifier("shrubbery","raw", hardwareMap.appContext.getPackageName());
+        int neatID      = hardwareMap.appContext.getResources().getIdentifier("neat",     "raw", hardwareMap.appContext.getPackageName());
 
+        if (niID != 0)
+            niFile   = SoundPlayer.getInstance().preload(hardwareMap.appContext, niID);
+
+        if (knightsID != 0)
+            knightsFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, knightsID);
+
+        if (deadID != 0)
+            deadFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, deadID);
+
+        if (shrubberyID != 0)
+            shrubberyFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, shrubberyID);
+
+        if (neatID != 0)
+            neatFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, neatID);
+
+        telemetry.addData("niFile",      niFile ?        "Found" : "NOT found\n Add ni.wav to /src/main/res/raw");
+        telemetry.addData("knightsFile", knightsFile ?   "Found" : "Not found\n Add knights.wav to /src/main/res/raw");
+        telemetry.addData("deadID",      deadFile ?      "Found" : "NOT found\n Add dead.wav to /src/main/res/raw");
+        telemetry.addData("shrubberyID", shrubberyFile ? "Found" : "Not found\n Add shrubbery.wav to /src/main/res/raw");
+        telemetry.addData("neatID",      neatFile ?      "Found" : "Not found\n Add neat.wav to /src/main/res/raw");
 
         imuInit();
-
-//        telemetry.addData("niFile",      niFile ?   "Found" : "NOT found\n Add ni.wav to /src/main/res/raw" );
-//        telemetry.addData("knightsFile", knightsFile ? "Found" : "Not found\n Add knights.wav to /src/main/res/raw" );
-//        telemetry.addData("deadID",      deadFile ?   "Found" : "NOT found\n Add dead.wav to /src/main/res/raw" );
-//        telemetry.addData("shrubberyID", shrubberyFile ? "Found" : "Not found\n Add shrubbery.wav to /src/main/res/raw" );
-
+        telemetry.addData(">", "Press Start to continue My Guy");
+        telemetry.update();
         waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
+            telemetry.addData("lift starts down = ",liftStartesDown);
+            telemetry.addData("lift down = ",liftDown);
+            telemetry.update();
+
 //--------------------------------------------------------------------------------------------------
 //            This is the block of code for driving and turning the robot
             double leftPower;
             double rightPower;
-            double drive = gamepad1.right_stick_y;
-            double turn  = -gamepad1.right_stick_x;
+            double drive = gamepad1.left_stick_y;
+            double turn  = -gamepad1.left_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 //----------------------------------
@@ -287,7 +296,7 @@ private double angleBoi()
 //-------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
             //This section extends the arm ---------------- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-            if(gamepad1.b && !armIsExtended)
+            if(gamepad1.b)
             {
                 robot.resetArm();
                 while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
@@ -296,20 +305,6 @@ private double angleBoi()
                 }
                 robot.arm.setPower(0);
                 robot.resetArm();
-                armIsExtended = true;
-            }
-//-----------------------------------------------------------------------
-            else if(gamepad1.b && armIsExtended)
-            {
-                robot.resetArm();
-                while(-armSteps < robot.arm.getCurrentPosition() && (!(isStopRequested())))
-                {
-                    robot.arm.setPower(-.7);
-                }
-                robot.arm.setPower(0);
-                robot.resetArm();
-//--------------------
-                armIsExtended = false;
             }
 //--------------------------------------------------------------------------------------------------
             //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -361,14 +356,38 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //if the lift didn't start in the down position, but rather the up position
-            if(!liftStartesDown)
-            {
-                //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
-                if(gamepad1.a && liftDown)
-                {
-                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//            if(gamepad1.a)
+//            {
+//                if(!liftStartesDown)
+//                {
+                    //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+                    if(gamepad1.a && liftDown)
                     {
-                        robot.lift.setPower(-.8);
+                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                        {
+                            robot.lift.setPower(-.8);
+                            drive = gamepad1.right_stick_y;
+                            turn = -gamepad1.right_stick_x;
+                            leftPower = Range.clip(drive + turn,-1.0,1.0);
+                            rightPower = Range.clip(drive - turn,-1.0,1.0);
+                            //This drives the robot forward
+                            robot.front_right.setPower(rightPower);
+                            robot.front_left.setPower(leftPower);
+                            robot.back_right.setPower(rightPower);
+                            robot.back_left.setPower(leftPower);
+                        }
+                        robot.resetLift();
+                        robot.lift.setPower(0);
+                    }
+//                }
+                //moves the lift down
+                else if (gamepad1.a && !liftDown)
+                {
+                    while (liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                    {
+                        robot.lift.setPower(.8);
+                        drive = gamepad1.right_stick_y;
+                        turn = -gamepad1.right_stick_x;
                         leftPower = Range.clip(drive + turn,-1.0,1.0);
                         rightPower = Range.clip(drive - turn,-1.0,1.0);
                         //This drives the robot forward
@@ -376,93 +395,42 @@ private double angleBoi()
                         robot.front_left.setPower(leftPower);
                         robot.back_right.setPower(rightPower);
                         robot.back_left.setPower(leftPower);
-                        if (gamepad1.right_stick_y != 0)
-                        {
-                            robot.arm.setPower(-gamepad1.right_stick_y);
-                        }
-                        else
-                        {
-                            robot.arm.setPower(0);
-                        }
                     }
-                    liftDown = false;
                     robot.resetLift();
                     robot.lift.setPower(0);
                 }
-            }
-            //moves the lift down
-            else if(gamepad1.a && !liftDown && !liftStartesDown)
-            {
-                while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-                {
-                    robot.lift.setPower(.8);
-                    if(gamepad1.left_stick_y !=0)
-                    {
-                        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-                        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-                        //This drives the robot forward
-                        robot.front_right.setPower(rightPower);
-                        robot.front_left.setPower(leftPower);
-                        robot.back_right.setPower(rightPower);
-                        robot.back_left.setPower(leftPower);
-                    }
-                    if(gamepad1.right_stick_y !=0)
-                    {
-                        robot.arm.setPower(-gamepad1.right_stick_y);
-                    }
-                    else
-                    {
-                        robot.arm.setPower(0);
-                    }
-                }
-                liftDown = true;
-                robot.resetLift();
-                robot.lift.setPower(0);
-            }
-            else
-            {
-                robot.lift.setPower(0);
-            }
 //-------------------------------------------------------
-            //if the lift didn't start in the down position, but rather the up position
-            if(liftStartesDown)
-            {
-                //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
-                if(gamepad1.a && liftDown)
-                {
-                    while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-                    {
-                        robot.lift.setPower(-.8);
-                        if(gamepad1.left_stick_y !=0)
-                        {
-                            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-                            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-//----------------------------------
-                            //This drives the robot forward
-                            robot.front_right.setPower(rightPower);
-                            robot.front_left.setPower(leftPower);
-                            robot.back_right.setPower(rightPower);
-                            robot.back_left.setPower(leftPower);
-                        }
-                        if(gamepad1.right_stick_y !=0)
-                        {
-                            robot.arm.setPower(-gamepad1.right_stick_y);
-                        }
-                        else
-                        {
-                            robot.arm.setPower(0);
-                        }
-                    }
-                    liftDown = false;
-                    liftStartesDown = false;
-                    robot.resetLift();
-                    robot.lift.setPower(0);
-                }
-                else
-                {
-                    robot.lift.setPower(0);
-                }
-            }
+                //if the lift didn't start in the down position, but rather the up position
+//                if(liftStartesDown)
+//                {
+//                    //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+//                    if (gamepad1.a && liftDown)
+//                    {
+//                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+//                        {
+//                            robot.lift.setPower(-.8);
+//
+//                            drive = gamepad1.right_stick_y;
+//                            turn = -gamepad1.right_stick_x;
+//                            leftPower = Range.clip(drive + turn,-1.0,1.0);
+//                            rightPower = Range.clip(drive - turn,-1.0,1.0);
+//                            //This drives the robot forward
+//                            robot.front_right.setPower(rightPower);
+//                            robot.front_left.setPower(leftPower);
+//                            robot.back_right.setPower(rightPower);
+//                            robot.back_left.setPower(leftPower);
+//                        }
+//                        liftDown = false;
+//                        liftStartesDown = false;
+//                        robot.resetLift();
+//                        robot.lift.setPower(0);
+//                    }
+//                    else
+//                    {
+//                        robot.lift.setPower(0);
+//                    }
+//                }
+//            }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//
@@ -470,31 +438,36 @@ private double angleBoi()
 //-------------------------------------------//
 //-------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-//            if(gamepad2.a)
-//            {
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, niID);
-//                telemetry.addData("Playing", "Ni File");
-//                telemetry.update();
-//            }
-//
-//            else if(gamepad2.b)
-//            {
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, knightsID);
-//                telemetry.addData("Playing", "Knights File");
-//                telemetry.update();
-//            }
-//            else if(gamepad2.x)
-//            {
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, deadID);
-//                telemetry.addData("Playing", "Dead File");
-//                telemetry.update();
-//            }
-//            else if(gamepad2.y)
-//            {
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, shrubberyID);
-//                telemetry.addData("Playing", "Shrubbery File");
-//                telemetry.update();
-//            }
+            if(gamepad2.a)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, niID);
+                telemetry.addData("Playing", "Ni File");
+                telemetry.update();
+            }
+            if(gamepad2.b)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, knightsID);
+                telemetry.addData("Playing", "Knights File");
+                telemetry.update();
+            }
+            if(gamepad2.x)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, deadID);
+                telemetry.addData("Playing", "Dead File");
+                telemetry.update();
+            }
+            if(gamepad2.y)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, shrubberyID);
+                telemetry.addData("Playing", "Shrubbery File");
+                telemetry.update();
+            }
+            if(gamepad2.dpad_up)
+            {
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, neatID);
+                telemetry.addData("Playing", "Neat File");
+                telemetry.update();
+            }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//

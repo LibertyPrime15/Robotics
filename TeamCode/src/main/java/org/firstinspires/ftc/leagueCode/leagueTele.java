@@ -147,55 +147,74 @@ private double angleBoi()
         while(opModeIsActive() && (!(isStopRequested())))
         {
             angleBoi();
-//--------------------------------------------------------------------------------------------------
+
+            double frontRight;
+            double frontLeft;
+            double backRight;
+            double backLeft;
+
+            frontRight = gamepad1.right_stick_y + gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
+            frontLeft  = gamepad1.right_stick_y + gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x;
+            backRight  = gamepad1.right_stick_y + gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
+            backLeft   = gamepad1.right_stick_y + gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
+////----------------------------------
+//            //This drives the robot forward
+            robot.front_right.setPower(frontRight);
+            robot.front_left.setPower(frontLeft);
+            robot.back_right.setPower(backRight);
+            robot.back_left.setPower(backLeft);
+//--------------------------------------------------------------------------------Forward & Backward
             //This drives the robot forward & backward - using LEFT TOGGLE YYYYYYYY AXISSSSSSSSSSSSS
-            if(gamepad1.left_stick_y !=0)
-            {
-                robot.front_right.setPower(gamepad1.left_stick_y);
-                robot.front_left.setPower(gamepad1.left_stick_y);
-                robot.back_right.setPower(gamepad1.left_stick_y);
-                robot.back_left.setPower(gamepad1.left_stick_y);
-            }
-            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
-            else if(gamepad1.left_stick_x > 0)//Moves the bot to the left
-            {
-                robot.front_right.setPower(-1);
-                robot.front_left.setPower(1);
-                robot.back_right.setPower(1);
-                robot.back_left.setPower(-1);
-            }
-            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
-            else if(gamepad1.left_stick_x < 0)//Moves the bot to the right
-            {
-                robot.front_right.setPower(1);
-                robot.front_left.setPower(-1);
-                robot.back_right.setPower(-1);
-                robot.back_left.setPower(1);
-            }
-            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
-            else if(gamepad1.right_stick_x < 0)
-            {
-                robot.front_right.setPower(gamepad1.right_stick_x);
-                robot.front_left.setPower(-gamepad1.right_stick_x);
-                robot.back_right.setPower(gamepad1.right_stick_x);
-                robot.back_left.setPower(-gamepad1.right_stick_x);
-            }
-            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
-            else if(gamepad1.right_stick_x > 0)//This is for turning the robot to the left
-            {
-                robot.front_right.setPower(gamepad1.right_stick_x);
-                robot.front_left.setPower(-gamepad1.right_stick_x);
-                robot.back_right.setPower(gamepad1.right_stick_x);
-                robot.back_left.setPower(-gamepad1.right_stick_x);
-            }
+//            if(gamepad1.left_stick_y !=0)
+//            {
+//                robot.front_right.setPower(gamepad1.left_stick_y);
+//                robot.front_left.setPower(gamepad1.left_stick_y);
+//                robot.back_right.setPower(gamepad1.left_stick_y);
+//                robot.back_left.setPower(gamepad1.left_stick_y);
+//            }
+////------------------------------------------------------------------------------------------Sideways
+//            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
+//            else if(gamepad1.left_stick_x > 0)//Moves the bot to the left
+//            {
+//                robot.front_right.setPower(-1);
+//                robot.front_left.setPower(1);
+//                robot.back_right.setPower(1);
+//                robot.back_left.setPower(-1);
+//            }
+//            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
+//            else if(gamepad1.left_stick_x < 0)//Moves the bot to the right
+//            {
+//                robot.front_right.setPower(1);
+//                robot.front_left.setPower(-1);
+//                robot.back_right.setPower(-1);
+//                robot.back_left.setPower(1);
+//            }
+////-------------------------------------------------------------------------------------------Turning
+//            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
+//            else if(gamepad1.right_stick_x < 0)
+//            {
+//                robot.front_right.setPower(gamepad1.right_stick_x);
+//                robot.front_left.setPower(-gamepad1.right_stick_x);
+//                robot.back_right.setPower(gamepad1.right_stick_x);
+//                robot.back_left.setPower(-gamepad1.right_stick_x);
+//            }
+////            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
+//            else if(gamepad1.right_stick_x > 0)//This is for turning the robot to the left
+//            {
+//                robot.front_right.setPower(gamepad1.right_stick_x);
+//                robot.front_left.setPower(-gamepad1.right_stick_x);
+//                robot.back_right.setPower(gamepad1.right_stick_x);
+//                robot.back_left.setPower(-gamepad1.right_stick_x);
+//            }
+//----------------------------------------------------------------------------------------------Stop
             //This stops the robot from moving if none of the other things are happeningggggggggggg
-            else
-            {
-                robot.front_right.setPower(0);
-                robot.front_left.setPower(0);
-                robot.back_right.setPower(0);
-                robot.back_left.setPower(0);
-            }
+//            else
+//            {
+//                robot.front_right.setPower(0);
+//                robot.front_left.setPower(0);
+//                robot.back_right.setPower(0);
+//                robot.back_left.setPower(0);
+//            }
 //--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
             if(gamepad1.b)
