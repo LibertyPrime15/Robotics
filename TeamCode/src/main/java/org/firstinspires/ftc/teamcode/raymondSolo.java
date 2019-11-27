@@ -367,8 +367,8 @@ private double angleBoi()
                         while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
                         {
                             robot.lift.setPower(-.8);
-                            drive = gamepad1.right_stick_y;
-                            turn = -gamepad1.right_stick_x;
+                            drive = gamepad1.left_stick_y;
+                            turn = -gamepad1.left_stick_x;
                             leftPower = Range.clip(drive + turn,-1.0,1.0);
                             rightPower = Range.clip(drive - turn,-1.0,1.0);
                             //This drives the robot forward
@@ -376,6 +376,14 @@ private double angleBoi()
                             robot.front_left.setPower(leftPower);
                             robot.back_right.setPower(rightPower);
                             robot.back_left.setPower(leftPower);
+                            if(gamepad1.right_stick_y !=0)
+                            {
+                                robot.arm.setPower(-gamepad1.right_stick_y);
+                            }
+                            else
+                            {
+                                robot.arm.setPower(0);
+                            }
                         }
                         liftDown = false;
                         robot.resetLift();
@@ -388,8 +396,8 @@ private double angleBoi()
                     while (liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                     {
                         robot.lift.setPower(.8);
-                        drive = gamepad1.right_stick_y;
-                        turn = -gamepad1.right_stick_x;
+                        drive = gamepad1.left_stick_y;
+                        turn = -gamepad1.left_stick_x;
                         leftPower = Range.clip(drive + turn,-1.0,1.0);
                         rightPower = Range.clip(drive - turn,-1.0,1.0);
                         //This drives the robot forward
@@ -397,6 +405,14 @@ private double angleBoi()
                         robot.front_left.setPower(leftPower);
                         robot.back_right.setPower(rightPower);
                         robot.back_left.setPower(leftPower);
+                        if(gamepad1.right_stick_y !=0)
+                        {
+                            robot.arm.setPower(-gamepad1.right_stick_y);
+                        }
+                        else
+                        {
+                            robot.arm.setPower(0);
+                        }
                     }
                     liftDown = true;
                     robot.resetLift();
