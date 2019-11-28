@@ -27,7 +27,6 @@ public class raymondSolo extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    boolean liftStartesDown  = false;
 
     private boolean niFile;
     private boolean knightsFile;
@@ -41,6 +40,7 @@ public class raymondSolo extends LinearOpMode
     boolean armIsExtended = false;
     boolean liftDown      = false;
     boolean servosAreOpen = false;
+    boolean liftStartesDown = false;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -213,42 +213,40 @@ private double angleBoi()
 //------------------------------------------------------//
 //------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    public void runOpMode()
-    {
-        int niID        = hardwareMap.appContext.getResources().getIdentifier("ni",       "raw", hardwareMap.appContext.getPackageName());
-        int knightsID   = hardwareMap.appContext.getResources().getIdentifier("knights",  "raw", hardwareMap.appContext.getPackageName());
-        int deadID      = hardwareMap.appContext.getResources().getIdentifier("dead",     "raw", hardwareMap.appContext.getPackageName());
-        int shrubberyID = hardwareMap.appContext.getResources().getIdentifier("shrubbery","raw", hardwareMap.appContext.getPackageName());
-        int neatID      = hardwareMap.appContext.getResources().getIdentifier("neat",     "raw", hardwareMap.appContext.getPackageName());
+    public void runOpMode() {
+        int niID = hardwareMap.appContext.getResources().getIdentifier("ni","raw",hardwareMap.appContext.getPackageName());
+        int knightsID = hardwareMap.appContext.getResources().getIdentifier("knights","raw",hardwareMap.appContext.getPackageName());
+        int deadID = hardwareMap.appContext.getResources().getIdentifier("dead","raw",hardwareMap.appContext.getPackageName());
+        int shrubberyID = hardwareMap.appContext.getResources().getIdentifier("shrubbery","raw",hardwareMap.appContext.getPackageName());
+        int neatID = hardwareMap.appContext.getResources().getIdentifier("neat","raw",hardwareMap.appContext.getPackageName());
 
         if (niID != 0)
-            niFile   = SoundPlayer.getInstance().preload(hardwareMap.appContext, niID);
+            niFile = SoundPlayer.getInstance().preload(hardwareMap.appContext,niID);
 
         if (knightsID != 0)
-            knightsFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, knightsID);
+            knightsFile = SoundPlayer.getInstance().preload(hardwareMap.appContext,knightsID);
 
         if (deadID != 0)
-            deadFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, deadID);
+            deadFile = SoundPlayer.getInstance().preload(hardwareMap.appContext,deadID);
 
         if (shrubberyID != 0)
-            shrubberyFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, shrubberyID);
+            shrubberyFile = SoundPlayer.getInstance().preload(hardwareMap.appContext,shrubberyID);
 
         if (neatID != 0)
-            neatFile = SoundPlayer.getInstance().preload(hardwareMap.appContext, neatID);
+            neatFile = SoundPlayer.getInstance().preload(hardwareMap.appContext,neatID);
 
-        telemetry.addData("niFile",      niFile ?        "Found" : "NOT found\n Add ni.wav to /src/main/res/raw");
-        telemetry.addData("knightsFile", knightsFile ?   "Found" : "Not found\n Add knights.wav to /src/main/res/raw");
-        telemetry.addData("deadID",      deadFile ?      "Found" : "NOT found\n Add dead.wav to /src/main/res/raw");
-        telemetry.addData("shrubberyID", shrubberyFile ? "Found" : "Not found\n Add shrubbery.wav to /src/main/res/raw");
-        telemetry.addData("neatID",      neatFile ?      "Found" : "Not found\n Add neat.wav to /src/main/res/raw");
+        telemetry.addData("niFile",niFile ? "Found" : "NOT found\n Add ni.wav to /src/main/res/raw");
+        telemetry.addData("knightsFile",knightsFile ? "Found" : "Not found\n Add knights.wav to /src/main/res/raw");
+        telemetry.addData("deadID",deadFile ? "Found" : "NOT found\n Add dead.wav to /src/main/res/raw");
+        telemetry.addData("shrubberyID",shrubberyFile ? "Found" : "Not found\n Add shrubbery.wav to /src/main/res/raw");
+        telemetry.addData("neatID",neatFile ? "Found" : "Not found\n Add neat.wav to /src/main/res/raw");
 
         imuInit();
-        telemetry.addData(">", "Press Start to continue My Guy");
+        telemetry.addData(">","Press Start to continue My Guy");
         telemetry.update();
         waitForStart();
 //--------------------------------------------------------------------------------------------------
-        while(opModeIsActive() && (!(isStopRequested())))
-        {
+        while (opModeIsActive() && (!(isStopRequested()))) {
             angleBoi();
             telemetry.addData("lift starts down = ",liftStartesDown);
             telemetry.addData("lift down = ",liftDown);
@@ -259,9 +257,9 @@ private double angleBoi()
             double leftPower;
             double rightPower;
             double drive = gamepad1.left_stick_y;
-            double turn  = -gamepad1.left_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            double turn = -gamepad1.left_stick_x;
+            leftPower = Range.clip(drive + turn,-1.0,1.0);
+            rightPower = Range.clip(drive - turn,-1.0,1.0);
 //----------------------------------
             //This drives the robot forward
             robot.front_right.setPower(rightPower);
@@ -270,25 +268,24 @@ private double angleBoi()
             robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
             //This keeps the lift always flipped up so that it won't fall over and break the program
-//            if(!liftStartesDown)
-//            {
-                if(robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
+            if(!liftStartesDown)
+            {
+                if (robot.lift.getCurrentPosition() < 100 && !liftDown)//Less then 100 = armUp
                 {
                     telemetry.addLine("The arm is Up exactly as it should be muy guy");
                     telemetry.update();
                 }
-//----------------------------------
-                else if(robot.lift.getCurrentPosition() > 45 && !liftDown)//Greater than 200 = liftDown
+    //----------------------------------
+                else if (robot.lift.getCurrentPosition() > 45 && !liftDown)//Greater than 200 = liftDown
                 {
-                    while(robot.lift.getCurrentPosition() > 45 && (!isStopRequested()))
-                    {
+                    while (robot.lift.getCurrentPosition() > 45 && (!isStopRequested())) {
                         robot.lift.setPower(-.85);
                         telemetry.addData("Realigning the Arm",robot.lift.getCurrentPosition());
                         telemetry.update();
                     }
                     robot.lift.setPower(0);
                 }
-//            }
+            }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------------------//
 //-------------------------------------------------------//
@@ -297,11 +294,10 @@ private double angleBoi()
 //-------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
             //This section extends the arm ---------------- BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-            if(gamepad1.b)
+            if (gamepad1.b)
             {
                 robot.resetArm();
-                while(armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested())))
-                {
+                while (armSteps > robot.arm.getCurrentPosition() && (!(isStopRequested()))) {
                     robot.arm.setPower(.7);
                 }
                 robot.arm.setPower(0);
@@ -309,9 +305,9 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //This closes the claw --------------------- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            if(gamepad1.x && servosAreOpen)
+            if (gamepad1.x && servosAreOpen)
             {
-                if(robot.claw1.getPosition() <= 0)
+                if (robot.claw1.getPosition() <= 0)
                 {
                     robot.claw1.setPosition(.5);
                     robot.claw2.setPosition(-.5);
@@ -323,12 +319,12 @@ private double angleBoi()
                 }
                 servosAreOpen = false;
             }
-            else if(((gamepad1.x && !servosAreOpen)) || ((!gamepad1.x && servosAreOpen)))
+            else if (((gamepad1.x && !servosAreOpen)) || ((!gamepad1.x && servosAreOpen)))
             {
                 telemetry.addData("Can Toggle = ",servosAreOpen);
                 telemetry.update();
             }
-            else if(!gamepad1.x && !servosAreOpen)
+            else if (!gamepad1.x && !servosAreOpen)
             {
                 servosAreOpen = true; // this resets it for the next cycle only if the button was pressed, then released
             }
@@ -339,34 +335,35 @@ private double angleBoi()
             }
 //--------------------------------------------------------------------------------------------------
             //This tells the robot if the arm starts up or down
-//            if(gamepad1.dpad_down)
-//            {
-//                liftStartesDown = true;
-//                liftDown = true;
-//            }
+            if(gamepad1.dpad_down)
+            {
+                liftStartesDown = true;
+                liftDown = true;
+            }
 //--------------------------------------------------------------------------------------------------
             //This moves the arm up --------------- RIGHTTTTTTTTTTTT STICKKKKKKKKKKKKKKKK YYYYYYYYY
-            if(gamepad1.right_stick_y!=0)
+            if (gamepad1.right_stick_y != 0)
             {
                 robot.arm.setPower(-gamepad1.right_stick_y);
             }
 //--------------------
             else
-            {
+                {
                 robot.arm.setPower(0);
             }
 //--------------------------------------------------------------------------------------------------
             //if the lift didn't start in the down position, but rather the up position
-//            if(gamepad1.a)
-//            {
-//                if(!liftStartesDown)
-//                {
-                    //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
-                    if(gamepad1.a && liftDown)
+            if(gamepad1.a)
+            {
+                telemetry.addLine("if statement");
+                telemetry.update();
+                if(!liftStartesDown)
+                {
+                    if(!liftDown)
                     {
-                        while(-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                        while(liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
                         {
-                            robot.lift.setPower(-.8);
+                            robot.lift.setPower(.8);
                             drive = gamepad1.left_stick_y;
                             turn = -gamepad1.left_stick_x;
                             leftPower = Range.clip(drive + turn,-1.0,1.0);
@@ -376,7 +373,33 @@ private double angleBoi()
                             robot.front_left.setPower(leftPower);
                             robot.back_right.setPower(rightPower);
                             robot.back_left.setPower(leftPower);
-                            if(gamepad1.right_stick_y !=0)
+                            if (gamepad1.right_stick_y != 0)
+                            {
+                                robot.arm.setPower(-gamepad1.right_stick_y);
+                            }
+                            else
+                            {
+                                robot.arm.setPower(0);
+                            }                        }
+                        robot.resetLift();
+                        robot.lift.setPower(0);
+                        liftDown = true;
+                    }
+                    //moves the lift down
+                    else if (liftDown)
+                    {
+                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                        {
+                            robot.lift.setPower(-.8);
+                            drive = gamepad1.left_stick_y;
+                            turn = -gamepad1.left_stick_x;
+                            leftPower = Range.clip(drive + turn,-1.0,1.0);
+                            rightPower = Range.clip(drive - turn,-1.0,1.0);
+                            robot.front_right.setPower(rightPower);
+                            robot.front_left.setPower(leftPower);
+                            robot.back_right.setPower(rightPower);
+                            robot.back_left.setPower(leftPower);
+                            if (gamepad1.right_stick_y != 0)
                             {
                                 robot.arm.setPower(-gamepad1.right_stick_y);
                             }
@@ -385,71 +408,45 @@ private double angleBoi()
                                 robot.arm.setPower(0);
                             }
                         }
-                        liftDown = false;
                         robot.resetLift();
                         robot.lift.setPower(0);
+                        liftDown = false;
                     }
-//                }
-                //moves the lift down
-                else if(gamepad1.a && !liftDown)
-                {
-                    while (liftSteps > robot.lift.getCurrentPosition() && (!(isStopRequested())))
-                    {
-                        robot.lift.setPower(.8);
-                        drive = gamepad1.left_stick_y;
-                        turn = -gamepad1.left_stick_x;
-                        leftPower = Range.clip(drive + turn,-1.0,1.0);
-                        rightPower = Range.clip(drive - turn,-1.0,1.0);
-                        //This drives the robot forward
-                        robot.front_right.setPower(rightPower);
-                        robot.front_left.setPower(leftPower);
-                        robot.back_right.setPower(rightPower);
-                        robot.back_left.setPower(leftPower);
-                        if(gamepad1.right_stick_y !=0)
-                        {
-                            robot.arm.setPower(-gamepad1.right_stick_y);
-                        }
-                        else
-                        {
-                            robot.arm.setPower(0);
-                        }
-                    }
-                    liftDown = true;
-                    robot.resetLift();
-                    robot.lift.setPower(0);
                 }
 //-------------------------------------------------------
-                //if the lift didn't start in the down position, but rather the up position
-//                if(liftStartesDown)
-//                {
-//                    //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
-//                    if (gamepad1.a && liftDown)
-//                    {
-//                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
-//                        {
-//                            robot.lift.setPower(-.8);
-//
-//                            drive = gamepad1.right_stick_y;
-//                            turn = -gamepad1.right_stick_x;
-//                            leftPower = Range.clip(drive + turn,-1.0,1.0);
-//                            rightPower = Range.clip(drive - turn,-1.0,1.0);
-//                            //This drives the robot forward
-//                            robot.front_right.setPower(rightPower);
-//                            robot.front_left.setPower(leftPower);
-//                            robot.back_right.setPower(rightPower);
-//                            robot.back_left.setPower(leftPower);
-//                        }
-//                        liftDown = false;
-//                        liftStartesDown = false;
-//                        robot.resetLift();
-//                        robot.lift.setPower(0);
-//                    }
-//                    else
-//                    {
-//                        robot.lift.setPower(0);
-//                    }
-//                }
-//            }
+//              If the lift didn't start in the down position, but rather the up position
+                else if (liftStartesDown)
+                {
+                    //Moves the lift up ---------------------------------- AAAAAAAAAAAAAAAAAAA
+                    if (gamepad1.a && liftDown)
+                    {
+                        while (-liftSteps < robot.lift.getCurrentPosition() && (!(isStopRequested())))
+                        {
+                            robot.lift.setPower(-.8);
+
+                            drive = gamepad1.left_stick_y;
+                            turn = -gamepad1.left_stick_x;
+                            leftPower = Range.clip(drive + turn,-1.0,1.0);
+                            rightPower = Range.clip(drive - turn,-1.0,1.0);
+                            robot.front_right.setPower(rightPower);
+                            robot.front_left.setPower(leftPower);
+                            robot.back_right.setPower(rightPower);
+                            robot.back_left.setPower(leftPower);
+                            if (gamepad1.right_stick_y != 0)
+                            {
+                                robot.arm.setPower(-gamepad1.right_stick_y);
+                            }
+                            else
+                            {
+                                robot.arm.setPower(0);
+                            }
+                        }
+                        robot.resetLift();
+                        robot.lift.setPower(0);
+                        liftDown = false;
+                        liftStartesDown = false;
+                    }
+                }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//
@@ -457,36 +454,36 @@ private double angleBoi()
 //-------------------------------------------//
 //-------------------------------------------//
 //--------------------------------------------------------------------------------------------------
-            if(gamepad2.a)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, niID);
-                telemetry.addData("Playing", "Ni File");
-                telemetry.update();
-            }
-            if(gamepad2.b)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, knightsID);
-                telemetry.addData("Playing", "Knights File");
-                telemetry.update();
-            }
-            if(gamepad2.x)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, deadID);
-                telemetry.addData("Playing", "Dead File");
-                telemetry.update();
-            }
-            if(gamepad2.y)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, shrubberyID);
-                telemetry.addData("Playing", "Shrubbery File");
-                telemetry.update();
-            }
-            if(gamepad2.dpad_up)
-            {
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, neatID);
-                telemetry.addData("Playing", "Neat File");
-                telemetry.update();
-            }
+                if (gamepad2.a)
+                {
+                    SoundPlayer.getInstance().startPlaying(hardwareMap.appContext,niID);
+                    telemetry.addData("Playing","Ni File");
+                    telemetry.update();
+                }
+                if (gamepad2.b)
+                {
+                    SoundPlayer.getInstance().startPlaying(hardwareMap.appContext,knightsID);
+                    telemetry.addData("Playing","Knights File");
+                    telemetry.update();
+                }
+                if (gamepad2.x)
+                {
+                    SoundPlayer.getInstance().startPlaying(hardwareMap.appContext,deadID);
+                    telemetry.addData("Playing","Dead File");
+                    telemetry.update();
+                }
+                if (gamepad2.y)
+                {
+                    SoundPlayer.getInstance().startPlaying(hardwareMap.appContext,shrubberyID);
+                    telemetry.addData("Playing","Shrubbery File");
+                    telemetry.update();
+                }
+                if (gamepad2.dpad_up)
+                {
+                    SoundPlayer.getInstance().startPlaying(hardwareMap.appContext,neatID);
+                    telemetry.addData("Playing","Neat File");
+                    telemetry.update();
+                }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
 //-------------------------------------------//
@@ -494,6 +491,7 @@ private double angleBoi()
 //-------------------------------------------//
 //-------------------------------------------//
 //--------------------------------------------------------------------------------------------------
+            }
         }
     }
 }
