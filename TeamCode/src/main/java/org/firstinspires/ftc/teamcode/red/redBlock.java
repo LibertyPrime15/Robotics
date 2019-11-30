@@ -198,6 +198,60 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
+//This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
+public void sadMove(double length, double power)
+{
+    double totDistInSteps = (((1120 / 11.97) * length) * -1);
+
+    double leftPower;
+    double rightPower;
+
+    if(totDistInSteps < robot.front_right.getCurrentPosition())
+    {
+        addMultiplier();
+        while (opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("distMultiplier",distMultipler);
+            angleBoi();
+            drive = -power;
+            turn = .05 * currHeading;
+            leftPower = Range.clip(drive - turn,-1.0,1.0);
+            rightPower = Range.clip(drive + turn,-1.0,1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
+    else if(totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        addMultiplier();
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----distMultiplier", distMultipler);
+            angleBoi();
+            drive = power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
+}
+//--------------------------------------------------------------------------------------------------
 public void armUp(double length)
 {
     double totDistInSteps = 1120 * length;

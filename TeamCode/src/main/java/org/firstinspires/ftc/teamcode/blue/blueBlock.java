@@ -46,7 +46,7 @@ public class blueBlock extends LinearOpMode
     //These variables are for moving the remaining distance across the field since our position changes every time
     double distGone   = 0;
     double distRemain = 0;
-    double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
+    double totField   = -4500;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
 
     double distMultipler = -6;
 
@@ -209,6 +209,60 @@ public void moveDistance(double length, double power)
     }
 }
 //--------------------------------------------------------------------------------------------------
+//This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
+public void sadMove(double length, double power)
+{
+    double totDistInSteps = (((1120 / 11.97) * length) * -1);
+
+    double leftPower;
+    double rightPower;
+
+    if(totDistInSteps < robot.front_right.getCurrentPosition())
+    {
+        addMultiplier();
+        while (opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("distMultiplier",distMultipler);
+            angleBoi();
+            drive = -power;
+            turn = .05 * currHeading;
+            leftPower = Range.clip(drive - turn,-1.0,1.0);
+            rightPower = Range.clip(drive + turn,-1.0,1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
+    else if(totDistInSteps > robot.front_right.getCurrentPosition())
+    {
+        addMultiplier();
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        {
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----distMultiplier", distMultipler);
+            angleBoi();
+            drive = power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
+}
+//--------------------------------------------------------------------------------------------------
 //This moves the arm up in autonomous
 public void armUp(double length)
 {
@@ -313,7 +367,7 @@ public boolean checkSight()
     else
     {
         inView = false;
-        moveDistance(6.7,.6);
+        moveDistance(7.7,.6);
         sleep(1000);
     }
     return inView;
@@ -332,9 +386,10 @@ public void checkEncoder()
     while(opModeIsActive() && (!(isStopRequested())))
     {
         //This moves the robot out of its start position and prepares for scanning
-        moveDistance(14,1);
+        moveDistance(17,1);
         turnAngle(-76);
-        moveDistance(4.3,1);
+        moveDistance(5,.6);
+        sleep(1000);
         if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
@@ -357,24 +412,25 @@ public void checkDistance()
 private void getBlock()
 {
     robot.Halt();
-    turnAngle(81);
+    turnAngle(78);
     robot.openClaw();
     liftUp();
     armUp(.9);
     moveDistance(7,1);
     armDown(.9);
     robot.closeClaw();
-    sleep(100);
+    sleep(200);
     liftDown();
-    moveDistance(-2.2,1);
-    turnAngle(68);
+    robot.resetEncoder();
+    sadMove(-.8,.6);
+    turnAngle(81);
     checkDistance();
     sleep(200);
     armUp(2);
     liftUp();
     robot.openClaw();
     sleep(100);
-    moveDistance(-10,1);//It isn't moving the proper distance
+    moveDistance(-5,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------

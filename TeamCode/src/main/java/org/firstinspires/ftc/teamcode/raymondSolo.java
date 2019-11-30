@@ -441,6 +441,8 @@ private double angleBoi()
                                 robot.arm.setPower(0);
                             }
                         }
+                        robot.claw1.setPosition(-.5);
+                        robot.claw2.setPosition(.5);
                         robot.resetLift();
                         robot.lift.setPower(0);
                         liftDown = false;
