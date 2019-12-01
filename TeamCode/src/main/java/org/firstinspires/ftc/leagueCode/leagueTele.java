@@ -20,6 +20,7 @@ public class leagueTele extends LinearOpMode
 
     float currHeading = 0;
     boolean isSpinningInward = false;
+    boolean canToggle = true;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -222,9 +223,9 @@ private double angleBoi()
                 robot.intake1.setPower(0);
                 robot.intake2.setPower(0);
             }
-            if(gamepad1.x && !isSpinningInward)//If it is not moving or is spinning outward
+            if(gamepad1.x && canToggle)//If it is not moving or is spinning outward
             {
-                if(robot.intake1.getPower() >= 0)//If it is not moving or spinning inward - spin inward
+                if(isSpinningInward)//If it is not moving or spinning inward - spin inward
                 {
                     robot.intake1.setPower(-.5);
                     robot.intake2.setPower(-.5);
@@ -234,15 +235,13 @@ private double angleBoi()
                 {
                     robot.intake1.setPower(.5);
                     robot.intake2.setPower(.5);
+                    isSpinningInward = false;
                 }
+                canToggle = false;
             }
-            else if(!gamepad1.x && isSpinningInward)
+            else if(!gamepad1.x && !canToggle)
             {
-                isSpinningInward = false; // this resets it for the next cycle only if the button was pressed, then released
-            }
-            else if(!gamepad1.x && !isSpinningInward)
-            {
-                isSpinningInward = true;
+                canToggle = true; // this resets it for the next cycle only if the button was pressed, then released
             }
 //--------------------------------------------------------------------------------------------------
             if(gamepad1.right_trigger !=0)

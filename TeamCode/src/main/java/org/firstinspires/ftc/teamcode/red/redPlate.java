@@ -120,11 +120,12 @@ public void moveDistance(double length, double power)
         robot.Halt();
         robot.resetEncoder();
     }
-
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
         {
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -139,8 +140,52 @@ public void moveDistance(double length, double power)
         robot.Halt();
         robot.resetEncoder();
     }
-    else
+}
+//--------------------------------------------------------------------------------------------------
+public void sadMove(double length, double power)
+{
+    double totDistInSteps = (((length / 11.97) * 1120) * -1);
+
+    double leftPower;
+    double rightPower;
+
+    if(totDistInSteps < robot.front_left.getCurrentPosition())
     {
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_left.getCurrentPosition())
+        {
+            telemetry.addData("distRemain",distRemain);
+            telemetry.addData("currSteps",robot.front_left.getCurrentPosition());
+            angleBoi();
+            drive = -power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
+        robot.Halt();
+        robot.resetEncoder();
+    }
+    else if(totDistInSteps > robot.front_left.getCurrentPosition())
+    {
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_left.getCurrentPosition())
+        {
+            telemetry.addData("----distRemain",distRemain);
+            telemetry.addData("----currSteps",robot.front_left.getCurrentPosition());
+            angleBoi();
+            drive = power;
+            turn  = .05 * currHeading;
+            leftPower    = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower   = Range.clip(drive + turn, -1.0, 1.0);
+
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
+        }
         robot.Halt();
         robot.resetEncoder();
     }
@@ -239,18 +284,20 @@ private void turnAngle(double angle)
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     turnAngle(-80);
-    moveDistance(26,1);
-    turnAngle(82);
+    sadMove(1,1);
+    turnAngle(80);
     liftUp();
     armUp(1.5);
-    moveDistance(30,.6);
-    armDown(1.1);
-    moveDistance(-27,.6);
+    sadMove(31,.6);
+    armDown(1.2);
+    sleep(200);
+    sadMove(-40,.6);
+    sadMove(3.5,.6);
     turnAngle(-25);
     armUp(1.5);
-    moveDistance(-1,.6);
-    turnAngle(-50);
-    moveDistance(-27,1);
+    sadMove(-1,1);
+    turnAngle(-42);
+    sadMove(-26,1);
     robot.Halt();
     stop();
 }
