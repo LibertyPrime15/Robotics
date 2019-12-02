@@ -21,6 +21,8 @@ public class leagueTele extends LinearOpMode
     float currHeading = 0;
     boolean isSpinningInward = false;
     boolean canToggle = true;
+
+    int armHeight = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -147,101 +149,64 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
-            angleBoi();
-
             double frontRight;
             double frontLeft;
             double backRight;
             double backLeft;
 
+            double leftPower;
+            double rightPower;
+            double drive = gamepad1.left_stick_y;
+            double turn = -gamepad1.left_stick_x;
+//----------------------------------
+            //This is full Holonomic
             frontRight = gamepad1.right_stick_y + gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x;
             frontLeft  = gamepad1.right_stick_y + gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x;
             backRight  = gamepad1.right_stick_y + gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x;
             backLeft   = gamepad1.right_stick_y + gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
-////----------------------------------
-//            //This drives the robot forward
+            //This is holonomic drive
             robot.front_right.setPower(frontRight);
             robot.front_left.setPower(frontLeft);
             robot.back_right.setPower(backRight);
             robot.back_left.setPower(backLeft);
-//--------------------------------------------------------------------------------Forward & Backward
-            //This drives the robot forward & backward - using LEFT TOGGLE YYYYYYYY AXISSSSSSSSSSSSS
-//            if(gamepad1.left_stick_y !=0)
-//            {
-//                robot.front_right.setPower(gamepad1.left_stick_y);
-//                robot.front_left.setPower(gamepad1.left_stick_y);
-//                robot.back_right.setPower(gamepad1.left_stick_y);
-//                robot.back_left.setPower(gamepad1.left_stick_y);
-//            }
-////------------------------------------------------------------------------------------------Sideways
-//            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
-//            else if(gamepad1.left_stick_x > 0)//Moves the bot to the left
-//            {
-//                robot.front_right.setPower(-1);
-//                robot.front_left.setPower(1);
-//                robot.back_right.setPower(1);
-//                robot.back_left.setPower(-1);
-//            }
-//            //This is driving the bot sideways - this uses the LEFT TOGGLE XXXXXXXX AXISSSSSSSSSSSSS
-//            else if(gamepad1.left_stick_x < 0)//Moves the bot to the right
-//            {
-//                robot.front_right.setPower(1);
-//                robot.front_left.setPower(-1);
-//                robot.back_right.setPower(-1);
-//                robot.back_left.setPower(1);
-//            }
-////-------------------------------------------------------------------------------------------Turning
-//            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
-//            else if(gamepad1.right_stick_x < 0)
-//            {
-//                robot.front_right.setPower(gamepad1.right_stick_x);
-//                robot.front_left.setPower(-gamepad1.right_stick_x);
-//                robot.back_right.setPower(gamepad1.right_stick_x);
-//                robot.back_left.setPower(-gamepad1.right_stick_x);
-//            }
-////            //This code is for turning the robot - this uses the RIGHT TOGGLE XXXXXXXXX AXISSSSSSSSS
-//            else if(gamepad1.right_stick_x > 0)//This is for turning the robot to the left
-//            {
-//                robot.front_right.setPower(gamepad1.right_stick_x);
-//                robot.front_left.setPower(-gamepad1.right_stick_x);
-//                robot.back_right.setPower(gamepad1.right_stick_x);
-//                robot.back_left.setPower(-gamepad1.right_stick_x);
-//            }
-//----------------------------------------------------------------------------------------------Stop
-            //This stops the robot from moving if none of the other things are happeningggggggggggg
-//            else
-//            {
-//                robot.front_right.setPower(0);
-//                robot.front_left.setPower(0);
-//                robot.back_right.setPower(0);
-//                robot.back_left.setPower(0);
-//            }
+
+            //This is standard driving on the right toggle
+            leftPower = Range.clip(drive + turn,-1.0,1.0);
+            rightPower = Range.clip(drive - turn,-1.0,1.0);
+            //This is standard drive on one stick
+            robot.front_right.setPower(rightPower);
+            robot.front_left.setPower(leftPower);
+            robot.back_right.setPower(rightPower);
+            robot.back_left.setPower(leftPower);
 //--------------------------------------------------------------------------------------------------
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
-            if(gamepad1.b)
+            if(gamepad1.y)
             {
                 robot.intake1.setPower(0);
                 robot.intake2.setPower(0);
             }
             if(gamepad1.x && canToggle)//If it is not moving or is spinning outward
             {
-                if(isSpinningInward)//If it is not moving or spinning inward - spin inward
+                if(robot.intake1.getPower() <= 0)//If it is not moving or spinning inward - spin inward
                 {
                     robot.intake1.setPower(-.5);
                     robot.intake2.setPower(-.5);
-                    isSpinningInward = true;
                 }
                 else
                 {
                     robot.intake1.setPower(.5);
                     robot.intake2.setPower(.5);
-                    isSpinningInward = false;
                 }
                 canToggle = false;
             }
+            else if((!gamepad1.x && !canToggle) || (gamepad1.x && canToggle))
+            {
+                telemetry.addData("Can Toggle = ",canToggle);
+                telemetry.update();
+            }
             else if(!gamepad1.x && !canToggle)
             {
-                canToggle = true; // this resets it for the next cycle only if the button was pressed, then released
+                canToggle = true;
             }
 //--------------------------------------------------------------------------------------------------
             if(gamepad1.right_trigger !=0)
@@ -259,6 +224,17 @@ private double angleBoi()
                 robot.liftPrimary.setPower(0);
                 robot.liftSecondary.setPower(0);
             }
+//--------------------------------------------------------------------------------------------------
+            if(gamepad1.a)
+            {
+                armHeight = armHeight + 1;//This might sprout a problem
+            }
+            else if(gamepad1.b)
+            {
+                armHeight = armHeight - 1;
+            }
+//-------------------
+            
 //--------------------------------------------------------------------------------------------------
         }
     }

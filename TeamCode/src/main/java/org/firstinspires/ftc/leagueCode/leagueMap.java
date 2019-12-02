@@ -18,12 +18,12 @@ public class leagueMap
     public DcMotor  intake2  = null;
     public DcMotor  liftPrimary  = null;
     public DcMotor  liftSecondary  = null;
-//
-//    public Servo arm1 = null;
-//    public Servo arm2 = null;
-//    public Servo arm3 = null;
-//    public Servo arm4 = null;
-//    public Servo arm5 = null;
+
+    public Servo flip1 = null;
+    public Servo flip2 = null;
+    public Servo wrist = null;
+    public Servo rotate = null;
+    public Servo grabber = null;
 //
 //    public Servo arm6  = null;
 //    public Servo arm7  = null;
@@ -49,14 +49,15 @@ public class leagueMap
         intake1   = hwMap.get(DcMotor.class, "intake1");
         intake2   = hwMap.get(DcMotor.class, "intake2");
         liftPrimary   = hwMap.get(DcMotor.class, "liftPrimary");
-        liftSecondary   = hwMap.get(DcMotor.class, "liftSecondary");
-//
-//        arm1  = hwMap.get(Servo.class, "arm1");
-//        arm2  = hwMap.get(Servo.class, "arm2");
-//        arm3  = hwMap.get(Servo.class, "arm3");
-//        arm4  = hwMap.get(Servo.class, "arm4");
-//        arm5  = hwMap.get(Servo.class, "arm5");
-//
+        liftSecondary = hwMap.get(DcMotor.class, "liftSecondary");
+
+        flip1  = hwMap.get(Servo.class, "flip1");
+        flip2  = hwMap.get(Servo.class, "flip2");
+
+        wrist   = hwMap.get(Servo.class, "wrist");
+        rotate  = hwMap.get(Servo.class, "rotate");
+        grabber = hwMap.get(Servo.class, "grabber");
+
 //        arm6  = hwMap.get(Servo.class, "arm6");
 //        arm7  = hwMap.get(Servo.class, "arm7");
 //        arm8  = hwMap.get(Servo.class, "arm8");
