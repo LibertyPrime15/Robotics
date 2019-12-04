@@ -20,7 +20,8 @@ public class leagueTele extends LinearOpMode
 
     float currHeading = 0;
     boolean isSpinningInward = false;
-    boolean canToggle = true;
+//    boolean canToggleIntake  = true;
+    boolean canToggleGrabber = true;
 
     int armHeight = 0;
 //--------------------------------------------------------------------------------------------------
@@ -149,6 +150,8 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
+            telemetry.addData("The intake is intaking a block = ",robot.canToggleIntake);
+
             double frontRight;
             double frontLeft;
             double backRight;
@@ -182,48 +185,32 @@ private double angleBoi()
             //These are the intake motor controls using buttons AAAAAAAAAAAAAAAAA && BBBBBBBBBBBBBBB
             if(gamepad1.y)
             {
-                robot.intake1.setPower(0);
-                robot.intake2.setPower(0);
+                robot.stopIntake();
             }
-            if(gamepad1.x && canToggle)//If it is not moving or is spinning outward
+            if(gamepad1.x && robot.canToggleIntake)//If it is not moving or is spinning outward
             {
                 if(robot.intake1.getPower() <= 0)//If it is not moving or spinning inward - spin inward
                 {
-                    robot.intake1.setPower(-.5);
-                    robot.intake2.setPower(-.5);
+                    robot.intake();
                 }
                 else
                 {
-                    robot.intake1.setPower(.5);
-                    robot.intake2.setPower(.5);
+                    robot.outtake();
                 }
-                canToggle = false;
+                robot.canToggleIntake = false;
             }
-            else if((!gamepad1.x && !canToggle) || (gamepad1.x && canToggle))
+            else if((!gamepad1.x && !robot.canToggleIntake) || (gamepad1.x && robot.canToggleIntake))
             {
-                telemetry.addData("Can Toggle = ",canToggle);
+                telemetry.addData("Can Toggle = ",robot.canToggleIntake);
                 telemetry.update();
             }
-            else if(!gamepad1.x && !canToggle)
+            else if(!gamepad1.x && !robot.canToggleIntake)
             {
-                canToggle = true;
+                robot.canToggleIntake = true;
             }
 //--------------------------------------------------------------------------------------------------
-            if(gamepad1.right_trigger !=0)
-            {
-                robot.liftPrimary.setPower(Math.abs(gamepad1.right_trigger));
-                robot.liftPrimary.setPower(Math.abs(gamepad1.right_trigger));
-            }
-            else if(gamepad1.left_trigger !=0)
-            {
-                robot.liftPrimary.setPower(-1 *(gamepad1.left_trigger));
-                robot.liftSecondary.setPower(-1 *(gamepad1.left_trigger));
-            }
-            else
-            {
-                robot.liftPrimary.setPower(0);
-                robot.liftSecondary.setPower(0);
-            }
+            robot.liftPrimary.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            robot.liftSecondary.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
 //--------------------------------------------------------------------------------------------------
             if(gamepad1.a)
             {
@@ -234,8 +221,85 @@ private double angleBoi()
                 armHeight = armHeight - 1;
             }
 //-------------------
-            
+
 //--------------------------------------------------------------------------------------------------
+            if(canToggleGrabber && gamepad1.right_bumper)
+            {
+                if(robot.grabber.getPosition() == 0.1 && canToggleGrabber)
+                {
+                    robot.grabber.setPosition(0.80);
+                }
+                else
+                {
+                    robot.grabber.setPosition(0.1);
+                }
+                canToggleGrabber = false;
+            }
+            else if(!canToggleGrabber && !gamepad1.right_bumper)
+            {
+                canToggleGrabber = true;
+            }
+//--------------------------------------------------------------------------------------------------
+            if(gamepad1.left_stick_button)
+            {
+                robot.flip1.setPosition(0.9);
+                robot.flip2.setPosition(0.9);
+                robot.wrist.setPosition(0.1);
+                robot.rotate.setPosition(0);
+
+//                targetPosition = [[just above brick]];
+
+                robot.grabber.setPosition(0.1);
+
+                robot.intake();
+//-------------------
+            if(gamepad1.right_stick_button)
+            {
+                robot.flip1.setPosition(0.9);
+                robot.flip2.setPosition(0.9);
+                robot.wrist.setPosition(0.1);
+                robot.rotate.setPosition(0);
+
+//                targetPosition = 0;
+
+                robot.stopIntake();
+
+                sleep(500);
+
+                robot.grabber.setPosition(0.8);
+            }
+//--------------------------------------------------------------------------------------------------
+                if(gamepad1.dpad_up)
+                {
+                    robot.flip1.setPosition(0.15);
+                    robot.flip2.setPosition(0.15);
+                    robot.wrist.setPosition(0.9);
+                    robot.rotate.setPosition(0.666);
+                }
+                if(gamepad1.dpad_down)
+                {
+                    robot.flip1.setPosition(0.15);
+                    robot.flip2.setPosition(0.15);
+                    robot.wrist.setPosition(0.9);
+                    robot.rotate.setPosition(0);
+                }
+                if(gamepad1.dpad_left)
+                {
+                    robot.flip1.setPosition(0.15);
+                    robot.flip2.setPosition(0.15);
+                    robot.wrist.setPosition(0.9);
+                    robot.rotate.setPosition(1);
+                }
+                if(gamepad1.dpad_right)
+                {
+                    robot.flip1.setPosition(0.15);
+                    robot.flip2.setPosition(0.15);
+                    robot.wrist.setPosition(0.9);
+                    robot.rotate.setPosition(0.3333);
+                }
+            }
+//--------------------------------------------------------------------------------------------------
+            telemetry.update();
         }
     }
 }

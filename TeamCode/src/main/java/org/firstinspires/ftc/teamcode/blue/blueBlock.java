@@ -430,7 +430,7 @@ private void getBlock()
     liftUp();
     robot.openClaw();
     sleep(100);
-    moveDistance(-5,1);//It isn't moving the proper distance
+    moveDistance(-4,1);//It isn't moving the proper distance
     stop();
 }
 //--------------------------------------------------------------------------------------------------

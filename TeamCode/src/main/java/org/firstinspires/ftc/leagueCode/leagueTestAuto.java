@@ -303,6 +303,75 @@ private void turnAngle(double angle)
     currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
+//This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
+private void newTurnAngle(double angle, double power)
+{
+    while(angle != 0)
+    {
+        double drive = power;
+
+        telemetry.addLine().addData("Heading", currHeading);
+        telemetry.update();
+        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.imu.getPosition();
+        currHeading = angles.firstAngle;
+
+        if(currHeading < (angle + 2))
+        {
+            robot.turnLeft(power);
+        }
+        if(currHeading > (angle - 4))
+        {
+            robot.turnRight(power);
+        }
+        else if(currHeading == (angle +-2))
+        {
+            break;
+        }
+
+//        timer.reset();
+//        double PIDconstant;
+//
+//        while(timer < idk like a couple seconds)
+//        {
+//            if(currentheading < angle)
+//            {
+//                turn(power * PIDconstant *(angle - currentHeading));
+//            }
+//            else if(currentHeading > angle)
+//        }
+//----------------------------------
+    }
+    if(angle > 0)
+    {
+        while(angle >= currHeading && (!(isStopRequested())))
+        {
+            telemetry.addLine().addData("Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnLeft(.6);
+        }
+        imuInit();
+    }
+
+    else if(angle < 0)
+    {
+        while(angle <= currHeading && (!(isStopRequested())))
+        {
+            telemetry.addLine().addData("---Heading", currHeading);
+            telemetry.update();
+            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            this.imu.getPosition();
+            currHeading = angles.firstAngle;
+            robot.turnRight(.6);
+        }
+        imuInit();
+    }
+    currHeading = 0;
+}
+//--------------------------------------------------------------------------------------------------
 //This checks to see if the skystone is in view
 //public boolean checkSight()
 //{

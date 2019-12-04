@@ -24,7 +24,9 @@ public class leagueMap
     public Servo wrist = null;
     public Servo rotate = null;
     public Servo grabber = null;
-//
+
+    public boolean canToggleIntake = true;
+
 //    public Servo arm6  = null;
 //    public Servo arm7  = null;
 //    public Servo arm8  = null;
@@ -146,6 +148,28 @@ public class leagueMap
         front_left.setPower(-power);
         back_right.setPower(power);
         back_left.setPower(-power);
+    }
+//----------------------------------------//
+    public void intake()
+    {
+        intake1.setPower(-0.2);
+        intake2.setPower(-0.2);
+        canToggleIntake = true;
+    }
+//----------------------------------------//
+    public void outtake()
+    {
+        intake1.setPower(1);
+        intake2.setPower(1);
+        canToggleIntake = false;
+    }
+//----------------------------------------//
+    public void stopIntake()
+    {
+        intake1.setPower(0);
+        intake2.setPower(0);
+
+        canToggleIntake = false;
     }
 //----------------------------------------//
 }

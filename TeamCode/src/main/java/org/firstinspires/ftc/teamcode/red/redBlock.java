@@ -156,7 +156,7 @@ public void moveDistance(double length, double power)
     {
         addMultiplier();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
-        {
+            {
             telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
             telemetry.addData("distMultiplier", distMultipler);
