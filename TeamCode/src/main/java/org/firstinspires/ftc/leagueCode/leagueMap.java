@@ -150,17 +150,17 @@ public class leagueMap
         back_left.setPower(-power);
     }
 //----------------------------------------//
-    public void intake()
+    public void intake(double power)
     {
-        intake1.setPower(-0.2);
-        intake2.setPower(-0.2);
+        intake1.setPower(-power);
+        intake2.setPower(-power);
         canToggleIntake = true;
     }
 //----------------------------------------//
-    public void outtake()
+    public void outtake(double power)
     {
-        intake1.setPower(1);
-        intake2.setPower(1);
+        intake1.setPower(power);
+        intake2.setPower(power);
         canToggleIntake = false;
     }
 //----------------------------------------//

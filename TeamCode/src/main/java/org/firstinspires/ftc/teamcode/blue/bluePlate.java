@@ -275,7 +275,6 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     moveDistance(29,.6);
     armDown(1.2);
     sleep(200);
-    robot.resetEncoder();
     sadMove(-40,.6);
     armUp(1.5);
     sadMove(3.5,.6);

@@ -63,9 +63,16 @@ public class leagueTestAuto extends LinearOpMode
     //Inches -> Steps  = #Inches * (1120/11.97)
     //Steps  -> Inches = #Steps  * (11.97/1120)
 
+    int currentEncPosSum = robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition();
+    int currentEncPosAvg = currentEncPosSum / 4;
+
     //These variables are for driving in a straight line
     double drive = 0;
     double turn  = 0;
+
+    //these stop the robot. Without them, it continues to move.
+    long start = System.currentTimeMillis();
+    long end = start + 1000;
     //These variables are for moving the remaining distance across the field since our position changes every time
 //    double distGone   = 0;
 //    double distRemain = 0;
@@ -188,12 +195,12 @@ public void moveDistance(double length, double power)
     double leftPower;
     double rightPower;
 
-    if(totDistInSteps < robot.front_right.getCurrentPosition())
+    if(totDistInSteps < currentEncPosAvg)
     {
 //    addMultiplier();
-    while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+    while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < currentEncPosAvg)
         {
-            telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("currSteps",currentEncPosAvg);
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -209,11 +216,11 @@ public void moveDistance(double length, double power)
         robot.resetEncoder();
     }
 
-    else if(totDistInSteps > robot.front_right.getCurrentPosition())
+    else if(totDistInSteps > currentEncPosAvg)
     {
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > currentEncPosAvg)
         {
-            telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
+            telemetry.addData("----currSteps",currentEncPosAvg);
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -249,7 +256,7 @@ public void moveSide(double distance, double power)
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
-            averageEncoderRight = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition()) / 2;
+            averageEncoderRight = (currentEncPosAvg + robot.back_right.getCurrentPosition()) / 2;
 
             topRight    = Range.clip(drive + turn, -1.0, 1.0);
             topLeft     = Range.clip(drive - turn, -1.0, 1.0);
@@ -288,64 +295,29 @@ public void moveSide(double distance, double power)
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
-private void turnAngle(double angle)
+private void turnAngle(double angle, double power, double time)
 {
+    double start = System.currentTimeMillis();
+    double end   = start + time;
+
     if(angle > 0)
     {
-        while(angle >= currHeading && (!(isStopRequested())))
+        while(angle >= currHeading && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
             telemetry.addLine().addData("Heading", currHeading);
             telemetry.update();
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnLeft(.6);
+            robot.turnLeft(power);
         }
-        imuInit();
+//        imuInit();
+        start = 0;
     }
 
     else if(angle < 0)
     {
-        while(angle <= currHeading && (!(isStopRequested())))
-        {
-            telemetry.addLine().addData("---Heading", currHeading);
-            telemetry.update();
-            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            this.imu.getPosition();
-            currHeading = angles.firstAngle;
-            robot.turnRight(.6);
-        }
-        imuInit();
-    }
-    currHeading = 0;
-}
-//--------------------------------------------------------------------------------------------------
-//This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
-private void newTurnAngle(double angle, double power, double time)
-{
-    TimerTask timerTask = new TimerTask(angle, power)
-    {
-        if(angle > 0)
-        {
-            while(angle >= currHeading && (!(isStopRequested())))
-            {
-                telemetry.addLine().addData("Heading", currHeading);
-                telemetry.update();
-                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                this.imu.getPosition();
-                currHeading = angles.firstAngle;
-                robot.turnLeft(power);
-                t.cancel();
-            }
-            imuInit();
-        }
-    };
-    t = new Timer();
-    t.schedule(timerTask,0,time);
-
-    else if(angle < 0)
-    {
-        while(angle <= currHeading && (!(isStopRequested())))
+        while(angle <= currHeading && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
             telemetry.addLine().addData("---Heading", currHeading);
             telemetry.update();
@@ -353,11 +325,11 @@ private void newTurnAngle(double angle, double power, double time)
             this.imu.getPosition();
             currHeading = angles.firstAngle;
             robot.turnRight(power);
-            t.cancel();
         }
-        imuInit();
+//        imuInit();
+        start = 0;
     }
-    currHeading = 0;
+//    currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
 //This method adds a multiplier of 1 every time a move distance, this is for moving the remaining distance of the field depending on which skystone is detected
@@ -404,19 +376,6 @@ private void newTurnAngle(double angle, double power, double time)
 //----------------------------------------//
 ////--------------------------------------//
 ////--------------------------------------------------------------------------------------------------
-private void runThing(int time, double angle)
-{
-    TimerTask timerTask = new TimerTask()
-    {
-        public void run(angle)
-        {
-            turnAngle(angle);
-            t.cancel();
-        }
-    };
-    t = new Timer();
-    t.schedule(timerTask,0,time);
-}
 
 
 

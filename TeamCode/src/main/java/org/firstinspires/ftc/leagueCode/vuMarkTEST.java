@@ -45,9 +45,6 @@ public class vuMarkTEST extends LinearOpMode
     double rX;
     double rY;
     double rZ;
-
-    double drive = 0;
-    double turn  = 0;
 //--------------------------------------------------------------------------------------------------
 private void imuInit()
 {
@@ -201,8 +198,6 @@ private double angleBoi()
             telemetry.update();
         }
     }
-
-
 
     String format(OpenGLMatrix transformationMatrix)
     {
