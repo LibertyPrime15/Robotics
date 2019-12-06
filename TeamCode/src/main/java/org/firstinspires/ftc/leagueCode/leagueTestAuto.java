@@ -21,6 +21,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.lang.Thread;
+import java.util.concurrent.TimeoutException;
+
 import org.firstinspires.ftc.teamcode.RevMap;
 
 @Autonomous(name="League Blue", group = "A")
@@ -33,12 +47,16 @@ public class leagueTestAuto extends LinearOpMode
     Orientation angles;
     BNO055IMU imu;
 
+    static Timer t;
+    double angle;
     //Declare the variable I'm gonna use the gyro
     float currHeading = 0;
     double Circ = 11.97;////RUBBER WHEELS
 //    double Circ = 00.00;///MECANUM WHEELS
     double Steps = 560;///40:1 Gear Ratio
     double Compensation = 1.5;
+//    Timer timer = new Timer();
+
 //    double Steps = 560;////20:1 Gear Ratio
 //    double Steps = 1680;///60:1 Gear Ratio
 
@@ -48,7 +66,6 @@ public class leagueTestAuto extends LinearOpMode
     //These variables are for driving in a straight line
     double drive = 0;
     double turn  = 0;
-
     //These variables are for moving the remaining distance across the field since our position changes every time
 //    double distGone   = 0;
 //    double distRemain = 0;
@@ -80,7 +97,7 @@ public class leagueTestAuto extends LinearOpMode
     private float robotAngle = 0;
 
     VuforiaLocalizer vuforia;
-    //--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -304,57 +321,27 @@ private void turnAngle(double angle)
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
-private void newTurnAngle(double angle, double power)
+private void newTurnAngle(double angle, double power, double time)
 {
-    while(angle != 0)
+    TimerTask timerTask = new TimerTask(angle, power)
     {
-        double drive = power;
-
-        telemetry.addLine().addData("Heading", currHeading);
-        telemetry.update();
-        angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        this.imu.getPosition();
-        currHeading = angles.firstAngle;
-
-        if(currHeading < (angle + 2))
+        if(angle > 0)
         {
-            robot.turnLeft(power);
+            while(angle >= currHeading && (!(isStopRequested())))
+            {
+                telemetry.addLine().addData("Heading", currHeading);
+                telemetry.update();
+                angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                this.imu.getPosition();
+                currHeading = angles.firstAngle;
+                robot.turnLeft(power);
+                t.cancel();
+            }
+            imuInit();
         }
-        if(currHeading > (angle - 4))
-        {
-            robot.turnRight(power);
-        }
-        else if(currHeading == (angle +-2))
-        {
-            break;
-        }
-
-//        timer.reset();
-//        double PIDconstant;
-//
-//        while(timer < idk like a couple seconds)
-//        {
-//            if(currentheading < angle)
-//            {
-//                turn(power * PIDconstant *(angle - currentHeading));
-//            }
-//            else if(currentHeading > angle)
-//        }
-//----------------------------------
-    }
-    if(angle > 0)
-    {
-        while(angle >= currHeading && (!(isStopRequested())))
-        {
-            telemetry.addLine().addData("Heading", currHeading);
-            telemetry.update();
-            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            this.imu.getPosition();
-            currHeading = angles.firstAngle;
-            robot.turnLeft(.6);
-        }
-        imuInit();
-    }
+    };
+    t = new Timer();
+    t.schedule(timerTask,0,time);
 
     else if(angle < 0)
     {
@@ -365,29 +352,13 @@ private void newTurnAngle(double angle, double power)
             angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             this.imu.getPosition();
             currHeading = angles.firstAngle;
-            robot.turnRight(.6);
+            robot.turnRight(power);
+            t.cancel();
         }
         imuInit();
     }
     currHeading = 0;
 }
-//--------------------------------------------------------------------------------------------------
-//This checks to see if the skystone is in view
-//public boolean checkSight()
-//{
-//    if(listener.isVisible()  && (!(isStopRequested())))
-//    {
-//        inView = true;
-//        getBlock();
-//    }
-//    else
-//    {
-//        inView = false;
-//        moveDistance(6.7,.6);
-//        sleep(1000);
-//    }
-//    return inView;
-//}
 //--------------------------------------------------------------------------------------------------
 //This method adds a multiplier of 1 every time a move distance, this is for moving the remaining distance of the field depending on which skystone is detected
 //public double addMultiplier()
@@ -427,53 +398,54 @@ private void newTurnAngle(double angle, double power)
 //    telemetry.update();
 //}
 //--------------------------------------------------------------------------------------------------
-//private void autoAdjust()//This is for auto adjusting the robot to align with the skystone
-//{
-//    float x = 0;
-//    if(x > 0)
-//    {
-//        while(x > 0 && (!(isStopRequested())))
-//        {
-//
-//        }
-//    }
-//
-//    else if(x < 0)
-//    {
-//        while(x < 0 && (!(isStopRequested())))
-//        {
-//
-//        }
-//    }
-//}
-//--------------------------------------------------------------------------------------------------
-//private void sideMove()//This is for moving to the side constantly
-//{
-//    float x = 0;
-//    if(x > 0)
-//    {
-//        while(x > 0 && (!(isStopRequested())))
-//        {
-//
-//        }
-//    }
-//
-//    else if(x < 0)
-//    {
-//        while(x < 0 && (!(isStopRequested())))
-//        {
-//
-//        }
-//    }
-//}
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
-//----------------------------------------//
-//--------------------------------------------------------------------------------------------------
+////--------------------------------------//
+////--------------------------------------------------------------------------------------------------
+private void runThing(int time, double angle)
+{
+    TimerTask timerTask = new TimerTask()
+    {
+        public void run(angle)
+        {
+            turnAngle(angle);
+            t.cancel();
+        }
+    };
+    t = new Timer();
+    t.schedule(timerTask,0,time);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -544,12 +516,6 @@ private void newTurnAngle(double angle, double power)
         imuInit();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
-
-
-
-
-
-
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();

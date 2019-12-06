@@ -268,7 +268,7 @@ private void turnAngle(double angle)
 private void getBlock()//Needs to go 6000 steps remaining distance
 {
     turnAngle(82);
-    moveDistance(10,1);
+    moveDistance(30,1);
     turnAngle(-75);
     liftUp();
     armUp(1.5);
@@ -277,11 +277,10 @@ private void getBlock()//Needs to go 6000 steps remaining distance
     sleep(200);
     robot.resetEncoder();
     sadMove(-40,.6);
-    sadMove(3.5,.6);
-    turnAngle(25);
     armUp(1.5);
-    sadMove(-1,1);
-    turnAngle(53);
+    sadMove(3.5,.6);
+    sadMove(-3.5,.6);
+    turnAngle(78);
     moveDistance(-20,1);
     robot.Halt();
     stop();
