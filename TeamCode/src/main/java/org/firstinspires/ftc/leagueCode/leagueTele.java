@@ -191,11 +191,11 @@ private double angleBoi()
             {
                 if(robot.intake1.getPower() <= 0)//If it is not moving or spinning inward - spin inward
                 {
-                    robot.intake();
+                    robot.intake(.5);
                 }
                 else
                 {
-                    robot.outtake();
+                    robot.outtake(.5);
                 }
                 robot.canToggleIntake = false;
             }
@@ -251,7 +251,7 @@ private double angleBoi()
 
                 robot.grabber.setPosition(0.1);
 
-                robot.intake();
+                robot.intake(.5);
 //-------------------
             if(gamepad1.right_stick_button)
             {

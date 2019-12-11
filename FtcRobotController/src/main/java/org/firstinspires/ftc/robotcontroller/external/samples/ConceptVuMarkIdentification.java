@@ -157,8 +157,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
-                if (pose != null)
-                {
+                if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
@@ -173,8 +172,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                     double rZ = rot.thirdAngle;
                 }
             }
-            else
-            {
+            else {
                 telemetry.addData("VuMark", "not visible");
             }
 
@@ -182,8 +180,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         }
     }
 
-    String format(OpenGLMatrix transformationMatrix)
-    {
+    String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }

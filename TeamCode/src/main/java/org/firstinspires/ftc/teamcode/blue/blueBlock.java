@@ -164,8 +164,8 @@ public void moveDistance(double length, double power)
 
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
-    addMultiplier();
-    while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        addMultiplier();
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_left.getCurrentPosition())
         {
             telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
@@ -188,7 +188,7 @@ public void moveDistance(double length, double power)
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
         addMultiplier();
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_left.getCurrentPosition())
         {
             telemetry.addData("----distRemain",distRemain);
             telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
@@ -220,7 +220,7 @@ public void sadMove(double length, double power)
     if(totDistInSteps < robot.front_right.getCurrentPosition())
     {
         addMultiplier();
-        while (opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_right.getCurrentPosition())
+        while (opModeIsActive() && (!(isStopRequested())) && totDistInSteps < robot.front_left.getCurrentPosition())
         {
             telemetry.addData("distRemain",distRemain);
             telemetry.addData("currSteps",robot.front_right.getCurrentPosition());
@@ -242,7 +242,7 @@ public void sadMove(double length, double power)
     else if(totDistInSteps > robot.front_right.getCurrentPosition())
     {
         addMultiplier();
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_right.getCurrentPosition())
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > robot.front_left.getCurrentPosition())
         {
             telemetry.addData("----distRemain",distRemain);
             telemetry.addData("----currSteps",robot.front_right.getCurrentPosition());
@@ -261,6 +261,33 @@ public void sadMove(double length, double power)
         robot.Halt();
         robot.resetEncoder();
     }
+}
+//--------------------------------------------------------------------------------------------------
+public void paulMoveDistance(double distance, double power)
+{
+    double distanceInSteps = distance * (1120/11.97);
+    if(robot.front_right.getCurrentPosition() < distanceInSteps && !isStopRequested())
+    {
+        while(robot.front_right.getCurrentPosition() < distanceInSteps)
+        {
+            robot.front_right.setPower(power);
+            robot.front_left.setPower(power);
+            robot.back_right.setPower(power);
+            robot.back_left.setPower(power);
+        }
+    }
+    else if(robot.front_right.getCurrentPosition() > distanceInSteps)
+    {
+        while(robot.front_right.getCurrentPosition() > distanceInSteps && !isStopRequested())
+        {
+            robot.front_right.setPower(-power);
+            robot.front_left.setPower(-power);
+            robot.back_right.setPower(-power);
+            robot.back_left.setPower(-power);
+        }
+    }
+    robot.Halt();
+    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 //This moves the arm up in autonomous
@@ -386,11 +413,8 @@ public void checkEncoder()
     while(opModeIsActive() && (!(isStopRequested())))
     {
         //This moves the robot out of its start position and prepares for scanning
-        moveDistance(17,1);
+        moveDistance(15,1);
         turnAngle(-76);
-        moveDistance(5,.6);
-        sleep(1000);
-        if(inView == false)
         {
             while(inView == false && (!(isStopRequested())))
             {
@@ -412,7 +436,7 @@ public void checkDistance()
 private void getBlock()
 {
     robot.Halt();
-    turnAngle(78);
+    turnAngle(77.5);
     robot.openClaw();
     liftUp();
     armUp(.9);
@@ -422,8 +446,8 @@ private void getBlock()
     sleep(200);
     liftDown();
     robot.resetEncoder();
-    sadMove(-.8,.6);
-    turnAngle(81);
+    sadMove(-3.8,.6);
+    turnAngle(78);
     checkDistance();
     sleep(200);
     armUp(2);

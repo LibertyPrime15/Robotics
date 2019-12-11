@@ -41,52 +41,25 @@ import org.firstinspires.ftc.teamcode.RevMap;
 //@Disabled
 public class leagueTestAuto extends LinearOpMode
 {
-    //Call my hardware map
     leagueMap robot = new leagueMap();
-    //Declare the variables needed for the imu/gyro
     Orientation angles;
     BNO055IMU imu;
 
-    static Timer t;
-    double angle;
-    //Declare the variable I'm gonna use the gyro
-    float currHeading = 0;
-    double Circ = 11.97;////RUBBER WHEELS
-//    double Circ = 00.00;///MECANUM WHEELS
-    double Steps = 560;///40:1 Gear Ratio
+    double diameter = 4;
+    double radius   = (diameter/2);
+    double circ     = Math.PI * (radius * radius);
+
+    double Steps        = 560;
+    float currHeading   = 0;
     double Compensation = 1.5;
-//    Timer timer = new Timer();
 
-//    double Steps = 560;////20:1 Gear Ratio
-//    double Steps = 1680;///60:1 Gear Ratio
-
-    //Inches -> Steps  = #Inches * (1120/11.97)
-    //Steps  -> Inches = #Steps  * (11.97/1120)
-
-    int currentEncPosSum = robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition();
-    int currentEncPosAvg = currentEncPosSum / 4;
-
-    //These variables are for driving in a straight line
     double drive = 0;
     double turn  = 0;
 
-    //these stop the robot. Without them, it continues to move.
-    long start = System.currentTimeMillis();
-    long end = start + 1000;
-    //These variables are for moving the remaining distance across the field since our position changes every time
-//    double distGone   = 0;
-//    double distRemain = 0;
-//    double totField   = -6200;//length * ((1/11.97) * 1120); = steps per inch ------ 144in = 13473steps ---- 2526 = 24
-//
-//    double distMultipler = -6;
+    double distGone   = 0;
+    double distRemain = 0;
+    double totField   = -5200;
 
-    //These are booleans for determining whether the arm and lift are in certain positions
-//    boolean isExtended = false;
-//    boolean isVertical = false;
-//    //This is a boolean that lets me know if vuforia is detecting the object
-//    boolean inView     = false;
-
-    //These are all variables needed for vuforia to work - they come with
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
     private VuforiaTrackables visionTargets;
@@ -95,12 +68,10 @@ public class leagueTestAuto extends LinearOpMode
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
 
-    //This is our vuforia key needed for the program to run
     private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
 
-    //These are variables I'm in the process of using for
-    private float robotX = 0;
-    private float robotY = 0;
+    private float robotX     = 0;
+    private float robotY     = 0;
     private float robotAngle = 0;
 
     VuforiaLocalizer vuforia;
@@ -188,19 +159,28 @@ private double angleBoi()
 }
 //--------------------------------------------------------------------------------------------------
 //This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
-public void moveDistance(double length, double power)
+public void moveDistance(double distance, double power, double time)
 {
-    double totDistInSteps = (((Steps / Circ) * length) * -1);
+    double length = distance;
+
+    double start = System.currentTimeMillis();
+    double end   = start + time;
+
+    int currentEncPosSum = robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition();
+    int currentEncPosAvg = currentEncPosSum / 4;
 
     double leftPower;
     double rightPower;
 
-    if(totDistInSteps < currentEncPosAvg)
+    if(distance < 0)//Going Backward
     {
-//    addMultiplier();
-    while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < currentEncPosAvg)
+        double totDistInSteps = (((Steps / circ) * length) * -1);
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < currentEncPosAvg  && System.currentTimeMillis() < end)
         {
-            telemetry.addData("currSteps",currentEncPosAvg);
+            currentEncPosSum = ( -1 * (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()));
+            currentEncPosAvg = currentEncPosSum / 4;
+
+            telemetry.addData("----currStepAVG",currentEncPosAvg);
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -212,15 +192,17 @@ public void moveDistance(double length, double power)
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
         }
-        robot.Halt();
-        robot.resetEncoder();
     }
 
-    else if(totDistInSteps > currentEncPosAvg)
+    else if(distance > 0)//Going Forward
     {
-        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > currentEncPosAvg)
+        double totDistInSteps = Math.abs((Steps / circ) * length);
+        while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > currentEncPosAvg && System.currentTimeMillis() < end)
         {
-            telemetry.addData("----currSteps",currentEncPosAvg);
+            currentEncPosSum = (Math.abs(robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()));
+            currentEncPosAvg = currentEncPosSum / 4;
+
+            telemetry.addData("currStepsAVG",currentEncPosAvg);
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -232,31 +214,36 @@ public void moveDistance(double length, double power)
             robot.back_right.setPower(rightPower);
             robot.back_left.setPower(leftPower);
         }
-        robot.Halt();
-        robot.resetEncoder();
     }
+    robot.Halt();
+    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 //This method moves a certain distance in inches SIDEWAYS at a certain speed - when moving it will move perfectly straight
-public void moveSide(double distance, double power)
+public void moveSide(double distance, double power, double time, boolean goingRight)
 {
-    double totDistInSteps = (((Circ / Steps) * (distance * Compensation)) * -1);
-    double averageEncoderRight = 0;
-    double averageEncoderLeft  = 0;
+    double length = distance;
+    double totDistInSteps = (Math.abs(circ / Steps) * (length * Compensation));
+
+    double averageEncoderRight = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition())/2));
+    double averageEncoderLeft  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition())/2));
+
+    double start = System.currentTimeMillis();
+    double end   = start + time;
 
     double topRight;
     double topLeft;
     double bottomRight;
     double bottomLeft;
 
-    if(totDistInSteps > 0)//DRIVE TO THE RIGHT
+    if(goingRight)//DRIVE TO THE RIGHT
     {
-        while(totDistInSteps > averageEncoderRight && opModeIsActive() && (!(isStopRequested())))
+        while(totDistInSteps > averageEncoderRight && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
+            averageEncoderRight = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition())/2));
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
-            averageEncoderRight = (currentEncPosAvg + robot.back_right.getCurrentPosition()) / 2;
 
             topRight    = Range.clip(drive + turn, -1.0, 1.0);
             topLeft     = Range.clip(drive - turn, -1.0, 1.0);
@@ -270,17 +257,15 @@ public void moveSide(double distance, double power)
         }
     }
 
-    else if(totDistInSteps < 0)//DRIVE TO THE LEFT
+    else if(!goingRight)//DRIVE TO THE LEFT
     {
-        while(totDistInSteps < averageEncoderLeft && opModeIsActive() && (!(isStopRequested())))
+        while(totDistInSteps < averageEncoderLeft && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
+            averageEncoderLeft  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition())/2));
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
-            averageEncoderLeft = (((robot.front_left.getCurrentPosition() + robot.back_left.getCurrentPosition()) / 2) * -1);
 
-            telemetry.addData("Average Encoder Value Left",averageEncoderLeft);
-            telemetry.update();
             topRight    = Range.clip(drive + turn, -1.0, 1.0);
             topLeft     = Range.clip(drive - turn, -1.0, 1.0);
             bottomRight = Range.clip(drive + turn, -1.0, 1.0);
@@ -292,6 +277,8 @@ public void moveSide(double distance, double power)
             robot.back_left.setPower(bottomLeft);
         }
     }
+    robot.resetEncoder();
+    robot.Halt();
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
@@ -311,8 +298,6 @@ private void turnAngle(double angle, double power, double time)
             currHeading = angles.firstAngle;
             robot.turnLeft(power);
         }
-//        imuInit();
-        start = 0;
     }
 
     else if(angle < 0)
@@ -326,49 +311,8 @@ private void turnAngle(double angle, double power, double time)
             currHeading = angles.firstAngle;
             robot.turnRight(power);
         }
-//        imuInit();
-        start = 0;
     }
-//    currHeading = 0;
 }
-//--------------------------------------------------------------------------------------------------
-//This method adds a multiplier of 1 every time a move distance, this is for moving the remaining distance of the field depending on which skystone is detected
-//public double addMultiplier()
-//{
-//    distMultipler = distMultipler + 1;
-//    return distMultipler;
-//}
-//--------------------------------------------------------------------------------------------------
-//This method runs actual atonomous code and calls the methods that run actual atonomous code
-//public void checkEncoder()
-//{
-//    while(opModeIsActive() && (!(isStopRequested())))
-//    {
-//        if(inView == false)
-//        {
-//            while(inView == false && (!(isStopRequested())))
-//            {
-//                checkSight();
-//            }
-//        }
-//    }
-//}
-//--------------------------------------------------------------------------------------------------
-//This moves the remaining distance of the field
-//public void checkDistance()
-//{
-//    distGone   = (467.83 * distMultipler) * (-1);//5 is the length in inches I travel per run = 467.83
-//    distRemain = ((totField + distGone) * (11.97/1120)) * (-1);
-//    moveDistance(distRemain,1);
-//}
-//--------------------------------------------------------------------------------------------------
-//This method is the actual autonomous in its entirety running right here and all of its method calls
-//private void getBlock()
-//{
-//    OpenGLMatrix createMatrix();
-//    telemetry.addData("Relative Coordinates", OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w)));
-//    telemetry.update();
-//}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -475,6 +419,14 @@ private void turnAngle(double angle, double power, double time)
         imuInit();
         setupVuforia();
         lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
+
+
+
+
+
+
+
+
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
@@ -484,7 +436,6 @@ private void turnAngle(double angle, double power, double time)
         {
 //----------------------------------
             vufoCrap();
-//            checkEncoder();
 //----------------------------------
         }
     }
