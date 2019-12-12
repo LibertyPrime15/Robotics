@@ -447,7 +447,7 @@ private void getBlock()
     liftDown();
     robot.resetEncoder();
     sadMove(-3.8,.6);
-    turnAngle(78);
+    turnAngle(80);
     checkDistance();
     sleep(200);
     armUp(2);

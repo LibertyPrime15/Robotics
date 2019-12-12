@@ -56,10 +56,6 @@ public class leagueTestAuto extends LinearOpMode
     double drive = 0;
     double turn  = 0;
 
-    double distGone   = 0;
-    double distRemain = 0;
-    double totField   = -5200;
-
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
     private VuforiaTrackables visionTargets;
@@ -319,8 +315,6 @@ private void turnAngle(double angle, double time)
     }
     robot.Halt();
     robot.resetEncoder();
-    
-    //hello
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
