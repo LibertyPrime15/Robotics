@@ -282,36 +282,43 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
-private void turnAngle(double angle, double power, double time)
+private void turnAngle(double angle, double time)
 {
     double start = System.currentTimeMillis();
     double end   = start + time;
-
-    if(angle > 0)
+    
+    double angleDifference = angle - currHeading;
+    double power = .02 * angleDifference;
+    
+    while(angle != currHeading)
     {
-        while(angle >= currHeading && (!(isStopRequested())) && System.currentTimeMillis() < end)
-        {
-            telemetry.addLine().addData("Heading", currHeading);
-            telemetry.update();
-            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            this.imu.getPosition();
-            currHeading = angles.firstAngle;
-            robot.turnLeft(power);
-        }
+    	if(Math.abs(angleDifference) > 180)
+		{
+			telemetry.addLine().addData("Right Heading", currHeading);
+			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imu.getPosition();
+			currHeading = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currHeading;
+			power = .02 * angleDifference;
+			robot.turnRight(power);
+		}
+		else
+		{
+			telemetry.addLine().addData("Heading", currHeading);
+			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imu.getPosition();
+			currHeading = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currHeading;
+			power = .02 * angleDifference;
+			robot.turnLeft(power);
+		}
     }
-
-    else if(angle < 0)
-    {
-        while(angle <= currHeading && (!(isStopRequested())) && System.currentTimeMillis() < end)
-        {
-            telemetry.addLine().addData("---Heading", currHeading);
-            telemetry.update();
-            angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            this.imu.getPosition();
-            currHeading = angles.firstAngle;
-            robot.turnRight(power);
-        }
-    }
+    robot.Halt();
+    robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
