@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.leagueCode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -26,6 +27,8 @@ public class leagueMap
     public Servo grabber = null;
 
     public boolean canToggleIntake = true;
+    
+    ColorSensor sensorColor;
 
 //    public Servo arm6  = null;
 //    public Servo arm7  = null;
@@ -42,6 +45,8 @@ public class leagueMap
     public void init(HardwareMap ahwMap)
     {
         hwMap  = ahwMap;
+	
+		sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
         front_left  = hwMap.get(DcMotor.class, "front_left");

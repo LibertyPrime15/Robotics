@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.leagueCode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -14,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
@@ -23,20 +28,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.RevMap;
 
+import java.util.Locale;
+
 @TeleOp(name="VuMarkTEST", group ="A")
 @Disabled
 public class vuMarkTEST extends LinearOpMode
 {
-    RevMap robot = new RevMap();
-
-    public static final String TAG = "Vuforia VuMark Sample";
-    OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
-
-    Orientation angles;
-    BNO055IMU imu;
-
-    float currHeading = 0;
+	leagueMap robot = new leagueMap();
+	Orientation angles;
+	BNO055IMU imu;
+	
+	double diameter = 4;
+	double radius   = (diameter/2);
+	double circ     = Math.PI * (radius * radius);
+	
+	double Steps        = 560;
+	float currHeading   = 0;
+	double Compensation = 1.5;
+	
+	double drive = 0;
+	double turn  = 0;
 
     double tX;
     double tY;
@@ -45,6 +56,10 @@ public class vuMarkTEST extends LinearOpMode
     double rX;
     double rY;
     double rZ;
+    
+	public static final String TAG = "Vuforia VuMark Sample";
+	OpenGLMatrix lastLocation = null;
+	VuforiaLocalizer vuforia;
 //--------------------------------------------------------------------------------------------------
 private void imuInit()
 {
@@ -69,6 +84,27 @@ private double angleBoi()
     this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
+}
+//--------------------------------------------------------------------------------------------------
+private void pickBlockPath()
+{
+	if(tY < 200 && tY > 100)
+	{
+		//Run this method
+	}
+	else if(tY < 300 && tY > 200)
+	{
+		//Run this mehod
+	}
+	else if(tY < 400 && tY > 300)
+	{
+		//Run this method
+	}
+}
+//--------------------------------------------------------------------------------------------------
+private void startIntakeCycle()
+{
+	robot.intake(.2);
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -150,7 +186,22 @@ private double angleBoi()
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("Skystone");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
-
+	
+		// hsvValues is an array that will hold the hue, saturation, and value information.
+		float hsvValues[] = {0F, 0F, 0F};
+	
+		// values is a reference to the hsvValues array.
+		final float values[] = hsvValues;
+	
+		// sometimes it helps to multiply the raw RGB values with a scale factor
+		// to amplify/attentuate the measured values.
+		final double SCALE_FACTOR = 255;
+	
+		// get a reference to the RelativeLayout so we can change the background
+		// color of the Robot Controller app to match the hue detected by the RGB sensor.
+		int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+		final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+		
         telemetry.addData("Status", "Hit it Bois");
         telemetry.update();
         waitForStart();
@@ -195,8 +246,60 @@ private double angleBoi()
                     telemetry.update();
                 }
             }
-            telemetry.update();
+            
+            if(tY != 0)
+			{
+				pickBlockPath();
+			}
+	
+	
+	
+	
+	
+	
+	
+	
+			// convert the RGB values to HSV values.
+			// multiply by the SCALE_FACTOR.
+			// then cast it back to int (SCALE_FACTOR is a double)
+			Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR), (int) (sensorColor.green() * SCALE_FACTOR), (int) (sensorColor.blue() * SCALE_FACTOR), hsvValues);
+	
+			// send the info back to driver station using telemetry function.
+			telemetry.addData("Alpha", sensorColor.alpha());
+			telemetry.addData("Red  ", sensorColor.red());
+			telemetry.addData("Green", sensorColor.green());
+			telemetry.addData("Blue ", sensorColor.blue());
+			telemetry.addData("Hue", hsvValues[0]);
+	
+			// change the background color to match the color detected by the RGB sensor.
+			// pass a reference to the hue, saturation, and value array as an argument
+			// to the HSVToColor method.
+			relativeLayout.post(new Runnable()
+			{
+				public void run()
+				{
+					relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+				}
+			});
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         }
+		relativeLayout.post(new Runnable()
+		{
+			public void run()
+			{
+				relativeLayout.setBackgroundColor(Color.WHITE);
+			}
+		});
 //--------------------------------------------------------------------------------------------------
     }
 //--------------------------------------------------------------------------------------------------
