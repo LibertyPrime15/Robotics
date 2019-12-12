@@ -91,15 +91,23 @@ private void pickBlockPath()
 	if(tY < 200 && tY > 100)
 	{
 		//Run this method
+		block1();
 	}
 	else if(tY < 300 && tY > 200)
 	{
 		//Run this mehod
+		block2();
 	}
 	else if(tY < 400 && tY > 300)
 	{
 		//Run this method
+		block3();
 	}
+}
+//--------------------------------------------------------------------------------------------------
+private void blockPlacement()
+{
+	//Servo Positions
 }
 //--------------------------------------------------------------------------------------------------
 private void startIntakeCycle()
@@ -107,7 +115,26 @@ private void startIntakeCycle()
 	robot.intake(.2);
 }
 //--------------------------------------------------------------------------------------------------
-
+private void endIntakeCycle()
+{
+	//Stop all of the intake stuff
+}
+//--------------------------------------------------------------------------------------------------
+private void block1()
+{
+	//Block Spot 1
+}
+//--------------------------------------------------------------------------------------------------
+private void block2()
+{
+	//Block Spot 2
+}
+//--------------------------------------------------------------------------------------------------
+private void block3()
+{
+	//Block Spot 3
+}
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -251,24 +278,16 @@ private void startIntakeCycle()
 			{
 				pickBlockPath();
 			}
-	
-	
-	
-	
-	
-	
-	
-	
 			// convert the RGB values to HSV values.
 			// multiply by the SCALE_FACTOR.
 			// then cast it back to int (SCALE_FACTOR is a double)
-			Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR), (int) (sensorColor.green() * SCALE_FACTOR), (int) (sensorColor.blue() * SCALE_FACTOR), hsvValues);
+			Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR), (int) (robot.sensorColor.green() * SCALE_FACTOR), (int) (robot.sensorColor.blue() * SCALE_FACTOR), hsvValues);
 	
 			// send the info back to driver station using telemetry function.
-			telemetry.addData("Alpha", sensorColor.alpha());
-			telemetry.addData("Red  ", sensorColor.red());
-			telemetry.addData("Green", sensorColor.green());
-			telemetry.addData("Blue ", sensorColor.blue());
+			telemetry.addData("Alpha", robot.sensorColor.alpha());
+			telemetry.addData("Red  ", robot.sensorColor.red());
+			telemetry.addData("Green", robot.sensorColor.green());
+			telemetry.addData("Blue ", robot.sensorColor.blue());
 			telemetry.addData("Hue", hsvValues[0]);
 	
 			// change the background color to match the color detected by the RGB sensor.
@@ -281,17 +300,6 @@ private void startIntakeCycle()
 					relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
 				}
 			});
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         }
 		relativeLayout.post(new Runnable()
 		{

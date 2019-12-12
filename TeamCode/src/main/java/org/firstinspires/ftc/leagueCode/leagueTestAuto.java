@@ -317,6 +317,106 @@ private void turnAngle(double angle, double time)
     robot.resetEncoder();
 }
 //--------------------------------------------------------------------------------------------------
+//This is a method that moves diagonally such that we can align to the block to grab it in autonomous
+public void diagonalMove(double distance, double power, double time, boolean goingRight, boolean goingBack)
+{
+	double totDistInSteps = (Math.abs((circ / Steps) * (distance * Compensation)));
+	
+	double averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+	double averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+	
+	double start = System.currentTimeMillis();
+	double end   = start + time;
+	
+	double topRight;
+	double topLeft;
+	double bottomRight;
+	double bottomLeft;
+	
+	if(goingRight && goingBack)//DRIVE TO THE BACK RIGHT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderLeftCorner  = (-1 *((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+			
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+			
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(goingRight && !goingBack)//DRIVE TO THE TOP RIGHT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+			
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+			
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(!goingRight && goingBack)//DRIVE TO THE BACK LEFT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderRightCorner = (-1 *((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+			
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(!goingRight && !goingBack)//DRIVE TO THE TOP LEFT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+			
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+			
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	robot.resetEncoder();
+	robot.Halt();
+}
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
