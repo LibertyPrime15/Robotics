@@ -50,7 +50,7 @@ public class leagueTestAuto extends LinearOpMode
     double circ     = Math.PI * (radius * radius);
 
     double Steps        = 560;
-    float currHeading   = 0;
+    float currHeading;
     double Compensation = 1.5;
 
     double drive = 0;
@@ -177,6 +177,9 @@ public void moveDistance(double distance, double power, double time)
             currentEncPosAvg = currentEncPosSum / 4;
 
             telemetry.addData("----currStepAVG",currentEncPosAvg);
+			telemetry.addData("----TotDistInSteps",totDistInSteps);
+			telemetry.update();
+			
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -199,6 +202,9 @@ public void moveDistance(double distance, double power, double time)
             currentEncPosAvg = currentEncPosSum / 4;
 
             telemetry.addData("currStepsAVG",currentEncPosAvg);
+			telemetry.addData("TotDistInSteps",totDistInSteps);
+			telemetry.update();
+            
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -237,6 +243,11 @@ public void moveSide(double distance, double power, double time, boolean goingRi
         while(totDistInSteps > averageEncoderRight && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
             averageEncoderRight = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition())/2));
+	
+			telemetry.addData("Average Encoder RIGHT",averageEncoderRight);
+			telemetry.addData("TotDistInSteps",totDistInSteps);
+			telemetry.update();
+            
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -258,6 +269,11 @@ public void moveSide(double distance, double power, double time, boolean goingRi
         while(totDistInSteps < averageEncoderLeft && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
             averageEncoderLeft  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition())/2));
+	
+			telemetry.addData("----Average Encoder LEFT",averageEncoderLeft);
+			telemetry.addData("----TotDistInSteps",totDistInSteps);
+			telemetry.update();
+            
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -280,6 +296,7 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
 private void turnAngle(double angle, double time)
 {
+	angleBoi();
     double start = System.currentTimeMillis();
     double end   = start + time;
     
@@ -290,7 +307,8 @@ private void turnAngle(double angle, double time)
     {
     	if(Math.abs(angleDifference) > 180)
 		{
-			telemetry.addLine().addData("Right Heading", currHeading);
+			telemetry.addData("Heading", currHeading);
+			telemetry.addData("angleDifference", angleDifference);
 			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			this.imu.getPosition();
 			currHeading = angles.firstAngle;
@@ -302,7 +320,8 @@ private void turnAngle(double angle, double time)
 		}
 		else
 		{
-			telemetry.addLine().addData("Heading", currHeading);
+			telemetry.addData("----Heading", currHeading);
+			telemetry.addData("----angleDifference", angleDifference);
 			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			this.imu.getPosition();
 			currHeading = angles.firstAngle;
@@ -539,6 +558,33 @@ public void diagonalMove(double distance, double power, double time, boolean goi
         {
 //----------------------------------
             vufoCrap();
+            sleep(4000);
+            moveDistance(20,.25,4000);
+            sleep(2000);
+            moveDistance(-20,.25,4000);
+            telemetry.addLine("Beginning Side Move Testing");
+            telemetry.update();
+            
+            sleep(4000);
+            moveSide(20,.25,4000,true);
+            sleep(2000);
+            moveSide(25,.25,4000,false);
+            sleep(4000);
+			telemetry.addLine("Beginning Turn Angle Testing");
+			telemetry.update();
+			
+			sleep(4000);
+            turnAngle(45,4000);
+            sleep(2000);
+            turnAngle(20,3000);
+            sleep(2000);
+            turnAngle(-50,4000);
+            sleep(2000);
+            turnAngle(10,4000);
+            sleep(4000);
+            turnAngle(-176,4000);
+			telemetry.addLine("Ending Program");
+			telemetry.update();
 //----------------------------------
         }
     }
