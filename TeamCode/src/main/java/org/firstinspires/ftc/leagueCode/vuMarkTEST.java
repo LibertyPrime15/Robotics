@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.RevMap;
 import java.util.Locale;
 
 @TeleOp(name="VuMarkTEST", group ="A")
-@Disabled
+//@Disabled
 public class vuMarkTEST extends LinearOpMode
 {
 	leagueMap robot = new leagueMap();

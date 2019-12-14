@@ -37,7 +37,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="League Blue", group = "A")
+@Autonomous(name="LeagueTestAuto", group = "A")
 //@Disabled
 public class leagueTestAuto extends LinearOpMode
 {
@@ -146,8 +146,6 @@ public boolean vufoCrap()
 //This program returns our current angular heading
 private double angleBoi()
 {
-    telemetry.addLine().addData("Heading",currHeading);
-    telemetry.update();
     angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
     this.imu.getPosition();
     currHeading = angles.firstAngle;
@@ -162,24 +160,26 @@ public void moveDistance(double distance, double power, double time)
     double start = System.currentTimeMillis();
     double end   = start + time;
 
-    int currentEncPosSum = robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition();
-    int currentEncPosAvg = currentEncPosSum / 4;
-
     double leftPower;
     double rightPower;
 
-    if(distance < 0)//Going Backward
+    if(distance > 0)//Going Forward
     {
-        double totDistInSteps = (((Steps / circ) * length) * -1);
+//------------------------------
+		double totDistInSteps = (Math.abs((Steps / circ) * length));
+		int currentEncPosSum = (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition());
+		int currentEncPosAvg = (Math.abs(currentEncPosSum / 4));
+//------------------------------
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps < currentEncPosAvg  && System.currentTimeMillis() < end)
         {
-            currentEncPosSum = ( -1 * (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()));
-            currentEncPosAvg = currentEncPosSum / 4;
+            currentEncPosSum = (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition());
+            currentEncPosAvg = (Math.abs(currentEncPosSum / 4));
 
             telemetry.addData("----currStepAVG",currentEncPosAvg);
 			telemetry.addData("----TotDistInSteps",totDistInSteps);
+			telemetry.addData("Heading",currHeading);
 			telemetry.update();
-			
+
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -193,18 +193,23 @@ public void moveDistance(double distance, double power, double time)
         }
     }
 
-    else if(distance > 0)//Going Forward
+    else if(distance < 0)//Going Backward
     {
-        double totDistInSteps = Math.abs((Steps / circ) * length);
+//------------------------------
+		double totDistInSteps = (-1 * ((Steps / circ) * length));
+		int currentEncPosSum = (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition());
+		int currentEncPosAvg = (-1 * (currentEncPosSum / 4));
+//------------------------------
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > currentEncPosAvg && System.currentTimeMillis() < end)
         {
-            currentEncPosSum = (Math.abs(robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()));
-            currentEncPosAvg = currentEncPosSum / 4;
+            currentEncPosSum = (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition());
+			currentEncPosAvg = (-1 * (currentEncPosSum / 4));
 
             telemetry.addData("currStepsAVG",currentEncPosAvg);
 			telemetry.addData("TotDistInSteps",totDistInSteps);
+			telemetry.addData("Heading",currHeading);
 			telemetry.update();
-            
+
             angleBoi();
             drive = power;
             turn  = .05 * currHeading;
@@ -227,27 +232,35 @@ public void moveSide(double distance, double power, double time, boolean goingRi
     double length = distance;
     double totDistInSteps = (Math.abs(circ / Steps) * (length * Compensation));
 
-    double averageEncoderRight = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition())/2));
-    double averageEncoderLeft  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition())/2));
-
     double start = System.currentTimeMillis();
     double end   = start + time;
-
+	
+	int currentEncSumRight = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition());
+	int currentEncSumLeft  = (robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition());
+	
+	int currentEncPosAvgRight = (Math.abs(currentEncSumRight / 2));
+	int currentEncPosAvgLeft  = (Math.abs(currentEncSumLeft  / 2));
+    
     double topRight;
     double topLeft;
     double bottomRight;
     double bottomLeft;
-
+	telemetry.addLine("Line Check 1");
+	telemetry.update();
     if(goingRight)//DRIVE TO THE RIGHT
     {
-        while(totDistInSteps > averageEncoderRight && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+//------------------------------
+		telemetry.addLine("Line Check 2");
+		telemetry.update();
+        while(totDistInSteps > currentEncPosAvgRight && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
-            averageEncoderRight = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition())/2));
-	
-			telemetry.addData("Average Encoder RIGHT",averageEncoderRight);
+			currentEncSumRight    = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition());
+			currentEncPosAvgRight = (Math.abs(currentEncSumRight / 2));
+
+			telemetry.addData("Average Encoder RIGHT",currentEncPosAvgRight);
 			telemetry.addData("TotDistInSteps",totDistInSteps);
 			telemetry.update();
-            
+
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -266,14 +279,16 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 
     else if(!goingRight)//DRIVE TO THE LEFT
     {
-        while(totDistInSteps < averageEncoderLeft && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+//------------------------------
+        while(totDistInSteps < currentEncPosAvgLeft && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
         {
-            averageEncoderLeft  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition())/2));
-	
-			telemetry.addData("----Average Encoder LEFT",averageEncoderLeft);
+			currentEncSumLeft    = (robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition());
+			currentEncPosAvgLeft = (Math.abs(currentEncSumLeft / 2));
+
+			telemetry.addData("----Average Encoder LEFT",currentEncPosAvgLeft);
 			telemetry.addData("----TotDistInSteps",totDistInSteps);
 			telemetry.update();
-            
+
             angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
@@ -299,10 +314,10 @@ private void turnAngle(double angle, double time)
 	angleBoi();
     double start = System.currentTimeMillis();
     double end   = start + time;
-    
+
     double angleDifference = angle - currHeading;
     double power = .02 * angleDifference;
-    
+
     while(angle != currHeading)
     {
     	if(Math.abs(angleDifference) > 180)
@@ -313,7 +328,7 @@ private void turnAngle(double angle, double time)
 			this.imu.getPosition();
 			currHeading = angles.firstAngle;
 			telemetry.update();
-			
+
 			angleDifference = angle - currHeading;
 			power = .02 * angleDifference;
 			robot.turnRight(power);
@@ -326,7 +341,7 @@ private void turnAngle(double angle, double time)
 			this.imu.getPosition();
 			currHeading = angles.firstAngle;
 			telemetry.update();
-			
+
 			angleDifference = angle - currHeading;
 			power = .02 * angleDifference;
 			robot.turnLeft(power);
@@ -340,18 +355,18 @@ private void turnAngle(double angle, double time)
 public void diagonalMove(double distance, double power, double time, boolean goingRight, boolean goingBack)
 {
 	double totDistInSteps = (Math.abs((circ / Steps) * (distance * Compensation)));
-	
+
 	double averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
 	double averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
-	
+
 	double start = System.currentTimeMillis();
 	double end   = start + time;
-	
+
 	double topRight;
 	double topLeft;
 	double bottomRight;
 	double bottomLeft;
-	
+
 	if(goingRight && goingBack)//DRIVE TO THE BACK RIGHT
 	{
 		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
@@ -360,12 +375,12 @@ public void diagonalMove(double distance, double power, double time, boolean goi
 			angleBoi();
 			drive = -power;
 			turn  = .05 * currHeading;
-			
+
 			topRight    = Range.clip(drive + turn, -1.0, 1.0);
 			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
 			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
 			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
+
 			robot.front_right.setPower(topRight);
 			robot.front_left.setPower(topLeft);
 			robot.back_right.setPower(bottomRight);
@@ -380,12 +395,12 @@ public void diagonalMove(double distance, double power, double time, boolean goi
 			angleBoi();
 			drive = -power;
 			turn  = .05 * currHeading;
-			
+
 			topRight    = Range.clip(drive + turn, -1.0, 1.0);
 			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
 			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
 			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
+
 			robot.front_right.setPower(topRight);
 			robot.front_left.setPower(topLeft);
 			robot.back_right.setPower(bottomRight);
@@ -405,7 +420,7 @@ public void diagonalMove(double distance, double power, double time, boolean goi
 			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
 			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
 			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
+
 			robot.front_right.setPower(topRight);
 			robot.front_left.setPower(topLeft);
 			robot.back_right.setPower(bottomRight);
@@ -420,12 +435,12 @@ public void diagonalMove(double distance, double power, double time, boolean goi
 			angleBoi();
 			drive = -power;
 			turn  = .05 * currHeading;
-			
+
 			topRight    = Range.clip(drive + turn, -1.0, 1.0);
 			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
 			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
 			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
+
 			robot.front_right.setPower(topRight);
 			robot.front_left.setPower(topLeft);
 			robot.back_right.setPower(bottomRight);
@@ -538,9 +553,9 @@ public void diagonalMove(double distance, double power, double time, boolean goi
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        imuInit();
-        setupVuforia();
-        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
+//        imuInit();
+//        setupVuforia();
+//        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 
 
 
@@ -552,27 +567,29 @@ public void diagonalMove(double distance, double power, double time, boolean goi
         telemetry.addData("Status","Initialized");
         telemetry.update();
         waitForStart();
-        visionTargets.activate();
+//        visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
 //----------------------------------
-            vufoCrap();
+//            vufoCrap();
             sleep(4000);
-            moveDistance(20,.25,4000);
+            moveDistance(20,.1,20000);
             sleep(2000);
-            moveDistance(-20,.25,4000);
+            moveDistance(-20,.1,4000);
             telemetry.addLine("Beginning Side Move Testing");
             telemetry.update();
-            
+
             sleep(4000);
-            moveSide(20,.25,4000,true);
+			telemetry.addLine("Line Check 0");
+			telemetry.update();
+            moveSide(20,.1,4000,true);
             sleep(2000);
-            moveSide(25,.25,4000,false);
+            moveSide(25,.1,4000,false);
             sleep(4000);
 			telemetry.addLine("Beginning Turn Angle Testing");
 			telemetry.update();
-			
+
 			sleep(4000);
             turnAngle(45,4000);
             sleep(2000);
@@ -583,8 +600,7 @@ public void diagonalMove(double distance, double power, double time, boolean goi
             turnAngle(10,4000);
             sleep(4000);
             turnAngle(-176,4000);
-			telemetry.addLine("Ending Program");
-			telemetry.update();
+            stop();
 //----------------------------------
         }
     }

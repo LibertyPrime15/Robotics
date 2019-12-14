@@ -102,6 +102,7 @@ public class leagueMap
         intake1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftPrimary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//		liftSecondary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //------------------------------
         front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
