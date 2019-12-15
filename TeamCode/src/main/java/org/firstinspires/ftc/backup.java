@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.leagueCode;
+package org.firstinspires.ftc;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.leagueCode.leagueMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -39,12 +40,11 @@ import org.firstinspires.ftc.teamcode.RevMap;
 
 @Autonomous(name="LeagueTestAuto", group = "A")
 //@Disabled
-public class leagueTestAuto extends LinearOpMode
+public class backup extends LinearOpMode
 {
     leagueMap robot = new leagueMap();
     Orientation angles;
-    BNO055IMU imuTurn;
-	BNO055IMU imuDrive;
+    BNO055IMU imu;
 
     double diameter = 4;
     double radius   = (diameter/2);
@@ -52,7 +52,6 @@ public class leagueTestAuto extends LinearOpMode
 
     double Steps        = 560;
     float currHeading;
-    float currAngle;
     double Compensation = 1.5;
 
     double drive = 0;
@@ -81,7 +80,7 @@ public class leagueTestAuto extends LinearOpMode
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
 //This method is for reseting the imu - must be called after every time a turn is used
-private void turnIMU()
+private void imuInit()
 {
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -92,24 +91,8 @@ private void turnIMU()
     parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
     robot.init(hardwareMap);
-    imuTurn = hardwareMap.get(BNO055IMU.class, "imu1");
-    imuTurn.initialize(parameters);
-}
-//--------------------------------------------------------------------------------------------------
-//This method is for reseting the imu - must be called after every time a turn is used
-private void driveIMU()
-{
-	BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-	parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-	parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-	parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-	parameters.loggingEnabled = true;
-	parameters.loggingTag = "IMU";
-	parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-	
-	robot.init(hardwareMap);
-	imuDrive = hardwareMap.get(BNO055IMU.class, "imu2");
-	imuDrive.initialize(parameters);
+    imu = hardwareMap.get(BNO055IMU.class, "imu");
+    imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
 //This method is used for setting up Vuforia and runs everytime the program initializes
@@ -162,10 +145,10 @@ public boolean vufoCrap()
 }
 //--------------------------------------------------------------------------------------------------
 //This program returns our current angular heading
-private double headingAngle()
+private double angleBoi()
 {
-    angles = this.imuDrive.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
-    this.imuDrive.getPosition();
+    angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
+    this.imu.getPosition();
     currHeading = angles.firstAngle;
     return currHeading;
 }
@@ -175,8 +158,6 @@ public void moveDistance(double distance, double power, double time)
 {
     double length = distance;
 
-    currHeading = 0;
-    
     double start = System.currentTimeMillis();
     double end   = start + time;
 
@@ -200,7 +181,7 @@ public void moveDistance(double distance, double power, double time)
 			telemetry.addData("Heading",currHeading);
 			telemetry.update();
 
-            headingAngle();
+            angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
@@ -230,7 +211,7 @@ public void moveDistance(double distance, double power, double time)
 			telemetry.addData("Heading",currHeading);
 			telemetry.update();
 
-            headingAngle();
+            angleBoi();
             drive = power;
             turn  = .05 * currHeading;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
@@ -281,7 +262,7 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 			telemetry.addData("TotDistInSteps",totDistInSteps);
 			telemetry.update();
 
-            headingAngle();
+            angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
 
@@ -309,7 +290,7 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 			telemetry.addData("----TotDistInSteps",totDistInSteps);
 			telemetry.update();
 
-            headingAngle();
+            angleBoi();
             drive = -power;
             turn  = .05 * currHeading;
 
@@ -331,147 +312,145 @@ public void moveSide(double distance, double power, double time, boolean goingRi
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
 private void turnAngle(double angle, double time)
 {
+	angleBoi();
     double start = System.currentTimeMillis();
     double end   = start + time;
 
-    double angleDifference = angle - currAngle;
+    double angleDifference = angle - currHeading;
     double power = .02 * angleDifference;
 
-    while(angle != currAngle)
+    while(angle != currHeading)
     {
     	if(Math.abs(angleDifference) > 180)
 		{
-			telemetry.addData("Heading", currAngle);
+			telemetry.addData("Heading", currHeading);
 			telemetry.addData("angleDifference", angleDifference);
-			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			this.imuTurn.getPosition();
-			currAngle = angles.firstAngle;
+			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imu.getPosition();
+			currHeading = angles.firstAngle;
 			telemetry.update();
 
-			angleDifference = angle - currAngle;
+			angleDifference = angle - currHeading;
 			power = .02 * angleDifference;
 			robot.turnRight(power);
 		}
 		else
 		{
-			telemetry.addData("----Heading", currAngle);
+			telemetry.addData("----Heading", currHeading);
 			telemetry.addData("----angleDifference", angleDifference);
-			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			this.imuTurn.getPosition();
-			currAngle = angles.firstAngle;
-			
+			angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imu.getPosition();
+			currHeading = angles.firstAngle;
 			telemetry.update();
 
-			angleDifference = angle - currAngle;
+			angleDifference = angle - currHeading;
 			power = .02 * angleDifference;
 			robot.turnLeft(power);
 		}
     }
     robot.Halt();
     robot.resetEncoder();
-    driveIMU();
-    currHeading = 0;
 }
 //--------------------------------------------------------------------------------------------------
 //This is a method that moves diagonally such that we can align to the block to grab it in autonomous
-//public void diagonalMove(double distance, double power, double time, boolean goingRight, boolean goingBack)
-//{
-//	double totDistInSteps = (Math.abs((circ / Steps) * (distance * Compensation)));
-//
-//	double averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
-//	double averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
-//
-//	double start = System.currentTimeMillis();
-//	double end   = start + time;
-//
-//	double topRight;
-//	double topLeft;
-//	double bottomRight;
-//	double bottomLeft;
-//
-//	if(goingRight && goingBack)//DRIVE TO THE BACK RIGHT
-//	{
-//		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-//		{
-//			averageEncoderLeftCorner  = (-1 *((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
-//			headingAngle();
-//			drive = -power;
-//			turn  = .05 * currHeading;
-//
-//			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-//			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-//			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-//			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-//
-//			robot.front_right.setPower(topRight);
-//			robot.front_left.setPower(topLeft);
-//			robot.back_right.setPower(bottomRight);
-//			robot.back_left.setPower(bottomLeft);
-//		}
-//	}
-//	else if(goingRight && !goingBack)//DRIVE TO THE TOP RIGHT
-//	{
-//		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-//		{
-//			averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
-//			headingAngle();
-//			drive = -power;
-//			turn  = .05 * currHeading;
-//
-//			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-//			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-//			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-//			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-//
-//			robot.front_right.setPower(topRight);
-//			robot.front_left.setPower(topLeft);
-//			robot.back_right.setPower(bottomRight);
-//			robot.back_left.setPower(bottomLeft);
-//		}
-//	}
-//	else if(!goingRight && goingBack)//DRIVE TO THE BACK LEFT
-//	{
-//		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-//		{
-//			averageEncoderRightCorner = (-1 *((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
-//			headingAngle();
-//			drive = -power;
-//			turn  = .05 * currHeading;
-//
-//			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-//			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-//			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-//			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-//
-//			robot.front_right.setPower(topRight);
-//			robot.front_left.setPower(topLeft);
-//			robot.back_right.setPower(bottomRight);
-//			robot.back_left.setPower(bottomLeft);
-//		}
-//	}
-//	else if(!goingRight && !goingBack)//DRIVE TO THE TOP LEFT
-//	{
-//		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-//		{
-//			averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
-//			headingAngle();
-//			drive = -power;
-//			turn  = .05 * currHeading;
-//
-//			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-//			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-//			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-//			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-//
-//			robot.front_right.setPower(topRight);
-//			robot.front_left.setPower(topLeft);
-//			robot.back_right.setPower(bottomRight);
-//			robot.back_left.setPower(bottomLeft);
-//		}
-//	}
-//	robot.resetEncoder();
-//	robot.Halt();
-//}
+public void diagonalMove(double distance, double power, double time, boolean goingRight, boolean goingBack)
+{
+	double totDistInSteps = (Math.abs((circ / Steps) * (distance * Compensation)));
+
+	double averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+	double averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+
+	double start = System.currentTimeMillis();
+	double end   = start + time;
+
+	double topRight;
+	double topLeft;
+	double bottomRight;
+	double bottomLeft;
+
+	if(goingRight && goingBack)//DRIVE TO THE BACK RIGHT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderLeftCorner  = (-1 *((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(goingRight && !goingBack)//DRIVE TO THE TOP RIGHT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderRightCorner = (Math.abs((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(!goingRight && goingBack)//DRIVE TO THE BACK LEFT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderRightCorner = (-1 *((robot.front_right.getCurrentPosition() + robot.back_left.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	else if(!goingRight && !goingBack)//DRIVE TO THE TOP LEFT
+	{
+		while(opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
+		{
+			averageEncoderLeftCorner  = (Math.abs((robot.front_left.getCurrentPosition()  + robot.back_right.getCurrentPosition())/2));
+			angleBoi();
+			drive = -power;
+			turn  = .05 * currHeading;
+
+			topRight    = Range.clip(drive + turn, -1.0, 1.0);
+			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
+			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
+			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
+
+			robot.front_right.setPower(topRight);
+			robot.front_left.setPower(topLeft);
+			robot.back_right.setPower(bottomRight);
+			robot.back_left.setPower(bottomLeft);
+		}
+	}
+	robot.resetEncoder();
+	robot.Halt();
+}
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -575,8 +554,7 @@ private void turnAngle(double angle, double time)
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        turnIMU();
-        driveIMU();
+//        imuInit();
 //        setupVuforia();
 //        lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 
