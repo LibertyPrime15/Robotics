@@ -333,47 +333,42 @@ private void turnAngle(double angle, double time)
 	double start = System.currentTimeMillis();
 	double end   = start + time;
 	
-	double posCurrAngle;
 	
-	double angleDifference = angle - currAngle;
-	double power = .02 * angleDifference;
+	double angleDifference = angle - currAngle;//-60, -40 = -20
+	double power;//.02*179+179
 	
-	while(angle != currAngle)
+	while(angle != currAngle && System.currentTimeMillis() < end)
 	{
-		posCurrAngle = Math.abs(currAngle);
-		if(angle == 180 || angle == -180)
-		{
-			if(posCurrAngle > 0 && currAngle < 0)
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .025 * angleDifference;
-				robot.turnRight(power);
-			}
-			else if(posCurrAngle > 0 && currAngle > 0)
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .025 * angleDifference;
-				robot.turnLeft(power);
-			}
-		}
-		else if(Math.abs(angleDifference) > 180)
+		if(angleDifference > 180)//358 > 180
 		{
 			telemetry.addData("Heading", currAngle);
 			telemetry.addData("angleDifference", angleDifference);
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currAngle;//358
+			power = .025 * (Math.sqrt(Math.abs(angleDifference)));//18*.025
+			robot.turnRight(power);
+		}
+		else if(angleDifference < 180)//-358 > 180
+		{
+			telemetry.addData("Heading", currAngle);
+			telemetry.addData("angleDifference", angleDifference);
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currAngle;//358
+			power = .025 * (Math.sqrt(Math.abs(angleDifference)));//18*.025
+			robot.turnLeft(power);
+		}
+		else if(angleDifference > 0)
+		{
+			telemetry.addData("----Heading", currAngle);
+			telemetry.addData("----angleDifference", angleDifference);
 			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			this.imuTurn.getPosition();
 			currAngle = angles.firstAngle;
@@ -383,63 +378,18 @@ private void turnAngle(double angle, double time)
 			power = .025 * angleDifference;
 			robot.turnRight(power);
 		}
-		else if(currAngle > 0)
+		else if(angleDifference < 0)
 		{
-			if(angle > 177 && currAngle > 150)
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .016 * angleDifference;
-				robot.turnLeft(power);
-			}
-			else
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .025 * angleDifference;
-				robot.turnLeft(power);
-			}
-		}
-		else if(currAngle < 0)
-		{
-			if (angle < -177 && currAngle < -150)
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .016 * angleDifference;
-				robot.turnLeft(power);
-			}
-			else
-			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .025 * angleDifference;
-				robot.turnLeft(power);
-			}
+			telemetry.addData("----Heading", currAngle);
+			telemetry.addData("----angleDifference", angleDifference);
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currAngle;
+			power = .025 * angleDifference;
+			robot.turnLeft(power);
 		}
 	}
 	robot.Halt();
