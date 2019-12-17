@@ -38,7 +38,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="LeagueTestAuto", group = "A")
+@Autonomous(name="LeagueTestBackUp", group = "A")
 //@Disabled
 public class backup extends LinearOpMode
 {

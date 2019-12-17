@@ -31,7 +31,7 @@ public class leagueTele extends LinearOpMode
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-private void imuInit()
+private void turnIMU()
 {
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -42,10 +42,25 @@ private void imuInit()
     parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
     robot.init(hardwareMap);
-    imu = hardwareMap.get(BNO055IMU.class,"imu");
+    imu = hardwareMap.get(BNO055IMU.class,"imu1");
     imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
+private void driveIMU()
+{
+	BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+	parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+	parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+	parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+	parameters.loggingEnabled = true;
+	parameters.loggingTag = "IMU";
+	parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+	
+	robot.init(hardwareMap);
+	imu = hardwareMap.get(BNO055IMU.class,"imu2");
+	imu.initialize(parameters);
+}
+	//--------------------------------------------------------------------------------------------------
 private double angleBoi()
 {
     angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
@@ -145,7 +160,8 @@ private double angleBoi()
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        imuInit();
+        turnIMU();
+        driveIMU();
         waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
