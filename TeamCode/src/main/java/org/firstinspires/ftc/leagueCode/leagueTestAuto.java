@@ -340,7 +340,7 @@ private void turnAngle(double angle, double time)
 	
 	while(angle != currAngle && System.currentTimeMillis() < end)
 	{
-		if(angleDifference > 180 && angle > 0)///If we are going from the negative side to the positive side
+		if(angleDifference >= 180 && angle > 0)///If we are going from the negative side to the positive side
 		{
 			while(angle != currAngle && System.currentTimeMillis() < end)
 			{
@@ -351,7 +351,7 @@ private void turnAngle(double angle, double time)
 				currAngle = angles.firstAngle;
 				telemetry.update();
 				
-				angleDifference = angle - currAngle;
+				angleDifference = angle - Math.abs(currAngle);
 				power = .025 * Math.abs(angleDifference);
 				robot.turnRight(power);
 				
@@ -370,7 +370,7 @@ private void turnAngle(double angle, double time)
 				}
 			}
 		}
-		else if(angleDifference < 180 && angle < 0)///If we are going from the positive side to the negative side
+		else if(angleDifference <= 180 && angle < 0)///If we are going from the positive side to the negative side
 		{
 			while(angle != currAngle && System.currentTimeMillis() < end)
 			{
@@ -394,7 +394,7 @@ private void turnAngle(double angle, double time)
 					currAngle = angles.firstAngle;
 					telemetry.update();
 					
-					angleDifference = angle - currAngle;
+					angleDifference = angle - Math.abs(currAngle);
 					power = .025 * angleDifference;
 					robot.turnRight(power);
 				}
@@ -457,7 +457,6 @@ private void turnAngle(double angle, double time)
 	robot.resetEncoder();
 	driveIMU();
 	currHeading = 0;
-	ogAngle = currAngle;
 }
 //--------------------------------------------------------------------------------------------------
 //This is a method that moves diagonally such that we can align to the block to grab it in autonomous
