@@ -333,39 +333,14 @@ private void turnAngle(double angle, double time)
 	double start = System.currentTimeMillis();
 	double end   = start + time;
 	
+	double ogAngle;
 	
 	double angleDifference = angle - currAngle;//-60, -40 = -20
 	double power;//.02*179+179
 	
 	while(angle != currAngle && System.currentTimeMillis() < end)
 	{
-		if(angleDifference > 180)//358 > 180
-		{
-			telemetry.addData("Heading", currAngle);
-			telemetry.addData("angleDifference", angleDifference);
-			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			this.imuTurn.getPosition();
-			currAngle = angles.firstAngle;
-			telemetry.update();
-			
-			angleDifference = angle - currAngle;//358
-			power = .025 * (Math.sqrt(Math.abs(angleDifference)));//18*.025
-			robot.turnRight(power);
-		}
-		else if(angleDifference < 180)//-358 > 180
-		{
-			telemetry.addData("Heading", currAngle);
-			telemetry.addData("angleDifference", angleDifference);
-			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-			this.imuTurn.getPosition();
-			currAngle = angles.firstAngle;
-			telemetry.update();
-			
-			angleDifference = angle - currAngle;//358
-			power = .025 * (Math.sqrt(Math.abs(angleDifference)));//18*.025
-			robot.turnLeft(power);
-		}
-		else if(angleDifference > 0)
+		if(angle >= 0 && angleDifference < 0)//////POSITIVE SIDE
 		{
 			telemetry.addData("----Heading", currAngle);
 			telemetry.addData("----angleDifference", angleDifference);
@@ -378,7 +353,7 @@ private void turnAngle(double angle, double time)
 			power = .025 * angleDifference;
 			robot.turnRight(power);
 		}
-		else if(angleDifference < 0)
+		else if(angle >= 0 && angleDifference > 0)
 		{
 			telemetry.addData("----Heading", currAngle);
 			telemetry.addData("----angleDifference", angleDifference);
@@ -390,12 +365,61 @@ private void turnAngle(double angle, double time)
 			angleDifference = angle - currAngle;
 			power = .025 * angleDifference;
 			robot.turnLeft(power);
+		}
+		else if(angle <= 0 && angleDifference > 0)/////NEGATIVE SIDE
+		{
+			telemetry.addData("----Heading", currAngle);
+			telemetry.addData("----angleDifference", angleDifference);
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currAngle;
+			power = .025 * angleDifference;
+			robot.turnLeft(power);
+		}
+		else if(angle <= 0 && angleDifference < 0)
+		{
+			telemetry.addData("----Heading", currAngle);
+			telemetry.addData("----angleDifference", angleDifference);
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			telemetry.update();
+			
+			angleDifference = angle - currAngle;
+			power = .025 * angleDifference;
+			robot.turnRight(power);
+		}
+		else if(angleDifference > 180 && angle > 0)///If we are going from the negative side to the positive side
+		{
+			while(angle != currAngle && System.currentTimeMillis() < end)
+			{
+				robot.turnRight(.05);
+				if(Math.abs(angleDifference) < angle)
+				{
+					robot.turnLeft(.05);
+				}
+			}
+		}
+		else if(angleDifference < 180 && angle < 0)///If we are going from the positive side to the negative side
+		{
+			while(angle != currAngle && System.currentTimeMillis() < end)
+			{
+				robot.turnLeft(.05);
+				if()
+				{
+					robot.turnRight(.05);
+				}
+			}
 		}
 	}
 	robot.Halt();
 	robot.resetEncoder();
 	driveIMU();
 	currHeading = 0;
+	ogAngle = currAngle;
 }
 //--------------------------------------------------------------------------------------------------
 //This is a method that moves diagonally such that we can align to the block to grab it in autonomous
