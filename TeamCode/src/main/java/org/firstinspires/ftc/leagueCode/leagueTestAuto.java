@@ -333,8 +333,6 @@ private void turnAngle(double angle, double time)
 	double start = System.currentTimeMillis();
 	double end   = start + time;
 	
-	double ogAngle;
-	
 	double angleDifference = angle - currAngle;//-60, -40 = -20
 	double power;//.02*179+179
 	
@@ -344,18 +342,33 @@ private void turnAngle(double angle, double time)
 		{
 			while(angle != currAngle && System.currentTimeMillis() < end)
 			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - Math.abs(currAngle);
-				power = .025 * Math.abs(angleDifference);
-				robot.turnRight(power);
-				
-				if(currAngle < angle && currAngle > 0)
+				if(currAngle < 0)
+				{
+					telemetry.addData("----Heading", currAngle);
+					telemetry.addData("----angleDifference", angleDifference);
+					angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+					this.imuTurn.getPosition();
+					currAngle = angles.firstAngle;
+					telemetry.update();
+					
+					angleDifference = angle - currAngle;
+					power = .025 * (360 - Math.abs(angleDifference));
+					robot.turnRight(power);
+				}
+				else if(currAngle > 0 && currAngle > angle)
+				{
+					telemetry.addData("----Heading", currAngle);
+					telemetry.addData("----angleDifference", angleDifference);
+					angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+					this.imuTurn.getPosition();
+					currAngle = angles.firstAngle;
+					telemetry.update();
+					
+					angleDifference = angle - currAngle;
+					power = .025 * Math.abs(angleDifference);
+					robot.turnRight(power);
+				}
+				else if(currAngle < angle && currAngle > 0)
 				{
 					telemetry.addData("----Heading", currAngle);
 					telemetry.addData("----angleDifference", angleDifference);
@@ -370,22 +383,37 @@ private void turnAngle(double angle, double time)
 				}
 			}
 		}
-		else if(angleDifference <= 180 && angle < 0)///If we are going from the positive side to the negative side
+		else if(angleDifference <= -180 && angle < 0)///If we are going from the positive side to the negative side
 		{
 			while(angle != currAngle && System.currentTimeMillis() < end)
 			{
-				telemetry.addData("----Heading", currAngle);
-				telemetry.addData("----angleDifference", angleDifference);
-				angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-				this.imuTurn.getPosition();
-				currAngle = angles.firstAngle;
-				telemetry.update();
-				
-				angleDifference = angle - currAngle;
-				power = .025 * angleDifference;
-				robot.turnLeft(power);
-				
-				if(currAngle > angle && currAngle < 0)
+				if((currAngle > 0))
+				{
+					telemetry.addData("----Heading", currAngle);
+					telemetry.addData("----angleDifference", angleDifference);
+					angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+					this.imuTurn.getPosition();
+					currAngle = angles.firstAngle;
+					telemetry.update();
+					
+					angleDifference = angle - currAngle;
+					power = .025 * (360 - Math.abs(angleDifference));
+					robot.turnLeft(power);
+				}
+				else if(currAngle < 0 && currAngle < angle && angle != 180)
+				{
+					telemetry.addData("----Heading", currAngle);
+					telemetry.addData("----angleDifference", angleDifference);
+					angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+					this.imuTurn.getPosition();
+					currAngle = angles.firstAngle;
+					telemetry.update();
+					
+					angleDifference = angle - currAngle;
+					power = .025 * Math.abs(angleDifference);
+					robot.turnLeft(power);
+				}
+				else if((currAngle > angle && currAngle < 0) || ((angle == 180) && (currAngle < 0)))
 				{
 					telemetry.addData("----Heading", currAngle);
 					telemetry.addData("----angleDifference", angleDifference);
