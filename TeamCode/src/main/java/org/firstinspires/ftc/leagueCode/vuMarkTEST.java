@@ -293,7 +293,7 @@ private void block3()
 			// change the background color to match the color detected by the RGB sensor.
 			// pass a reference to the hue, saturation, and value array as an argument
 			// to the HSVToColor method.
-			relativeLayout.post(new Runnable()
+			relativeLayout.post(new Runnable()//I hate how this line reformats
 			{
 				public void run()
 				{
@@ -301,7 +301,7 @@ private void block3()
 				}
 			});
         }
-		relativeLayout.post(new Runnable()
+		relativeLayout.post(new Runnable()//I hate how this line reformats
 		{
 			public void run()
 			{
