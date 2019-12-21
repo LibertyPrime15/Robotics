@@ -157,24 +157,17 @@ private double headingAngle()
 //This method moves a certain distance in inches at a certain speed - when moving it will move perfectly straight
 public void moveDistance(double distance, double power, double time, double angle)
 {
-	telemetry.addLine("StepTOP");
-	telemetry.update();
     double length = distance;
+    double newAngle;
     
     double start = System.currentTimeMillis();
     double end   = start + time;
 
     double leftPower;
     double rightPower;
-	telemetry.addLine("StepOG");
-	telemetry.update();
     if(distance < 0)//Going Backward
     {
-		telemetry.addLine("Step1");
-		telemetry.update();
 		double totDistInSteps = (Math.abs((Steps / circ) * length));
-		telemetry.addLine("Step2");
-		telemetry.update();
 //------------------------------
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > (1/4 * (Math.abs(robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()))) && System.currentTimeMillis() < end)
         {
@@ -184,12 +177,16 @@ public void moveDistance(double distance, double power, double time, double angl
 			telemetry.addData("front_left",robot.front_left.getCurrentPosition());
 			telemetry.addData("back_right",robot.back_right.getCurrentPosition());
 			telemetry.addData("back_left",robot.back_left.getCurrentPosition());
-			telemetry.addData("Heading",currHeading);
+			telemetry.addData("Heading", currAngle);
 			telemetry.update();
-
-            turnIMU();
+			
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			newAngle = currAngle - angle;
+			
             drive = power;
-            turn  = .01 * angle;
+            turn  = .01 * newAngle;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
 
@@ -204,25 +201,25 @@ public void moveDistance(double distance, double power, double time, double angl
 
     else if(distance > 0)//Going Forward
     {
-		telemetry.addLine("Step3");
-		telemetry.update();
 		double totDistInSteps = (-1 * ((Steps / circ) * length));
-		telemetry.addLine("Step4");
-		telemetry.update();
         while(opModeIsActive() && (!(isStopRequested())) && totDistInSteps > (-1/4 * (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition())) && System.currentTimeMillis() < end)
         {
             telemetry.addData("currStepsAVG",(-1 * (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()/4)));
 			telemetry.addData("TotDistInSteps",totDistInSteps);
-			telemetry.addData("Heading",currHeading);
 			telemetry.addData("front_right",robot.front_right.getCurrentPosition());
 			telemetry.addData("front_left",robot.front_left.getCurrentPosition());
 			telemetry.addData("back_right",robot.back_right.getCurrentPosition());
 			telemetry.addData("back_left",robot.back_left.getCurrentPosition());
+			telemetry.addData("Heading", currAngle);
 			telemetry.update();
-
-            turnIMU();
+			
+			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+			this.imuTurn.getPosition();
+			currAngle = angles.firstAngle;
+			newAngle = currAngle - angle;
+			
             drive = -power;
-            turn  = .01 * angle;
+            turn  = .01 * newAngle;
             leftPower    = Range.clip(drive - turn, -1.0, 1.0);
             rightPower   = Range.clip(drive + turn, -1.0, 1.0);
 
@@ -623,8 +620,6 @@ private void turnAngle(double angle, double time)
 //			telemetry.update();
 	
 			sleep(2000);
-			telemetry.addLine("Sleep1");
-			telemetry.update();
 			moveDistance(-20,.1,4000, 46);
 //            sleep(2000);
 //			telemetry.addLine("Sleep2");
