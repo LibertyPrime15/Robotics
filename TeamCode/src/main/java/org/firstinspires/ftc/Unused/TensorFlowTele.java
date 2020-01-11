@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.Unused;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.RevMap;
 
 @TeleOp(name="Tensor Flow", group = "Concept")
-//@Disabled
+@Disabled
 public class TensorFlowTele extends LinearOpMode
 {
     RevMap robot = new RevMap();
