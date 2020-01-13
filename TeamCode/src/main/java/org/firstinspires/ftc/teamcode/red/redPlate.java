@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Red Plate", group = "C")
+@Autonomous(name="Red Plate", group = "Z")
 //@Disabled
 public class redPlate extends LinearOpMode
 {

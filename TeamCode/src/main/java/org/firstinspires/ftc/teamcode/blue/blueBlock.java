@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Blue Block", group = "B")
+@Autonomous(name="Blue Block", group = "Y")
 //@Disabled
 public class blueBlock extends LinearOpMode
 {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.leagueCode;
+package org.firstinspires.ftc.leagueCode.blue;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -9,9 +9,8 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.leagueCode.leagueMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -24,26 +23,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.lang.Thread;
-import java.util.concurrent.TimeoutException;
 
-import org.firstinspires.ftc.teamcode.RevMap;
-
-@Autonomous(name="leagueAuto", group = "A")
+@Autonomous(name="blueLeagueBlock", group = "blueLeague")
 //@Disabled
-public class leagueAuto extends LinearOpMode
+public class blueLeagueBlock extends LinearOpMode
 {
 	leagueMap robot = new leagueMap();
 	Orientation angles;
@@ -481,97 +464,97 @@ public class leagueAuto extends LinearOpMode
 				telemetry.addLine("Grab two Blocks");
 				//code to get the first 2 blocks
 			}
-			else if(tZ > 42 && tY < 43)//Position One
+			else if(tY < 50)//Position One
 			{
 				telemetry.addLine().addData("First tX", tX);
 				telemetry.addLine().addData("First tY", tY);
 				telemetry.addLine().addData("First tZ", tZ);
 				telemetry.update();
-//				moveDistanceAtAngle(-17, 0, 0.3);
-//				turnAngle(20, 1500);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-18, 20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(13, 20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(63, 90, 0.5);
-//				turnAngle(-20, 2000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-19, -20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12.5, -20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12, 90, 0.5);
+				moveDistanceAtAngle(-17, 0, 0.3);
+				turnAngle(20, 1500);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-18, 20, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(13, 20, 0.3);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-58, 90, 0.5);
+				robot.outtake(0.5);
+				sleep(1000);
+				robot.stopIntake();
+				moveDistanceAtAngle(63, 90, 0.5);
+				turnAngle(-20, 2000);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-19, -20, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(12.5, -20, 0.3);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-58, 90, 0.5);
+				robot.outtake(0.5);
+				sleep(1000);
+				robot.stopIntake();
+				moveDistanceAtAngle(12, 90, 0.5);
 			}
-			else if(tZ > 50 && tY < 50)//Position 2
+			else if(tY > 50)//Position 2
 			{
 				telemetry.addLine().addData("First tX", tX);
 				telemetry.addLine().addData("First tY", tY);
 				telemetry.addLine().addData("First tZ", tZ);
 				telemetry.update();
-//				moveDistanceAtAngle(-12, 0, 0.3);
-//				turnAngle(-45, 2000);
-//				moveDistanceAtAngle(-6, -45, 0.3);
-//				turnAngle(20, 2000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-20, 20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(18, 20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.05);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(56, 90, 0.5);
-//				turnAngle(-25, 3000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-20, -25, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12, -25, 0.5);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-53, 90, 0.6);
-//				robot.outtake(0.05);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(30, 90, 0.6);
+				moveDistanceAtAngle(-12, 0, 0.3);
+				turnAngle(-45, 2000);
+				moveDistanceAtAngle(-6, -45, 0.3);
+				turnAngle(20, 2000);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-20, 20, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(18, 20, 0.3);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-58, 90, 0.5);
+				robot.outtake(0.05);
+				sleep(1000);
+				robot.stopIntake();
+				moveDistanceAtAngle(56, 90, 0.5);
+				turnAngle(-25, 3000);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-20, -25, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(12, -25, 0.5);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-53, 90, 0.6);
+				robot.outtake(0.05);
+				sleep(1000);
+				robot.stopIntake();
+				moveDistanceAtAngle(30, 90, 0.6);
 			}
 			else//Position 3
 			{
-//				moveDistanceAtAngle(-16, 0, 0.3);
-//				turnAngle(-20, 1000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-19, -20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(13, -20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(500);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(50, 90, 0.5);
-//				turnAngle(-60, 2000);
-//				robot.outtake(1);
-//				moveDistanceAtAngle(-26, -60, 0.3);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-8, -60, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(20, -60, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-68, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(500);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(14, 90, 0.5);
+				moveDistanceAtAngle(-16, 0, 0.3);
+				turnAngle(-20, 1000);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-19, -20, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(13, -20, 0.3);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-58, 90, 0.5);
+				robot.outtake(0.5);
+				sleep(500);
+				robot.stopIntake();
+				moveDistanceAtAngle(50, 90, 0.5);
+				turnAngle(-60, 2000);
+				robot.outtake(1);
+				moveDistanceAtAngle(-26, -60, 0.3);
+				robot.intake(0.05);
+				moveDistanceAtAngle(-8, -60, 0.1);
+				robot.stopIntake();
+				moveDistanceAtAngle(20, -60, 0.3);
+				turnAngle(90, 2000);
+				moveDistanceAtAngle(-68, 90, 0.5);
+				robot.outtake(0.5);
+				sleep(500);
+				robot.stopIntake();
+				moveDistanceAtAngle(14, 90, 0.5);
 			}
-//			stop();
+			stop();
 			telemetry.addLine().addData("First tX", tX);
 			telemetry.addLine().addData("First tY", tY);
 			telemetry.addLine().addData("First tZ", tZ);

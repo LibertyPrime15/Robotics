@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RevMap;
 
-@Autonomous(name="Blue Plate", group = "B")
+@Autonomous(name="Blue Plate", group = "Y")
 //@Disabled
 public class bluePlate extends LinearOpMode
 {
