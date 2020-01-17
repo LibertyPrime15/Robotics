@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="RedLeaguePlate", group = "redLeague")
+@Autonomous(name="redLeaguePlate", group = "redLeague")
 //@Disabled
 public class redLeaguePlate extends LinearOpMode
 {

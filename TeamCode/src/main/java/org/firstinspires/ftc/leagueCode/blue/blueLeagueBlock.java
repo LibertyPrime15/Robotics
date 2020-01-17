@@ -2,6 +2,7 @@ package org.firstinspires.ftc.leagueCode.blue;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.hardware.camera2.CameraDevice;
 import android.view.View;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -374,6 +375,7 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 		waitForStart();
 		relicTrackables.activate();
 		
+		
 		moveDistanceAtAngle(-13, 0, 0.2);
 //--------------------------------------------------------------------------------------------------
 		while (opModeIsActive() && (!(isStopRequested())))
@@ -458,6 +460,62 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 				telemetry.addLine("Grab two Blocks");
 				//code to get the first 2 blocks
 			}
+			else if(inSight == true)//THIS IS A POSITION 1 TEST
+			{
+				turnAngle(-20,1000);
+				moveDistanceAtAngle(15,-20,.02);
+				turnAngle(-5,1000);
+				robot.intake(.05);
+				moveDistanceAtAngle(-25,-5,.02);
+				robot.stopIntake();
+				moveDistanceAtAngle(25,-5,.02);
+				turnAngle(90,1000);
+				moveDistanceAtAngle(50,90,.02);
+				robot.outtake(.05);
+				robot.stopIntake();
+				moveDistanceAtAngle(-50,-90,.02);
+				turnAngle(-45,1000);
+				robot.intake(.05);
+				moveDistanceAtAngle(-25,-45,.02);
+				robot.stopIntake();
+				moveDistanceAtAngle(-10,-45,.02);
+				turnAngle(-90,1000);
+				moveDistanceAtAngle(45,-45,.02);
+			}
+			else if(inSight == true)//THIS IS A POSITION 2 TEST - Unfinished
+			{
+				turnAngle(-20,1000);
+				moveDistanceAtAngle(15,-20,.02);
+				turnAngle(-5,1000);
+				robot.intake(.05);
+				moveDistanceAtAngle(-25,-5,.02);
+				robot.stopIntake();
+				moveDistanceAtAngle(25,-5,.02);
+				turnAngle(90,1000);
+				moveDistanceAtAngle(50,90,.02);
+				robot.outtake(.05);
+				robot.stopIntake();
+				moveDistanceAtAngle(-50,-90,.02);
+				turnAngle(-45,1000);
+				robot.intake(.05);
+				moveDistanceAtAngle(-25,-45,.02);
+				robot.stopIntake();
+				moveDistanceAtAngle(-10,-45,.02);
+				turnAngle(-90,1000);
+				moveDistanceAtAngle(45,-45,.02);
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			else if(tX < 10)//Position One
 			{
 				telemetry.addLine().addData("First tX", tX);
