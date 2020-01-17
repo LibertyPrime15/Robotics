@@ -340,7 +340,7 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
 ////--------------------------------------//
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 	public void runOpMode()
 	{
 		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -470,7 +470,7 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 				robot.stopIntake();
 				moveDistanceAtAngle(25,-5,.02);
 				turnAngle(90,1000);
-				moveDistanceAtAngle(50,90,.02);
+				moveDistanceAtAngle(-50,90,.02);
 				robot.outtake(.05);
 				robot.stopIntake();
 				moveDistanceAtAngle(-50,-90,.02);
@@ -479,8 +479,8 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 				moveDistanceAtAngle(-25,-45,.02);
 				robot.stopIntake();
 				moveDistanceAtAngle(-10,-45,.02);
-				turnAngle(-90,1000);
-				moveDistanceAtAngle(45,-45,.02);
+				turnAngle(90,1000);
+				moveDistanceAtAngle(45,90,.02);
 			}
 			else if(inSight == true)//THIS IS A POSITION 2 TEST - Unfinished
 			{
@@ -501,8 +501,11 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 				moveDistanceAtAngle(-25,-45,.02);
 				robot.stopIntake();
 				moveDistanceAtAngle(-10,-45,.02);
-				turnAngle(-90,1000);
-				moveDistanceAtAngle(45,-45,.02);
+				turnAngle(90,1000);
+				moveDistanceAtAngle(-45,90,.02);
+				robot.outtake(.05);
+				robot.stopIntake();
+				moveDistanceAtAngle(5,90,.02);
 			}
 			
 			

@@ -59,7 +59,7 @@ public class redLeaguePlate extends LinearOpMode
 	public static final String TAG = "Vuforia VuMark Sample";
 	OpenGLMatrix lastLocation = null;
 	VuforiaLocalizer vuforia;
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -230,7 +230,6 @@ public class redLeaguePlate extends LinearOpMode
 	public void moveDistanceAtAngle(double distance, double angle, double power)
 	{
 		//this resets the encoders, to make sure that all the values start at 0
-		
 		robot.resetEncoder();
 		robot.setDriveToBrake();
 		
@@ -247,8 +246,6 @@ public class redLeaguePlate extends LinearOpMode
 			telemetry.addData("We are in the if statement", "");
 			telemetry.update();
 			double realAngleDifference = angleDifference;
-			
-			
 			
 			//while we aren't supposed to be stopped, and we haven't yet reached the distance we are supposed to travel,
 			while(!isStopRequested() && (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()) < (4 * totalDistInSteps))
@@ -336,13 +333,13 @@ public class redLeaguePlate extends LinearOpMode
 		robot.resetEncoder();
 		robot.setDriveToBrake();
 	}
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
 ////--------------------------------------//
-//------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 	public void runOpMode()
 	{
 		turnIMU();

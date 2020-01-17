@@ -78,7 +78,7 @@ public class blueLeaguePlate extends LinearOpMode
 	public static final String TAG = "Vuforia VuMark Sample";
 	OpenGLMatrix lastLocation = null;
 	VuforiaLocalizer vuforia;
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
@@ -249,7 +249,6 @@ public class blueLeaguePlate extends LinearOpMode
 	public void moveDistanceAtAngle(double distance, double angle, double power)
 	{
 		//this resets the encoders, to make sure that all the values start at 0
-		
 		robot.resetEncoder();
 		robot.setDriveToBrake();
 		
@@ -266,8 +265,6 @@ public class blueLeaguePlate extends LinearOpMode
 			telemetry.addData("We are in the if statement", "");
 			telemetry.update();
 			double realAngleDifference = angleDifference;
-			
-			
 			
 			//while we aren't supposed to be stopped, and we haven't yet reached the distance we are supposed to travel,
 			while(!isStopRequested() && (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()) < (4 * totalDistInSteps))
@@ -355,242 +352,42 @@ public class blueLeaguePlate extends LinearOpMode
 		robot.resetEncoder();
 		robot.setDriveToBrake();
 	}
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
 //----------------------------------------//
 ////--------------------------------------//
-//------------------------------------------------------------------------------------------------
-	public void runOpMode()
+//--------------------------------------------------------------------------------------------------
+public void runOpMode()
+{
+	turnIMU();
+	telemetry.addData("Status", "Hit it Bois");
+	telemetry.update();
+	waitForStart();
+//--------------------------------------------------------------------------------------------------
+	while (opModeIsActive() && (!(isStopRequested())))
 	{
-		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-		parameters.vuforiaLicenseKey = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
-		
-		parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-		vuforia = ClassFactory.getInstance().createVuforia(parameters);
-		
-		VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("Skystone");
-		VuforiaTrackable relicTemplate = relicTrackables.get(0);
-		relicTemplate.setName("relicVuMarkTemplate");
-		
-		// hsvValues is an array that will hold the hue, saturation, and value information.
-		float hsvValues[] = {0F, 0F, 0F};
-		
-		// values is a reference to the hsvValues array.
-		final float values[] = hsvValues;
-		
-		// sometimes it helps to multiply the raw RGB values with a scale factor
-		// to amplify/attentuate the measured values.
-		final double SCALE_FACTOR = 255;
-		
-		// get a reference to the RelativeLayout so we can change the background
-		// color of the Robot Controller app to match the hue detected by the RGB sensor.
-		int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-		final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-		
-		turnIMU();
-		telemetry.addData("Status", "Hit it Bois");
-		telemetry.update();
-		waitForStart();
-		relicTrackables.activate();
-
-
-//--------------------------------------------------------------------------------------------------
-		while (opModeIsActive() && (!(isStopRequested())))
-		{
 //----------------------------------
-			double start = System.currentTimeMillis();
-			double end   = start + 1000000;
-			
-			moveDistanceAtAngle(-13, 0, 0.2);
-//--------------------------------------------------------------------------------------------------
-			while((inSight == false) && (end > System.currentTimeMillis()) && (!(isStopRequested())))
-			{
-				RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-				telemetry.addData("VuMark", "%s visible", vuMark);
-				
-				OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-				telemetry.addData("Pose", format(pose));
-				
-				if(pose != null)
-				{
-					VectorF trans = pose.getTranslation();
-					Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-					
-					// Extract the X, Y, and Z components of the offset of the target relative to the robot
-					tX = trans.get(0);
-					tY = trans.get(1);
-					tZ = trans.get(2);
-					
-					// Extract the rotational components of the target relative to the robot
-					rX = rot.firstAngle;
-					rY = rot.secondAngle;
-					rZ = rot.thirdAngle;
-					telemetry.addLine().addData("First tX", tX);
-					telemetry.addLine().addData("First tY", tY);
-					telemetry.addLine().addData("First tZ", tZ);
-					telemetry.update();
-					inSight = true;
-				}
-				
-				else if (pose == null)
-				{
-					while ((!(isStopRequested())) && rX > 0)
-					{
-						telemetry.addLine().addData("rX", rX);
-						telemetry.addLine().addData("rY", rY);
-						telemetry.addLine().addData("rZ", rZ);
-						telemetry.update();
-					}
-				}
-				// convert the RGB values to HSV values.
-				// multiply by the SCALE_FACTOR.
-				// then cast it back to int (SCALE_FACTOR is a double)
-				Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR), (int) (robot.sensorColor.green() * SCALE_FACTOR), (int) (robot.sensorColor.blue() * SCALE_FACTOR), hsvValues);
-				
-				// send the info back to driver station using telemetry function.
-//				telemetry.addData("Alpha", robot.sensorColor.alpha());
-//				telemetry.addData("Red  ", robot.sensorColor.red());
-//				telemetry.addData("Green", robot.sensorColor.green());
-//				telemetry.addData("Blue ", robot.sensorColor.blue());
-//				telemetry.addData("Hue", hsvValues[0]);
-				
-				// change the background color to match the color detected by the RGB sensor.
-				// pass a reference to the hue, saturation, and value array as an argument
-				// to the HSVToColor method.
-				relativeLayout.post(new Runnable()
-				{
-					//I hate how this line reformats
-					public void run()
-					{
-						//Formatting Comment
-						relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-					}
-				});
-				telemetry.addLine("We still haven't seen the brick");
-				telemetry.update();
-			}
-//--------------------------------------------------------------------------------------------------
-			if(inSight == false)
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.update();
-				telemetry.addLine("Grab two Blocks");
-				//code to get the first 2 blocks
-			}
-			else if(tZ > 42 && tY < 43)//Position One
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.update();
-				moveDistanceAtAngle(-17, 0, 0.3);
-				turnAngle(20, 1500);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-18, 20, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(13, 20, 0.3);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-58, 90, 0.5);
-				robot.outtake(0.5);
-				sleep(1000);
-				robot.stopIntake();
-				moveDistanceAtAngle(63, 90, 0.5);
-				turnAngle(-20, 2000);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-19, -20, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(12.5, -20, 0.3);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-58, 90, 0.5);
-				robot.outtake(0.5);
-				sleep(1000);
-				robot.stopIntake();
-				moveDistanceAtAngle(12, 90, 0.5);
-			}
-			else if(tZ > 50 && tY < 50)//Position 2
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.update();
-				moveDistanceAtAngle(-12, 0, 0.3);
-				turnAngle(-45, 2000);
-				moveDistanceAtAngle(-6, -45, 0.3);
-				turnAngle(20, 2000);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-20, 20, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(18, 20, 0.3);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-58, 90, 0.5);
-				robot.outtake(0.05);
-				sleep(1000);
-				robot.stopIntake();
-				moveDistanceAtAngle(56, 90, 0.5);
-				turnAngle(-25, 3000);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-20, -25, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(12, -25, 0.5);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-53, 90, 0.6);
-				robot.outtake(0.05);
-				sleep(1000);
-				robot.stopIntake();
-				moveDistanceAtAngle(30, 90, 0.6);
-			}
-			else//Position 3
-			{
-				moveDistanceAtAngle(-16, 0, 0.3);
-				turnAngle(-20, 1000);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-19, -20, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(13, -20, 0.3);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-58, 90, 0.5);
-				robot.outtake(0.5);
-				sleep(500);
-				robot.stopIntake();
-				moveDistanceAtAngle(50, 90, 0.5);
-				turnAngle(-60, 2000);
-				robot.outtake(1);
-				moveDistanceAtAngle(-26, -60, 0.3);
-				robot.intake(0.05);
-				moveDistanceAtAngle(-8, -60, 0.1);
-				robot.stopIntake();
-				moveDistanceAtAngle(20, -60, 0.3);
-				turnAngle(90, 2000);
-				moveDistanceAtAngle(-68, 90, 0.5);
-				robot.outtake(0.5);
-				sleep(500);
-				robot.stopIntake();
-				moveDistanceAtAngle(14, 90, 0.5);
-			}
-//			stop();
-			telemetry.addLine().addData("First tX", tX);
-			telemetry.addLine().addData("First tY", tY);
-			telemetry.addLine().addData("First tZ", tZ);
-			telemetry.update();
+		double start = System.currentTimeMillis();
+		double end   = start + 1000000;
+		
+		robot.ungrabPlate();
+		moveDistanceAtAngle(-4,0,6);
+		turnAngle(-45,1500);
+		moveDistanceAtAngle(-13,-45,.6);
+		turnAngle(0,1500);
+		moveDistanceAtAngle(-7,0,.1);
+		robot.grabPlate();
+		sleep(1000);
+//			moonDrive this will be at -90 degrees
+		sleep(500);
+		moveDistanceAtAngle(-12,-90,.6);
+		robot.ungrabPlate();
+		sleep(500);
+		moveDistanceAtAngle(20,-90,.6);
+		stop();
 //----------------------------------
-		}
-		relativeLayout.post(new Runnable()//I hate how this line reformats
-		{
-			//Formatting Comment
-			public void run()
-			{
-				//Formatting Comment
-				relativeLayout.setBackgroundColor(Color.WHITE);
-			}
-		});
 	}
-	String format(OpenGLMatrix transformationMatrix)
-	{
-		return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-	}
+}
 }
