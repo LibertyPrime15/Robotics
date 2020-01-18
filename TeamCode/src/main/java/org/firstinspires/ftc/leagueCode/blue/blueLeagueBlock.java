@@ -10,6 +10,8 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.HINT;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.leagueCode.leagueMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -24,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.R;
 
 @Autonomous(name="blueLeagueBlock", group = "blueLeague")
 //@Disabled
@@ -45,27 +48,82 @@ public class blueLeagueBlock extends LinearOpMode
 	double drive = 0;
 	double turn  = 0;
 	
+	private VuforiaLocalizer vuforiaLocalizer;
+	private VuforiaLocalizer.Parameters parameters;
+	private VuforiaTrackables visionTargets;
+	private VuforiaTrackable target;
+	private VuforiaTrackableDefaultListener listener;
+	private OpenGLMatrix lastKnownLocation;
+	private OpenGLMatrix phoneLocation;
+	
 	private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
 	
-	boolean inSight = false;
+	boolean inView  = false;
 	
-	double tX;
-	double tY;
-	double tZ;
+	boolean blockPositionOne   = false;
+	boolean blockPositionTwo   = false;
+	boolean blockPositionThree = false;
 	
-	double rX;
-	double rY;
-	double rZ;
-	
-	public static final String TAG = "Vuforia VuMark Sample";
-	OpenGLMatrix lastLocation = null;
-	VuforiaLocalizer vuforia;
+	private float robotX = 0;
+	private float robotY = 0;
+	private float robotAngle = 0;
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//gyro.getHeading()
 //----------------------------------------//
 //----------------------------------------//
+//--------------------------------------------------------------------------------------------------
+//This method is used for setting up Vuforia and runs everytime the program initializes
+private void setupVuforia()
+{
+	parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+	parameters.vuforiaLicenseKey = VUFORIA_KEY;
+	parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+	parameters.useExtendedTracking = false;
+	vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
+	
+	visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
+	Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
+	
+	target = visionTargets.get(0);
+	target.setName("Wheels Target");
+	target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+	phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
+	
+	
+	listener = (VuforiaTrackableDefaultListener) target.getListener();
+	listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+	
+}
+private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
+{
+	return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
+}
+private String formatMatrix(OpenGLMatrix matrix)
+{
+	//This method formats weird
+	return matrix.formatAsTransform();
+}
+public boolean vuforia()
+{
+	OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+	
+	if(latestLocation != null)
+	{
+		lastKnownLocation = latestLocation;
+	}
+	float[] coordinates = lastKnownLocation.getTranslation().getData();
+	
+	robotX = coordinates[0];
+	robotY = coordinates[1];
+	robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+	
+	telemetry.addData("Tracking " + target.getName(), listener.isVisible());
+	telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+	telemetry.update();
+	return listener.isVisible();
+}
 //--------------------------------------------------------------------------------------------------
 //This method is for reseting the imu - must be called after every time a turn is used
 private void turnIMU()
@@ -335,6 +393,147 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 	robot.setDriveToBrake();
 }
 //--------------------------------------------------------------------------------------------------
+public void setFlipPosition(double position)
+{
+	robot.flip2.setPosition(position);
+	robot.flip1.setPosition(position);
+}
+//--------------------------------------------------------------------------------------------------
+//This checks to see if the skystone is in view
+public void checkSight()
+{
+	turnAngle(7,2500);//Positions to see the block
+	if(listener.isVisible() && System.currentTimeMillis() > 2000)
+	{
+		inView = true;
+	}
+	if(inView)
+	{
+		blockPositionOne = true;
+		turnAngle(1,400);
+		runCycle();
+	}
+	else
+	{
+		turnAngle(-10,500);
+		moveDistanceAtAngle(-1.2,-10,.2);
+		turnAngle(-10,2500);//These are all positioning to see the block
+		if(listener.isVisible())
+		{
+			inView = true;
+		}
+		if(inView)
+		{
+			blockPositionTwo = true;
+			turnAngle(-8,500);
+			runCycle();
+		}
+		else
+		{
+			blockPositionThree = true;
+			runCycle();
+		}
+	}
+}
+//--------------------------------------------------------------------------------------------------
+//This method runs actual atonomous code and calls the methods that run actual atonomous code
+public void beginScanning()
+{
+	//This moves the robot out of its start position and prepares for scanning
+	moveDistanceAtAngle(-16.4,0,.2);
+	robot.wrist.setPosition(.03);
+	setFlipPosition(.87);
+	checkSight();
+}
+//--------------------------------------------------------------------------------------------------
+public void runCycle()
+{
+	if(blockPositionOne)//THIS IS A POSITION 1 TEST
+	{
+		moveDistanceAtAngle(5, 0, 0.3);
+		turnAngle(-40, 1000);
+		moveDistanceAtAngle(-8, -40, 0.3);
+		turnAngle(20, 1500);
+		robot.intake(.05);
+		moveDistanceAtAngle(-20, 20, .15);
+		robot.stopIntake();
+		moveDistanceAtAngle(10, 20, .3);
+		turnAngle(90, 1200);
+		moveDistanceAtAngle(-40, 90, .5);
+		robot.outtake(.7);
+		sleep(400);
+		robot.stopIntake();
+		moveDistanceAtAngle(47, 90, .5);
+		turnAngle(-20, 1200);
+		robot.intake(.05);
+		moveDistanceAtAngle(-10, -20, .2);
+		robot.stopIntake();
+		moveDistanceAtAngle(10, -20, .2);
+		turnAngle(90, 1000);
+		moveDistanceAtAngle(-53, 90, .5);
+		robot.outtake(.7);
+		sleep(400);
+		moveDistanceAtAngle(12,90,.5);
+		stop();
+	}
+	else if(blockPositionTwo)//THIS IS A POSITION 2 TEST
+	{
+		turnAngle(0, 1500);
+		moveDistanceAtAngle(-2, 0, 0.3);
+		turnAngle(-17, 1500);
+		robot.intake(.05);
+		moveDistanceAtAngle(-15, -17, .15);
+		robot.stopIntake();
+		moveDistanceAtAngle(6.5, -17, .3);
+		turnAngle(90, 1000);
+		moveDistanceAtAngle(-37, 90, .6);
+		robot.outtake(.7);
+		sleep(400);
+		robot.stopIntake();
+		moveDistanceAtAngle(54, 90, .6);
+		turnAngle(-20, 1000);
+		robot.intake(.05);
+		moveDistanceAtAngle(-18, -20, .3);
+		robot.stopIntake();
+		moveDistanceAtAngle(14.2, -20, .3);
+		turnAngle(90, 1000);
+		moveDistanceAtAngle(-60, 90, .6);
+		robot.outtake(.7);
+		sleep(400);
+		robot.stopIntake();
+		moveDistanceAtAngle(15, 90, .4);
+		stop();
+	}
+	else if(blockPositionThree)//THIS IS A POSITION 3 TEST - Unfinished
+	{
+		moveDistanceAtAngle(10, -10, 0.3);
+		turnAngle(-28, 1000);
+		moveDistanceAtAngle(-12, -28, 0.3);
+		robot.intake(.05);
+		moveDistanceAtAngle(-20, -28, .1);
+		robot.stopIntake();
+		moveDistanceAtAngle(7.5, -27, .3);
+		turnAngle(90, 1000);
+		moveDistanceAtAngle(-50, 90, .6);
+		robot.outtake(.7);
+		sleep(400);
+		robot.stopIntake();
+		moveDistanceAtAngle(52.5, 90, .6);
+		turnAngle(-20, 1000);
+		robot.intake(.05);
+		moveDistanceAtAngle(-16, -20, .1);
+		robot.stopIntake();
+		moveDistanceAtAngle(10, -20, .3);
+		turnAngle(90, 1000);
+		moveDistanceAtAngle(-60, 90, .8);
+		robot.outtake(.7);
+		sleep(700);
+		robot.stopIntake();
+		moveDistanceAtAngle(15, 90, .8);
+		stop();
+	}
+}
+//--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---No More Methods Are Made Past This---//
@@ -343,40 +542,14 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 //--------------------------------------------------------------------------------------------------
 	public void runOpMode()
 	{
-		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-		parameters.vuforiaLicenseKey = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
-		
-		parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-		vuforia = ClassFactory.getInstance().createVuforia(parameters);
-		
-		VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("Skystone");
-		VuforiaTrackable relicTemplate = relicTrackables.get(0);
-		relicTemplate.setName("relicVuMarkTemplate");
-		
-		// hsvValues is an array that will hold the hue, saturation, and value information.
-		float hsvValues[] = {0F, 0F, 0F};
-		
-		// values is a reference to the hsvValues array.
-		final float values[] = hsvValues;
-		
-		// sometimes it helps to multiply the raw RGB values with a scale factor
-		// to amplify/attentuate the measured values.
-		final double SCALE_FACTOR = 255;
-		
-		// get a reference to the RelativeLayout so we can change the background
-		// color of the Robot Controller app to match the hue detected by the RGB sensor.
-		int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-		final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-		
 		turnIMU();
+		setupVuforia();
+		lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
 		telemetry.addData("Status", "Hit it Bois");
 		telemetry.update();
+		
 		waitForStart();
-		relicTrackables.activate();
-		
-		
-		moveDistanceAtAngle(-13, 0, 0.2);
+		visionTargets.activate();
 //--------------------------------------------------------------------------------------------------
 		while (opModeIsActive() && (!(isStopRequested())))
 		{
@@ -384,252 +557,9 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 			double start = System.currentTimeMillis();
 			double end   = start + 1000000;
 //--------------------------------------------------------------------------------------------------
-			while((inSight == false) && (end > System.currentTimeMillis()) && (!(isStopRequested())))
-			{
-				RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-				telemetry.addData("VuMark", "%s visible", vuMark);
-				
-				OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
-				telemetry.addData("Pose", format(pose));
-				
-				if(pose != null)
-				{
-					VectorF trans = pose.getTranslation();
-					Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-					
-					// Extract the X, Y, and Z components of the offset of the target relative to the robot
-					tX = trans.get(0);
-					tY = trans.get(1);
-					tZ = trans.get(2);
-					
-					// Extract the rotational components of the target relative to the robot
-					rX = rot.firstAngle;
-					rY = rot.secondAngle;
-					rZ = rot.thirdAngle;
-					telemetry.addLine().addData("First tX", tX);
-					telemetry.addLine().addData("First tY", tY);
-					telemetry.addLine().addData("First tZ", tZ);
-					telemetry.update();
-					inSight = true;
-				}
-				
-				else if(pose == null)
-				{
-					while ((!(isStopRequested())) && rX > 0)
-					{
-						telemetry.addLine().addData("rX", rX);
-						telemetry.addLine().addData("rY", rY);
-						telemetry.addLine().addData("rZ", rZ);
-						telemetry.update();
-					}
-				}
-				// convert the RGB values to HSV values.
-				// multiply by the SCALE_FACTOR.
-				// then cast it back to int (SCALE_FACTOR is a double)
-				Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR), (int) (robot.sensorColor.green() * SCALE_FACTOR), (int) (robot.sensorColor.blue() * SCALE_FACTOR), hsvValues);
-				
-				// send the info back to driver station using telemetry function.
-//				telemetry.addData("Alpha", robot.sensorColor.alpha());
-//				telemetry.addData("Red  ", robot.sensorColor.red());
-//				telemetry.addData("Green", robot.sensorColor.green());
-//				telemetry.addData("Blue ", robot.sensorColor.blue());
-//				telemetry.addData("Hue", hsvValues[0]);
-				
-				// change the background color to match the color detected by the RGB sensor.
-				// pass a reference to the hue, saturation, and value array as an argument
-				// to the HSVToColor method.
-				relativeLayout.post(new Runnable()
-				{
-					//I hate how this line reformats
-					public void run()
-					{
-						//Formatting Comment
-						relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-					}
-				});
-				telemetry.addLine("We still haven't seen the brick");
-				telemetry.update();
-			}
-//--------------------------------------------------------------------------------------------------
-			if(inSight == false)
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.update();
-				telemetry.addLine("Grab two Blocks");
-				//code to get the first 2 blocks
-			}
-			else if(inSight == true)//THIS IS A POSITION 1 TEST
-			{
-				turnAngle(-20,1000);
-				moveDistanceAtAngle(15,-20,.02);
-				turnAngle(-5,1000);
-				robot.intake(.05);
-				moveDistanceAtAngle(-25,-5,.02);
-				robot.stopIntake();
-				moveDistanceAtAngle(25,-5,.02);
-				turnAngle(90,1000);
-				moveDistanceAtAngle(-50,90,.02);
-				robot.outtake(.05);
-				robot.stopIntake();
-				moveDistanceAtAngle(-50,-90,.02);
-				turnAngle(-45,1000);
-				robot.intake(.05);
-				moveDistanceAtAngle(-25,-45,.02);
-				robot.stopIntake();
-				moveDistanceAtAngle(-10,-45,.02);
-				turnAngle(90,1000);
-				moveDistanceAtAngle(45,90,.02);
-			}
-			else if(inSight == true)//THIS IS A POSITION 2 TEST - Unfinished
-			{
-				turnAngle(-20,1000);
-				moveDistanceAtAngle(15,-20,.02);
-				turnAngle(-5,1000);
-				robot.intake(.05);
-				moveDistanceAtAngle(-25,-5,.02);
-				robot.stopIntake();
-				moveDistanceAtAngle(25,-5,.02);
-				turnAngle(90,1000);
-				moveDistanceAtAngle(50,90,.02);
-				robot.outtake(.05);
-				robot.stopIntake();
-				moveDistanceAtAngle(-50,-90,.02);
-				turnAngle(-45,1000);
-				robot.intake(.05);
-				moveDistanceAtAngle(-25,-45,.02);
-				robot.stopIntake();
-				moveDistanceAtAngle(-10,-45,.02);
-				turnAngle(90,1000);
-				moveDistanceAtAngle(-45,90,.02);
-				robot.outtake(.05);
-				robot.stopIntake();
-				moveDistanceAtAngle(5,90,.02);
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			else if(tX < 10)//Position One
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.addLine("Position 1");
-				telemetry.update();
-//				moveDistanceAtAngle(-17, 0, 0.3);
-//				turnAngle(20, 1500);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-18, 20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(13, 20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(63, 90, 0.5);
-//				turnAngle(-20, 2000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-19, -20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12.5, -20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12, 90, 0.5);
-			}
-			else if(tX > -10)//Position 2
-			{
-				telemetry.addLine().addData("First tX", tX);
-				telemetry.addLine().addData("First tY", tY);
-				telemetry.addLine().addData("First tZ", tZ);
-				telemetry.addLine("Position 2");
-				telemetry.update();
-//				moveDistanceAtAngle(-12, 0, 0.3);
-//				turnAngle(-45, 2000);
-//				moveDistanceAtAngle(-6, -45, 0.3);
-//				turnAngle(20, 2000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-20, 20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(18, 20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.05);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(56, 90, 0.5);
-//				turnAngle(-25, 3000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-20, -25, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(12, -25, 0.5);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-53, 90, 0.6);
-//				robot.outtake(0.05);
-//				sleep(1000);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(30, 90, 0.6);
-			}
-			else//Position 3
-			{
-//				moveDistanceAtAngle(-16, 0, 0.3);
-//				turnAngle(-20, 1000);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-19, -20, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(13, -20, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-58, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(500);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(50, 90, 0.5);
-//				turnAngle(-60, 2000);
-//				robot.outtake(1);
-//				moveDistanceAtAngle(-26, -60, 0.3);
-//				robot.intake(0.05);
-//				moveDistanceAtAngle(-8, -60, 0.1);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(20, -60, 0.3);
-//				turnAngle(90, 2000);
-//				moveDistanceAtAngle(-68, 90, 0.5);
-//				robot.outtake(0.5);
-//				sleep(500);
-//				robot.stopIntake();
-//				moveDistanceAtAngle(14, 90, 0.5);
-			}
-//			stop();
-			telemetry.addLine().addData("First tX", tX);
-			telemetry.addLine().addData("First tY", tY);
-			telemetry.addLine().addData("First tZ", tZ);
-			telemetry.update();
+			vuforia();
+			beginScanning();
 //----------------------------------
 		}
-		relativeLayout.post(new Runnable()//I hate how this line reformats
-		{
-			//Formatting Comment
-			public void run()
-			{
-				//Formatting Comment
-				relativeLayout.setBackgroundColor(Color.WHITE);
-			}
-		});
-	}
-	String format(OpenGLMatrix transformationMatrix)
-	{
-		return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
 	}
 }
