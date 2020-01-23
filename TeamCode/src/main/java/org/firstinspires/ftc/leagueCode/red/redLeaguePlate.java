@@ -329,7 +329,7 @@ private void moonDrive(double angle, double power, double moonPower, double time
 			turnAngle(-45, 1500);
 			moveDistanceAtAngle(-12, -45, .6);
 			turnAngle(0, 1500);
-			moveDistanceAtAngle(-7,0,.1);
+			moveDistanceAtAngle(-13,0,.1);
 			sleep(500);
 			robot.grabPlate();
 			sleep(800);
@@ -340,7 +340,7 @@ private void moonDrive(double angle, double power, double moonPower, double time
 			robot.ungrabPlate();
 			sleep(700);
 			turnAngle(-45, 1500);
-			moveDistanceAtAngle(3.5,-45,.5);
+			moveDistanceAtAngle(2,-45,.5);
 			sleep(500);
 			turnAngle(-89,1500);
 			moveDistanceAtAngle(32,-89,.4);

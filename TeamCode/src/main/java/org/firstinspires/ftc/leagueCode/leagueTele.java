@@ -43,9 +43,9 @@ public class leagueTele extends LinearOpMode
 
     //these are the servo positions for the end effector - they allow us to change these values
     // everywhere in the code at once
-    double flippedIn = 0.96;
-    double flippedGrab = 0.84;
-    double flippedOut = 0.25;
+    double flippedIn = 0.90;
+    double flippedGrab = 0.80;
+    double flippedOut = 0.2;
     double flipStartPos = 0.7;
     double wristWhenIn = 0.03;
     double wristWhenOut = 1;
@@ -232,19 +232,21 @@ public class leagueTele extends LinearOpMode
                 {
                     normalTeleopStuff();
                 }
+                robot.disengageIntake();
                 setFlipPosition(flippedGrab);
                 start = System.currentTimeMillis();
                 while((System.currentTimeMillis() - start) < 400 && !isStopRequested())
                 {
                     normalTeleopStuff();
                 }
-                robot.outtake(1);
+                robot.outtake(0.01);
                 start = System.currentTimeMillis();
                 while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
                 {
                     normalTeleopStuff();
                 }
                 robot.stopIntake();
+                robot.ungrabPlate();
                 blockIsGrabbed = false;
             }
 
@@ -270,7 +272,7 @@ public class leagueTele extends LinearOpMode
         {
             canTogglePlateGrabber = true;
         }
-        //--------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
         if(canAddToLiftPos && gamepad1.dpad_up && nextLiftPos < 9)
         {
             nextLiftPos++;

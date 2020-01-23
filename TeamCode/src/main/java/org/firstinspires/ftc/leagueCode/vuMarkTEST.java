@@ -85,58 +85,6 @@ private double angleBoi()
     currHeading = angles.firstAngle;
     return currHeading;
 }
-//--------------------------------------------------------------------------------------------------
-private void pickBlockPath()
-{
-	if(tY < 200 && tY > 100)
-	{
-		//Run this method
-		block1();
-	}
-	else if(tY < 300 && tY > 200)
-	{
-		//Run this mehod
-		block2();
-	}
-	else if(tY < 400 && tY > 300)
-	{
-		//Run this method
-		block3();
-	}
-}
-//--------------------------------------------------------------------------------------------------
-private void blockPlacement()
-{
-	//Servo Positions
-}
-//--------------------------------------------------------------------------------------------------
-private void startIntakeCycle()
-{
-	robot.intake(.2);
-}
-//--------------------------------------------------------------------------------------------------
-private void endIntakeCycle()
-{
-	//Stop all of the intake stuff
-}
-//--------------------------------------------------------------------------------------------------
-private void block1()
-{
-	//Block Spot 1
-}
-//--------------------------------------------------------------------------------------------------
-private void block2()
-{
-	//Block Spot 2
-}
-//--------------------------------------------------------------------------------------------------
-private void block3()
-{
-	//Block Spot 3
-}
-//--------------------------------------------------------------------------------------------------
-
-
 
 
 
@@ -276,7 +224,7 @@ private void block3()
             
             if(tY != 0)
 			{
-				pickBlockPath();
+				//This is where oyu put your things
 			}
 			// convert the RGB values to HSV values.
 			// multiply by the SCALE_FACTOR.

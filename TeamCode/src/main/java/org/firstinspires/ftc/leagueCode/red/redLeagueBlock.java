@@ -408,7 +408,7 @@ public class redLeagueBlock extends LinearOpMode
 		}
 		if(inView)
 		{
-			blockPositionOne = true;
+			blockPositionTwo = true;
 			turnAngle(1,400);
 			runCycle();
 		}
@@ -423,7 +423,7 @@ public class redLeagueBlock extends LinearOpMode
 			}
 			if(inView)
 			{
-				blockPositionTwo = true;
+				blockPositionOne = true;
 				turnAngle(-8,500);
 				runCycle();
 			}
@@ -441,7 +441,7 @@ public class redLeagueBlock extends LinearOpMode
 		//This moves the robot out of its start position and prepares for scanning
 		moveDistanceAtAngle(-16.4,0,.2);
 		robot.wrist.setPosition(.03);
-		setFlipPosition(.87);
+		setFlipPosition(.8);
 		checkSight();
 	}
 	//--------------------------------------------------------------------------------------------------
@@ -451,17 +451,17 @@ public class redLeagueBlock extends LinearOpMode
 		{
 			turnAngle(0, 1500);
 			moveDistanceAtAngle(-2, 0, 0.3);
-			turnAngle(-17, 1500);
+			turnAngle(-18, 1500);
 			robot.intake(.05);
-			moveDistanceAtAngle(-15, -17, .15);
+			moveDistanceAtAngle(-15, -18, .15);
 			robot.stopIntake();
-			moveDistanceAtAngle(6.5, -17, .3);
+			moveDistanceAtAngle(8, -18, .3);
 			turnAngle(-90, 1000);
 			moveDistanceAtAngle(-37, -90, .6);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(400);
-			robot.stopIntake();
 			moveDistanceAtAngle(54, -90, .6);
+			robot.ungrabPlate();
 			turnAngle(-20, 1000);
 			robot.intake(.05);
 			moveDistanceAtAngle(-18, -20, .3);
@@ -469,38 +469,38 @@ public class redLeagueBlock extends LinearOpMode
 			moveDistanceAtAngle(14.2, -20, .3);
 			turnAngle(-90, 1000);
 			moveDistanceAtAngle(-60, -90, .6);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(400);
-			robot.stopIntake();
 			moveDistanceAtAngle(15, -90, .4);
+			robot.ungrabPlate();
 			stop();
 		}
 		else if(blockPositionTwo)//THIS IS A POSITION 2 TEST
 		{
-			moveDistanceAtAngle(5, 0, 0.3);
-			turnAngle(-40, 1000);
-			moveDistanceAtAngle(-8, -40, 0.3);
-			turnAngle(20, 1500);
+			turnAngle(0, 1500);
+			moveDistanceAtAngle(-2, 0, 0.3);
+			turnAngle(19, 1500);
 			robot.intake(.05);
 			moveDistanceAtAngle(-20, 20, .15);
 			robot.stopIntake();
 			moveDistanceAtAngle(10, 20, .3);
 			turnAngle(-90, 1200);
 			moveDistanceAtAngle(-40, -90, .5);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(400);
-			robot.stopIntake();
 			moveDistanceAtAngle(47, -90, .5);
-			turnAngle(-20, 1200);
+			robot.ungrabPlate();
+			turnAngle(20, 1300);
 			robot.intake(.05);
 			moveDistanceAtAngle(-10, -20, .2);
 			robot.stopIntake();
 			moveDistanceAtAngle(10, -20, .2);
 			turnAngle(-90, 1000);
 			moveDistanceAtAngle(-53, -90, .5);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(400);
 			moveDistanceAtAngle(12,-90,.5);
+			robot.ungrabPlate();
 			stop();
 		}
 		else if(blockPositionThree)//THIS IS A POSITION 3 TEST - Unfinished
@@ -514,10 +514,10 @@ public class redLeagueBlock extends LinearOpMode
 			moveDistanceAtAngle(7.5, 27, .3);
 			turnAngle(-90, 1000);
 			moveDistanceAtAngle(-50, -90, .6);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(400);
-			robot.stopIntake();
 			moveDistanceAtAngle(52.5, -90, .6);
+			robot.ungrabPlate();
 			turnAngle(20, 1000);
 			robot.intake(.05);
 			moveDistanceAtAngle(-16, 20, .1);
@@ -525,10 +525,10 @@ public class redLeagueBlock extends LinearOpMode
 			moveDistanceAtAngle(10, 20, .3);
 			turnAngle(-90, 1000);
 			moveDistanceAtAngle(-60, -90, .8);
-			robot.outtake(.7);
+			robot.disengageIntake();
 			sleep(700);
-			robot.stopIntake();
 			moveDistanceAtAngle(15, -90, .8);
+			robot.ungrabPlate();
 			stop();
 		}
 	}

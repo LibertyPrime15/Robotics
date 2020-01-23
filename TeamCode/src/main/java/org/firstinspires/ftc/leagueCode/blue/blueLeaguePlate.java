@@ -347,7 +347,7 @@ public void runOpMode()
 		turnAngle(45, 1500);
 		moveDistanceAtAngle(-12, 45, .6);
 		turnAngle(0, 1500);
-		moveDistanceAtAngle(-6,0,.1);
+		moveDistanceAtAngle(-7.50,0,.1);
 		sleep(500);
 		robot.grabPlate();
 		sleep(800);
