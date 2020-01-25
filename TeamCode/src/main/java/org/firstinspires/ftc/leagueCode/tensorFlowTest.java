@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.leagueCode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +14,10 @@ import java.util.List;
 //@Disabled
 public class tensorFlowTest extends LinearOpMode
 {
+	private boolean blockPosition1 = false;
+	private boolean blockPosition2 = false;
+	private boolean blockPosition3 = false;
+	
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
@@ -59,33 +62,56 @@ private void initTfod()
 //--------------------------------------------------------------------------------------------------
         if(opModeIsActive())
         {
-            while (opModeIsActive())
+            while(opModeIsActive() && (!(isStopRequested())))
             {
-                if (tfod != null)
+                if(tfod != null)
                 {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null)
+                    if(updatedRecognitions != null)
                     {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
-                      for (Recognition recognition : updatedRecognitions)
-                      {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f", recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f", recognition.getRight(), recognition.getBottom());
+						telemetry.addData("# Object Detected", updatedRecognitions.size());
+						telemetry.update();
+						for(Recognition recognition : updatedRecognitions)
+						{
+//							if(((System.currentTimeMillis() > 6000) && (tfod == null)) || ((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
+//							{
+//								telemetry.addLine("We can't see the brick");
+//								telemetry.update();
+////								tfod.shutdown();
+//							}
+							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
+							{
+								if(recognition.getTop() > 400)//Position 1
+								{
+									telemetry.addLine("Position 1");
+									telemetry.update();
+									tfod.shutdown();
+								}
+								else if(recognition.getTop() > 700)//Position 2
+								{
+									telemetry.addLine("Position 2");
+									telemetry.update();
+									tfod.shutdown();
+								}
+								else if(recognition.getTop() > 900)//Position 3
+								{
+									telemetry.addLine("Position 3");
+									telemetry.update();
+									tfod.shutdown();
+								}
+							}
+							telemetry.addData(("Stone Type = "), recognition.getLabel());
+//							telemetry.addData(("Distance From the Camera   = "), recognition.getLeft());
+//							telemetry.addData(("Distance behind the Camera  = "), recognition.getRight());
+							telemetry.addLine("---------------------------------------------------");
+							telemetry.addData(("X Distance From Left    = "), recognition.getTop());
+//							telemetry.addData(("X Distance From Right   = "), recognition.getBottom());
+							telemetry.update();
                       }
                       telemetry.update();
                     }
                 }
             }
-        }
-
-        if (tfod != null)
-        {
-            tfod.shutdown();
         }
     }
 //--------------------------------------------------------------------------------------------------
