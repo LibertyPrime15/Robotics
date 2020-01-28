@@ -10,9 +10,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
-@TeleOp(name = "tensorFlowTest", group = "Concept")
+
+@TeleOp(name = "tensorFlowAUTOS", group = "Concept")
 //@Disabled
-public class tensorFlowTest extends LinearOpMode
+public class tensorFlowAUTOS extends LinearOpMode
 {
 	private boolean blockPosition1 = false;
 	private boolean blockPosition2 = false;
