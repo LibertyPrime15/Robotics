@@ -72,9 +72,11 @@ private void initTfod()
                     {
                     	telemetry.addData("# Object Detected", updatedRecognitions.size());
 						telemetry.update();
-						for(Recognition recognition : updatedRecognitions) {
+						for(Recognition recognition : updatedRecognitions)
+						{
 							tensorDist = recognition.getTop();
-							if (((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000))) {
+							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
+							{
 								telemetry.addLine("We can't see the brick");
 								telemetry.update();
 //								tfod.shutdown();
@@ -113,15 +115,6 @@ private void initTfod()
 								telemetry.addData(("X Distance From Right   = "), (int) recognition.getBottom());
 								telemetry.update();
 							}
-//							telemetry.addLine("None");
-//							telemetry.addData(("Stone Type = "), recognition.getLabel());
-//							telemetry.addData(("Distance From the Camera    = "), (int)recognition.getLeft());
-//							telemetry.addData(("Distance behind the Camera  = "), (int)recognition.getRight());
-//							telemetry.addLine("---------------------------------------------------");
-//							telemetry.addData(("X Distance From Left    = "), (int)recognition.getTop());
-//							telemetry.addData(("X Distance From Right   = "), (int)recognition.getBottom());
-//							telemetry.addData(("tensorDist   = "), (int)tensorDist);
-//							telemetry.update();
 						}
                       telemetry.update();
                     }
