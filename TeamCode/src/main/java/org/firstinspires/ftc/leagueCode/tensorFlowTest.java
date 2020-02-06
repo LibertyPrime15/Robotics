@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.leagueCode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
-@TeleOp(name = "tensorFlowTest", group = "Concept")
+@Autonomous(name = "tensorFlowTest", group = "Concept")
 //@Disabled
 public class tensorFlowTest extends LinearOpMode
 {
@@ -36,7 +37,7 @@ private void initTfod()
 {
 	int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 	TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-	tfodParameters.minimumConfidence = 0.8;
+	tfodParameters.minimumConfidence = .77;
 	tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 	tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 }
@@ -62,7 +63,10 @@ private void initTfod()
 //--------------------------------------------------------------------------------------------------
         if(opModeIsActive())
         {
-			float tensorDist;
+			float tensorLeft;
+			float tensorRight;
+			float tensorAvgDist;
+			
             while(opModeIsActive() && (!(isStopRequested())))
             {
                 if(tfod != null)
@@ -74,59 +78,55 @@ private void initTfod()
 						telemetry.update();
 						for(Recognition recognition : updatedRecognitions)
 						{
-							tensorDist = recognition.getTop();
-							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
+							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
 							{
-								telemetry.addLine("We can't see the brick");
-								telemetry.update();
-//								tfod.shutdown();
-							}
-							
-							if((tensorDist > 0) && (tensorDist < 250))
-							{
-								telemetry.addLine("Position 1");
-								telemetry.addData(("Stone Type = "), recognition.getLabel());
-								telemetry.addData(("Distance From the Camera    = "), (int) recognition.getLeft());
-								telemetry.addData(("Distance behind the Camera  = "), (int) recognition.getRight());
-								telemetry.addLine("---------------------------------------------------");
-								telemetry.addData(("X Distance From Left    = "), (int) recognition.getTop());
-								telemetry.addData(("X Distance From Right   = "), (int) recognition.getBottom());
-								telemetry.update();
-							}
-							if ((tensorDist > 250) && (tensorDist < 500))
-							{
-								telemetry.addLine("Position 2");
-								telemetry.addData(("Stone Type = "), recognition.getLabel());
-								telemetry.addData(("Distance From the Camera    = "), (int) recognition.getLeft());
-								telemetry.addData(("Distance behind the Camera  = "), (int) recognition.getRight());
-								telemetry.addLine("---------------------------------------------------");
-								telemetry.addData(("X Distance From Left    = "), (int) recognition.getTop());
-								telemetry.addData(("X Distance From Right   = "), (int) recognition.getBottom());
-								telemetry.update();
-							}
-							if ((tensorDist > 500) && (tensorDist < 750))
-							{
-								telemetry.addLine("Position 3");
-								telemetry.addData(("Stone Type = "), recognition.getLabel());
-								telemetry.addData(("Distance From the Camera    = "), (int) recognition.getLeft());
-								telemetry.addData(("Distance behind the Camera  = "), (int) recognition.getRight());
-								telemetry.addLine("---------------------------------------------------");
-								telemetry.addData(("X Distance From Left    = "), (int) recognition.getTop());
-								telemetry.addData(("X Distance From Right   = "), (int) recognition.getBottom());
-								telemetry.update();
+								tensorLeft    = (int)recognition.getTop();
+								tensorRight   = (int)recognition.getBottom();
+								tensorAvgDist = ((tensorLeft + tensorRight)/2);
+								if(tensorAvgDist < 550)
+								{
+									telemetry.addLine("Position 1");
+									telemetry.addData(("Stone Type = "), recognition.getLabel());
+									telemetry.addData(("Tensor Average = "), tensorAvgDist);
+									telemetry.addData(("Tensor Left    = "), tensorLeft);
+									telemetry.addData(("Tensor Right   = "), tensorRight);
+									telemetry.update();
+								}
+								if((tensorAvgDist < 700) && (tensorAvgDist > 550))
+								{
+									telemetry.addLine("Position 2");
+									telemetry.addData(("Stone Type = "), recognition.getLabel());
+									telemetry.addData(("Tensor Average = "), tensorAvgDist);
+									telemetry.addData(("Tensor Left    = "), tensorLeft);
+									telemetry.addData(("Tensor Right   = "), tensorRight);
+									telemetry.update();
+								}
+								if(tensorAvgDist > 700)
+								{
+									telemetry.addLine("Position 3");
+									telemetry.addData(("Stone Type = "), recognition.getLabel());
+									telemetry.addData(("Tensor Average = "), tensorAvgDist);
+									telemetry.addData(("Tensor Left    = "), tensorLeft);
+									telemetry.addData(("Tensor Right   = "), tensorRight);
+									telemetry.update();
+								}
 							}
 						}
                       telemetry.update();
                     }
                 }
-				if((System.currentTimeMillis() > 6000) && (tfod == null))
+				if(tfod == null)
 				{
 					telemetry.addLine("We can't see the brick");
 					telemetry.update();
-//								tfod.shutdown();
 				}
             }
         }
     }
 //--------------------------------------------------------------------------------------------------
 }
+
+/*
+If the avg block length is within a range
+
+ */
