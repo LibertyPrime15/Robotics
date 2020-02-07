@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.leagueCode;
+package org.firstinspires.ftc.leagueCode.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

@@ -1,23 +1,15 @@
-package org.firstinspires.ftc.leagueCode;
+package org.firstinspires.ftc.robotcontroller.internal;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.teamcode.R;
 
-@TeleOp(name="leagueTele", group = "A")
+@TeleOp(name="leagueTele", group = "Concept")
 //@Disabled
 public class leagueTele extends LinearOpMode
 {
@@ -26,62 +18,18 @@ public class leagueTele extends LinearOpMode
     BNO055IMU imu;
 
     float currHeading = 0;
-    // these booleans are all used for toggles
-    boolean canTogglePlateGrabber = true;
-    boolean canAddToLiftPos = true;
-    boolean canSubtractFromLiftPos = true;
-    boolean canInitiateSpitCycle = true;
-
-    //This boolean tells us if we have a block in the intake
-    boolean hasBlock = false;
-
-    boolean blockIsGrabbed = false;
-
-    //this array allows us to store the encoder values that correspond to different positions we
-    // might want the lift to go to
-    int[] liftPositions = {0, 750, 1750, 3250, 4000, 5000, 6000, 7000, 7500, 8000};
-
-    //these are the servo positions for the end effector - they allow us to change these values
-    // everywhere in the code at once
-    double flippedIn = 0.90;
-    double flippedGrab = 0.80;
-    double flippedOut = 0.2;
-    double flipStartPos = 0.7;
-    double wristWhenIn = 0.03;
-    double wristWhenOut = 1;
-    double rotateGrab = 0.98;
-    double rotateFar = 0.58;
-    double rotateLeft = 0.23;
-    double rotateClose = 0;
-    double grabbed = 0.8;
-    double ungrabbed = 0.25;
-    double capStore = 0;
-    double capSlap = 0.38;
-
-
-    //This tells the code what position the lift should be in at the moment
-    int currentLiftPos = 0;
-
-    //This is a value that lowers the lift slightly when we want to place a brick
-    int blockPlaceValue = 500;
-
-    //these track what our next place position on, to make it so our driver doesn't have to deal
-    // with as much
-    int nextLiftPos = 1;
-    int nextPlacePos = 3;
-
-    //This boolean is used to tell the code when the spit cycle should return the intake to intaking
-    //instead of just stopping the intake
-    boolean isInIntakeCycle = false;
-
-//--------------------------------------------------------------------------------------------------
+    boolean intaking = false;
+    int targetPosition = 0;
+    boolean canToggle1 = true;
+    boolean canToggle2 = true;
+    //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
 //---These are all of my Called Methods---//
 //----------------------------------------//
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
-    private void turnIMU()
+    private void imuInit()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -92,25 +40,10 @@ public class leagueTele extends LinearOpMode
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         robot.init(hardwareMap);
-        imu = hardwareMap.get(BNO055IMU.class,"imu1");
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
         imu.initialize(parameters);
     }
-//--------------------------------------------------------------------------------------------------
-    private void driveIMU()
-    {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        robot.init(hardwareMap);
-        imu = hardwareMap.get(BNO055IMU.class,"imu2");
-        imu.initialize(parameters);
-    }
-//--------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------
     private double angleBoi()
     {
         angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
@@ -118,355 +51,31 @@ public class leagueTele extends LinearOpMode
         currHeading = angles.firstAngle;
         return currHeading;
     }
-//--------------------------------------------------------------------------------------------------
-    //this method tells the lift motors to drive towards their target position
-    public void driveLiftToPosition()
-    {
-        int currentPos = robot.liftSecondary.getCurrentPosition();
-        int posDifference = currentPos - liftPositions[currentLiftPos];
-        double power = posDifference * 0.003;
-        robot.liftPrimary.setPower(power);
-        robot.liftSecondary.setPower(-power);
-    }
-//--------------------------------------------------------------------------------------------------
-    //this method sets the target position for the lift
-    public void setLiftPosition(int position)
-    {
-        if(position >= 0 && position <= 9)
-        {
-            currentLiftPos = position;
-        }
-    }
-//--------------------------------------------------------------------------------------------------
-    //this method starts an intake cycle - it will start the intake, wait until we have a block, and
-    //then grab onto it
-    public void initiateIntakeCycle()
-    {
-        isInIntakeCycle = true;
-        setLiftPosition(0);
-        setFlipPosition(flippedGrab);
-        robot.rotate.setPosition(rotateGrab);
-        robot.grabber.setPosition(ungrabbed);
-        robot.wrist.setPosition(wristWhenIn);
-        robot.intake(0.05);
-        while(!hasBlock && !isStopRequested())
-        {
-            telemetry.addLine("We are in the initiateIntakeCycle method");
-            normalTeleopStuff();
-        }
-        robot.stopIntake();
-        double start = System.currentTimeMillis();
-        blockIsGrabbed = true;
-        while((System.currentTimeMillis() - start) > 250 && !isStopRequested())
-        {
-            telemetry.addLine("We are in the initiateIntakeCycle method");
-            normalTeleopStuff();
-        }
-        setFlipPosition(flippedIn);
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) > 600 && !isStopRequested())
-        {
-            telemetry.addLine("We are in the initiateIntakeCycle method");
-            normalTeleopStuff();
-        }
-        robot.grabber.setPosition(grabbed);
 
-    }
-//--------------------------------------------------------------------------------------------------
-    //this method stores most of our standard (not automated) teleop code like driving and toggling
-    //the plate grabber.
-    //making this a method allowed us to add this functionality to other methods easier
-    public void normalTeleopStuff()
+    private void intake()
     {
-        //--------------------------------------------------------------------------------------------------
-        double frontRight;
-        double frontLeft;
-        double backRight;
-        double backLeft;
-        //This is full Holonomic
-        frontRight = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) + (0.25 * gamepad1.left_stick_x) + gamepad1.right_stick_x;
-        frontLeft  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
-        backRight  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) + gamepad1.right_stick_x;
-        backLeft   = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) + (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
-        //This is holonomic drive
-        robot.front_right.setPower(frontRight);
-        robot.front_left.setPower(frontLeft);
-        robot.back_right.setPower(backRight);
-        robot.back_left.setPower(backLeft);
-        //--------------------------------------------------------------------------------------------------
-        if(robot.sensorColor.red() > 2 * robot.sensorColor.blue())
-        {
-            hasBlock = true;
-        }
-        else if(robot.sensorColor.red() <= 2 * robot.sensorColor.blue())
-        {
-            hasBlock = false;
-        }
-        //--------------------------------------------------------------------------------------------------
-        //this spits out a block if for some reason we need to
-        if(gamepad1.left_bumper && canInitiateSpitCycle)
-        {
-            canInitiateSpitCycle = false;
-            if(!blockIsGrabbed)
-            {
-                robot.outtake(1);
-                double start = System.currentTimeMillis();
-                while((System.currentTimeMillis() - start) < 800 && !isStopRequested())
-                {
-                    normalTeleopStuff();
-                }
-                if(isInIntakeCycle)
-                {
-                    robot.intake(0.05);
-                }
-                else
-                {
-                    robot.stopIntake();
-                }
-            }
-            else
-            {
-                robot.grabber.setPosition(ungrabbed);
-                double start = System.currentTimeMillis();
-                while((System.currentTimeMillis() - start) < 400 && !isStopRequested())
-                {
-                    normalTeleopStuff();
-                }
-                robot.disengageIntake();
-                setFlipPosition(flippedGrab);
-                start = System.currentTimeMillis();
-                while((System.currentTimeMillis() - start) < 400 && !isStopRequested())
-                {
-                    normalTeleopStuff();
-                }
-                robot.outtake(0.01);
-                start = System.currentTimeMillis();
-                while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
-                {
-                    normalTeleopStuff();
-                }
-                robot.stopIntake();
-                robot.ungrabPlate();
-                blockIsGrabbed = false;
-            }
+        robot.intake1.setPower(-0.2);
+        robot.intake2.setPower(-0.2);
+        intaking = true;
+    }
 
-        }
-        else if(!canInitiateSpitCycle && !gamepad1.left_bumper)
-        {
-            canInitiateSpitCycle = true;
-        }
-        //--------------------------------------------------------------------------------------------------
-        if(canTogglePlateGrabber && gamepad1.dpad_left)
-        {
-            if(robot.plateGrabber1.getPosition() == 0.73 && canTogglePlateGrabber)
-            {
-                robot.grabPlate();
-            }
-            else
-            {
-                robot.ungrabPlate();
-            }
-            canTogglePlateGrabber = false;
-        }
-        else if(!canTogglePlateGrabber && !gamepad1.dpad_left)
-        {
-            canTogglePlateGrabber = true;
-        }
-        //------------------------------------------------------------------------------------------
-        if(canAddToLiftPos && gamepad1.dpad_up && nextLiftPos < 9)
-        {
-            nextLiftPos++;
-            canAddToLiftPos = false;
-        }
-        else if(!canAddToLiftPos && !gamepad1.dpad_up)
-        {
-            canAddToLiftPos = true;
-        }
-        if(canSubtractFromLiftPos && gamepad1.dpad_down && nextLiftPos > 0)
-        {
-            nextLiftPos--;
-            canSubtractFromLiftPos = false;
-        }
-        else if(!canSubtractFromLiftPos && !gamepad1.dpad_down)
-        {
-            canSubtractFromLiftPos = true;
-        }
-        telemetry.addData("Next lift position", nextLiftPos);
-        //--------------------------------------------------------------------------------------------------
-        if(gamepad1.a || gamepad2.a)
-        {
-            nextPlacePos = 0;
-        }
-        if(gamepad1.x || gamepad2.x)
-        {
-            nextPlacePos = 1;
-        }
-        if(gamepad1.y || gamepad2.y)
-        {
-            nextPlacePos = 2;
-        }
-        if(gamepad1.b || gamepad2.b)
-        {
-            nextPlacePos = 3;
-        }
-        //------------------------------------------------------------------------------------------
-        if(nextPlacePos == 0)
-        {
-            telemetry.addLine("the next brick will be placed close");
-        }
-        if(nextPlacePos == 1)
-        {
-            telemetry.addLine("the next brick will be placed on the left");
-        }
-        if(nextPlacePos == 2)
-        {
-            telemetry.addLine("the next brick will be placed far");
-        }
-        if(nextPlacePos == 3)
-        {
-            telemetry.addLine("the next brick will be placed on the right");
-        }
-        //------------------------------------------------------------------------------------------
-        if(gamepad1.dpad_right)
-        {
-            hasBlock = true;
-        }
-        //------------------------------------------------------------------------------------------
-        driveLiftToPosition();
-        telemetry.addData("Lift encoder position", robot.liftPrimary.getCurrentPosition());
-        telemetry.update();
+    public void outtake()
+    {
+        robot.intake1.setPower(1);
+        robot.intake2.setPower(1);
+        intaking = false;
+    }
 
-    }
-//--------------------------------------------------------------------------------------------------
-    //this sets both the flip servos to a position.
-    public void setFlipPosition(double position)
+    public void stopIntake()
     {
-        robot.flip1.setPosition(position);
-        robot.flip2.setPosition(position);
-    }
-//--------------------------------------------------------------------------------------------------
-    //this method moves the lift to it's next place position, as tracked with nextLiftPos and
-    // nextPlacePos
-    //It allows our driver to press 1 button and have the robot do everything to get ready to place
-    public void goToNextPosition()
-    {
-        double start = System.currentTimeMillis();
-        robot.disengageIntake();
-        while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
-        {
-            normalTeleopStuff();
-            telemetry.addLine("We are in the goToNextPosition method");
-        }
-        if(nextLiftPos >= 3)
-        {
-            setLiftPosition(nextLiftPos + 1);
-        }
-        else
-        {
-            setLiftPosition(4);
-        }
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 2000 && !isStopRequested())
-        {
-            normalTeleopStuff();
-            telemetry.addLine("We are in the goToNextPosition method");
-        }
-        robot.ungrabPlate();
-        setFlipPosition(flippedOut);
-        robot.wrist.setPosition(wristWhenOut);
-        if(nextPlacePos == 0)
-        {
-            robot.rotate.setPosition(rotateClose);
-        }
-        else if(nextPlacePos == 1)
-        {
-            robot.rotate.setPosition(rotateLeft);
-        }
-        else if(nextPlacePos == 2)
-        {
-            robot.rotate.setPosition(rotateFar);
-        }
-        else
-        {
-            robot.rotate.setPosition(rotateGrab);
-        }
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 800 && !isStopRequested())
-        {
-            normalTeleopStuff();
-        }
-        setLiftPosition(nextLiftPos + 1);
-    }
-//--------------------------------------------------------------------------------------------------
-    //this method drops the block, flips the arm back in, and collapses the slides to get ready for
-    // the next cycle
-    public void place()
-    {
-        if(currentLiftPos > 1)
-        {
-            setLiftPosition(currentLiftPos - 1);
-        }
-        double start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 1000 && !isStopRequested())
-        {
-            telemetry.addLine("we are in the place method");
-            normalTeleopStuff();
-        }
-        robot.grabber.setPosition(ungrabbed);
-        blockIsGrabbed = false;
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 400 && !isStopRequested())
-        {
-            telemetry.addLine("we are in the place method");
-            normalTeleopStuff();
-        }
-        setFlipPosition(flippedIn);
-        robot.rotate.setPosition(rotateGrab);
-        robot.wrist.setPosition(wristWhenIn);
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 300 && !isStopRequested())
-        {
-            telemetry.addLine("we are in the place method");
-            normalTeleopStuff();
-        }
-        setLiftPosition(0);
-        driveLiftToPosition();
-    }
-//--------------------------------------------------------------------------------------------------
-    public void regrabBlock()
-    {
-        robot.grabber.setPosition(ungrabbed);
-        double start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 300 && !isStopRequested())
-        {
-            normalTeleopStuff();
-        }
-        setFlipPosition(flippedGrab);
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 300 && !isStopRequested())
-        {
-            normalTeleopStuff();
-        }
-        setFlipPosition(flippedIn);
-        start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) > 800 && !isStopRequested())
-        {
-            normalTeleopStuff();
-        }
-        robot.grabber.setPosition(grabbed);
-    }
-//--------------------------------------------------------------------------------------------------
-    public void slapTheCap()
-    {
-        robot.capStone.setPosition(capSlap);
-        double start = System.currentTimeMillis();
-        while((System.currentTimeMillis() - start) < 1500 && !isStopRequested())
-        {
-            normalTeleopStuff();
-        }
-        robot.capStone.setPosition(capStore);
+        robot.intake1.setPower(0);
+        robot.intake2.setPower(0);
 
+        intaking = false;
     }
+
+
+
 //--------------------------------------------------------------------------------------------------
 //----------------------------------------//
 //----------------------------------------//
@@ -475,7 +84,79 @@ public class leagueTele extends LinearOpMode
 //----------------------------------------//
 //--------------------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------------------
 //------------------------------------------------------//
 //------------------------------------------------------//
 //---Here is my Actual Run Op where I call my methods---//
@@ -484,48 +165,169 @@ public class leagueTele extends LinearOpMode
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
     {
-        turnIMU();
-        driveIMU();
-        robot.resetLift();
-        robot.sensorColor.enableLed(true);
-        setFlipPosition(flipStartPos);
-        robot.rotate.setPosition(rotateGrab);
-        robot.wrist.setPosition(wristWhenIn);
-        robot.grabber.setPosition(ungrabbed);
-        robot.ungrabPlate();
+        imuInit();
         waitForStart();
-        initiateIntakeCycle();
-
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
-            normalTeleopStuff();
-            if(gamepad1.left_stick_button)
+//--------------------------------------------------------------------
+//            angleBoi();
+            //This is what allows for holonomic drive -- the y values for each stick, plus the side to side or turn values
+            //This will do parallel holonomic on the left stick and normal turning on the right stick
+            robot.front_left.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x);
+            robot.front_right.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x);
+            robot.back_left.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x);
+            robot.back_right.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x);
+//------------------------------------------------
+            //This is the function that allows for the intake toggle to work, on the left bumper
+            if(canToggle1 && gamepad1.left_bumper)
             {
-                if(blockIsGrabbed)
+                if(intaking)
                 {
-                    regrabBlock();
+                    outtake();
                 }
                 else
                 {
-                    initiateIntakeCycle();
+                    intake();
                 }
+                canToggle1 = false;
             }
+            else if(!canToggle1 && !gamepad1.left_bumper)
+            {
+                canToggle1 = true;
+            }
+
+//--------------------------------------------------------------------------------------------------
+            //This allows for the grabber toggle to work -- this should only be used for the placing of blocks, as the intake
+            //method will allow for the grabber to grab
+            if(canToggle2 && gamepad1.right_bumper)
+            {
+                if(robot.grabber.getPosition() == 0.1 && canToggle2)
+                {
+                    robot.grabber.setPosition(0.80);
+                }
+                else
+                {
+                    robot.grabber.setPosition(0.1);
+                }
+                canToggle2 = false;
+            }
+            else if(!canToggle2 && !gamepad1.right_bumper)
+            {
+                canToggle2 = true;
+            }
+
+//------------------------------------------------------------------
+            //This is the method that alows for the lift to move to a target position
+            //the range in +- 50 encoder steps, which isn't great, and the power will mess with the accuracy a lot.
+            //This code should be replaced ASAP with code using the dcmotor.setTargetPosition() method, which will
+            //do a better job with accuracy and overcoming torque issues without overshooting the target position
+//            if(robot.liftPrimary.getCurrentPosition() < targetPosition - 50)
+//            {
+//                robot.liftPrimary.setPower(1);
+//                robot.liftSecondary.setPower(1);
+//            }
+//            else if(robot.liftPrimary.getCurrentPosition() > targetPosition + 50);
+//            {
+//                robot.liftPrimary.setPower(-1);
+//                robot.liftSecondary.setPower(-1);
+//            }
+//            else
+//            {
+//                robot.liftPrimary.setPower(0);
+//                robot.liftSecondary.setPower(0);
+//            }
+
+            robot.liftPrimary.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            robot.liftSecondary.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
+//--------------------------------------------------------------------------------------------------
+            //This is what sets the target position, based on the buttons on gamepad 1. TThey are each assigned a
+            //different level, and we may have issues with there not being enough buttons for the different levels.
+//            if(gamepad1.a)
+//            {
+//                targetPosition = 0;
+//            }
+//            else if(gamepad1.b)
+//            {
+//                targetPosition = [[just above brick]];
+//            }
+//            else if(gamepad1.x)
+//            {
+//                targetPosition = [[block height 1]];
+//            }
+//            else if(gamepad1.y)
+//            {
+//                targetPosition = [[block height 2]];
+//            }
+//--------------------------------------------------------------------------------------------------
+            //This is what moves the end effector to it's place positions. The D-pad buttons will all correspond to a different
+            //position, which will be the space of the block on the tower as if the robot was facing the same direction as the driver
+            if(gamepad1.dpad_up)
+            {
+                robot.flip1.setPosition(0.22);
+                robot.flip2.setPosition(0.22);
+                robot.wrist.setPosition(0.99);
+                robot.rotate.setPosition(0.666);
+            }
+            if(gamepad1.dpad_down)
+            {
+                robot.flip1.setPosition(0.22);
+                robot.flip2.setPosition(0.22);
+                robot.wrist.setPosition(0.99);
+                robot.rotate.setPosition(0);
+            }
+            if(gamepad1.dpad_left)
+            {
+                robot.flip1.setPosition(0.22);
+                robot.flip2.setPosition(0.22);
+                robot.wrist.setPosition(0.99);
+                robot.rotate.setPosition(1);
+            }
+            if(gamepad1.dpad_right)
+            {
+                robot.flip1.setPosition(0.22);
+                robot.flip2.setPosition(0.22);
+                robot.wrist.setPosition(0.99);
+                robot.rotate.setPosition(0.3333);
+            }
+//--------------------------------------------------------------------------------------------------
+//            This is what initiates and completes an intake cycle -- it will bring the lift down, turn on the intake motors, and \
+//            set the position of the grabber to be ready to pick up a block
+            if(gamepad1.left_stick_button)
+            {
+                robot.flip1.setPosition(0.99);
+                robot.flip2.setPosition(0.99);
+                robot.wrist.setPosition(0.03);
+                robot.rotate.setPosition(0.03);
+
+//                targetPosition = [[just above brick]];
+
+                robot.grabber.setPosition(0.1);
+
+                intake();
+
+            }
+            //This is what completes an intake cycle -- it will drop the lift down and turn off the intake, and grab the block.
             if(gamepad1.right_stick_button)
             {
-                goToNextPosition();
+                robot.flip1.setPosition(0.99);
+                robot.flip2.setPosition(0.99);
+                robot.wrist.setPosition(0.03);
+                robot.rotate.setPosition(0.03);
+
+//                targetPosition = 0;
+
+                stopIntake();
+
+                sleep(500);
+
+                robot.grabber.setPosition(0.8);
             }
-            if(gamepad1.right_bumper)
-            {
-                place();
-            }
-            if(gamepad1.back)
-            {
-                slapTheCap();
-            }
+// -------------------------------------------------------------------------------------------------
+
         }
     }
-
 }
 //--------------------------------------------------------------------------------------------------
 //-------------------------------------------//
@@ -533,4 +335,3 @@ public class leagueTele extends LinearOpMode
 //---There is No More Code Past This Point---//
 //-------------------------------------------//
 //-------------------------------------------//
-//--------------------------------------------------------------------------------------------------
