@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.leagueCode;
+package org.firstinspires.ftc.leagueCode.misc;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //@Disabled
-public class leagueMap {
+public class leagueMap
+{
     /* Public OpMode members */
     public DcMotor front_right = null;
     public DcMotor front_left = null;
