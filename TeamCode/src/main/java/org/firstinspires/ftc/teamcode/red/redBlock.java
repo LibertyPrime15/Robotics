@@ -19,13 +19,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.RevMap;
+import org.firstinspires.ftc.teamcode.misc.revMap;
 
 @Autonomous(name="Red Block", group = "Z")
 //@Disabled
 public class redBlock extends LinearOpMode
 {
-    RevMap robot = new RevMap();
+    revMap robot = new revMap();
     Orientation angles;
     BNO055IMU imu;
 

@@ -548,7 +548,10 @@ public class leagueTele extends LinearOpMode
         robot.ungrabPlate();
         waitForStart();
         initiateIntakeCycle();
-
+	
+		telemetry.addData("Status", "Hit it Bois");
+		telemetry.update();
+		waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {

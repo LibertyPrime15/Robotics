@@ -32,9 +32,9 @@ public class leagueMap
 
     public boolean canToggleIntake = true;
 
-    ColorSensor sensorColor;
+    public ColorSensor sensorColor;
 
-    //    public Servo arm6  = null;
+//    public Servo arm6  = null;
 //    public Servo arm7  = null;
 //    public Servo arm8  = null;
 //    public Servo arm9  = null;
@@ -48,7 +48,8 @@ public class leagueMap
     public leagueMap() {
     }
 
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap)
+	{
         hwMap = ahwMap;
 
         sensorColor = hwMap.get(ColorSensor.class, "color_sensor");

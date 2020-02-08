@@ -1,15 +1,9 @@
-package org.firstinspires.ftc.Unused;
+package org.firstinspires.ftc.unused;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-/**
- *     If you wish to use the sounds provided for this sample, they are located in:
- *     <project root>/FtcRobotController/src/main/res/raw
- *     You can copy and paste the entire 'raw' folder using Android Studio.
- */
 
 @TeleOp(name="Concept: Sound Resources", group="Concept")
 @Disabled

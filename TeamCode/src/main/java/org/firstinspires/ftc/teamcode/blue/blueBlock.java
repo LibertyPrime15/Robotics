@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -19,14 +18,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.RevMap;
+import org.firstinspires.ftc.teamcode.misc.revMap;
 
 @Autonomous(name="Blue Block", group = "Y")
 //@Disabled
 public class blueBlock extends LinearOpMode
 {
     //Call my hardware map
-    RevMap robot = new RevMap();
+    revMap robot = new revMap();
     //Declare the variables needed for the imu/gyro
     Orientation angles;
     BNO055IMU imu;
