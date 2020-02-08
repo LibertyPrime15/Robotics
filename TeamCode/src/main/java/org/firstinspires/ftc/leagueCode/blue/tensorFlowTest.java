@@ -78,7 +78,7 @@ private void initTfod()
 								tensorLeft    = (int)recognition.getTop();
 								tensorRight   = (int)recognition.getBottom();
 								tensorAvgDist = ((tensorLeft + tensorRight)/2);
-								if(tensorAvgDist < 550)
+								if(tensorAvgDist > 725)
 								{
 									telemetry.addLine("Position 1");
 									telemetry.addData(("Stone Type = "), recognition.getLabel());
@@ -87,7 +87,7 @@ private void initTfod()
 									telemetry.addData(("Tensor Right   = "), tensorRight);
 									telemetry.update();
 								}
-								if((tensorAvgDist < 700) && (tensorAvgDist > 550))
+								if((tensorAvgDist < 725) && (tensorAvgDist > 550))
 								{
 									telemetry.addLine("Position 2");
 									telemetry.addData(("Stone Type = "), recognition.getLabel());
@@ -96,7 +96,7 @@ private void initTfod()
 									telemetry.addData(("Tensor Right   = "), tensorRight);
 									telemetry.update();
 								}
-								if(tensorAvgDist > 700)
+								if(tensorAvgDist < 550)//The top of the phone camera is facing away from the bridge so the values change based on the orientation
 								{
 									telemetry.addLine("Position 3");
 									telemetry.addData(("Stone Type = "), recognition.getLabel());

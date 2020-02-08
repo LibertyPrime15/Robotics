@@ -45,8 +45,7 @@ public class leagueMap
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap = null;
 
-    public leagueMap() {
-    }
+    public leagueMap() {}
 
     public void init(HardwareMap ahwMap)
 	{
@@ -215,10 +214,5 @@ public class leagueMap
         plateGrabber1.setPosition(0.365);
         plateGrabber2.setPosition(0.365);
     }
-
-
-
 }
 //-----------------------------
-
-//hello

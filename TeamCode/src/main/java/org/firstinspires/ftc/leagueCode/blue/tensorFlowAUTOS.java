@@ -2,8 +2,8 @@ package org.firstinspires.ftc.leagueCode.blue;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.leagueCode.misc.leagueMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -14,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
 import java.util.List;
 
 @Autonomous(name = "tensorFlowAUTOS", group = "Concept")
@@ -56,7 +55,7 @@ private void initTfod()
 {
 	int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 	TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-	tfodParameters.minimumConfidence = 0.9;
+	tfodParameters.minimumConfidence = 0.77;
 	tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 	tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 }
@@ -343,44 +342,56 @@ private void blockPositionThree()
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
-			float tensorDist;
+			float tensorLeft;
+			float tensorRight;
+			float tensorAvgDist;
+			
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
 				if(tfod != null)
 				{
 					List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-					
 					if(updatedRecognitions != null)
 					{
 						telemetry.addData("# Object Detected", updatedRecognitions.size());
 						telemetry.update();
 						for(Recognition recognition : updatedRecognitions)
 						{
-							tensorDist = recognition.getTop();
-							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
+							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
 							{
-								blockPositionOne();
-							}
-							if(tensorDist > 400)
-							{
-								blockPositionOne();
-							}
-							if((tensorDist < 400) && (tensorDist > 200))
-							{
-								blockPositionTwo();
-							}
-							if((tensorDist < 200) && (tensorDist > 0))
-							{
-								blockPositionThree();
+								tensorLeft = (int) recognition.getTop();
+								tensorRight = (int) recognition.getBottom();
+								tensorAvgDist = ((tensorLeft + tensorRight) / 2);
+//							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
+//							{
+//								blockPositionOne();
+//							}
+								if (tensorAvgDist > 725)
+								{
+									blockPositionOne();
+								}
+								if ((tensorAvgDist < 725) && (tensorAvgDist > 550))
+								{
+									blockPositionTwo();
+								}
+								if (tensorAvgDist < 550)
+								{
+									blockPositionThree();
+								}
 							}
 						}
 						telemetry.update();
 					}
 				}
-				if((System.currentTimeMillis() > 6000) && (tfod == null))
+				if(tfod == null)
 				{
-					blockPositionOne();
+					telemetry.addLine("We can't see the brick");
+					telemetry.update();
 				}
+//				if((System.currentTimeMillis() > 6000) && (tfod == null))
+//				{
+//					blockPositionOne();
+//				}
 			}
 		}
 	}
