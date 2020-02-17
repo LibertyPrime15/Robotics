@@ -24,10 +24,6 @@ public class tensorFlowAUTOS extends LinearOpMode
 	Orientation angles;
 	BNO055IMU imuTurn;
 	
-	float tensorLeft;
-	float tensorRight;
-	float tensorAvgDist;
-	
 	double diameter = 4;//4
 	double radius   = (diameter/2);//2
 	double circ     = (22/18 * (Math.PI * diameter));//12.5
@@ -377,43 +373,34 @@ private void blockPositionOne()
         }
         if (tfod != null)
         {
-			tfod.activate();
-			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-			if(updatedRecognitions != null)
-			{
-				telemetry.addData("# Object Detected", updatedRecognitions.size());
-				telemetry.update();
-				for(Recognition recognition : updatedRecognitions)
-				{
-					if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
-					{
-						tensorLeft = (int) recognition.getTop();
-						tensorRight = (int) recognition.getBottom();
-						tensorAvgDist = ((tensorLeft + tensorRight) / 2);
-					}
-				}
-			}
-		}
+            tfod.activate();
+        }
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
         waitForStart();
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
+			float tensorLeft;
+			float tensorRight;
+			float tensorAvgDist;
+			
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
-				if(tfod != null)
-				{
-					List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-					if(updatedRecognitions != null)
-					{
-						telemetry.addData("# Object Detected", updatedRecognitions.size());
-						telemetry.update();
-						for(Recognition recognition : updatedRecognitions)
-						{
-							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
-							{
-								tensorLeft = (int) recognition.getTop();
-								tensorRight = (int) recognition.getBottom();
-								tensorAvgDist = ((tensorLeft + tensorRight) / 2);
+//				if(tfod != null)
+//				{
+//					List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+//					if(updatedRecognitions != null)
+//					{
+//						telemetry.addData("# Object Detected", updatedRecognitions.size());
+//						telemetry.update();
+//						for(Recognition recognition : updatedRecognitions)
+//						{
+//							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
+//							{
+//								tensorLeft = (int) recognition.getTop();
+//								tensorRight = (int) recognition.getBottom();
+//								tensorAvgDist = ((tensorLeft + tensorRight) / 2);
 //							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
 //							{
 //								blockPositionOne();
@@ -430,10 +417,20 @@ private void blockPositionOne()
 //								{
 //									blockPositionThree();
 //								}
-							}
-						}
-					}
-				}
+//							}
+//						}
+//						telemetry.update();
+//					}
+//				}
+//				if(tfod == null)
+//				{
+//					telemetry.addLine("We can't see the brick");
+//					telemetry.update();
+//				}
+//				if((System.currentTimeMillis() > 6000) && (tfod == null))
+//				{
+//					blockPositionOne();
+//				}
 			}
 		}
 	}
