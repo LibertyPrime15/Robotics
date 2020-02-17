@@ -110,14 +110,6 @@ private void driveIMU()
 	imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-private double angleBoi()
-{
-	angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES);
-	this.imu.getPosition();
-	currHeading = angles.firstAngle;
-	return currHeading;
-}
-//--------------------------------------------------------------------------------------------------
 //this method tells the lift motors to drive towards their target position and updates our tracking booleans
 public void driveLiftToPosition()
 {

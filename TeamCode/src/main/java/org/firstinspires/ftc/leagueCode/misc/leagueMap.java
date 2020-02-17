@@ -45,7 +45,7 @@ public class leagueMap
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap = null;
 
-    public leagueMap() {}
+    public leagueMap(){}
 
     public void init(HardwareMap ahwMap)
 	{
@@ -128,7 +128,6 @@ public class leagueMap
         back_right.setPower(0);
         back_left.setPower(0);
     }
-
     //----------------------------------------//
     //Reset all of the encoder values
     public void resetEncoder() {
@@ -142,9 +141,7 @@ public class leagueMap
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
     //----------------------------------------//
-
     public void resetLift()
     {
         liftSecondary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -157,7 +154,6 @@ public class leagueMap
         back_right.setPower(-power);
         back_left.setPower(power);
     }
-
     //----------------------------------------//
     //RTurn
     public void turnRight(double power) {
@@ -166,21 +162,18 @@ public class leagueMap
         back_right.setPower(power);
         back_left.setPower(-power);
     }
-
     //----------------------------------------//
     public void intake(double power) {
         intake1.setPower(-power);
         intake2.setPower(-power);
         canToggleIntake = true;
     }
-
     //----------------------------------------//
     public void outtake(double power) {
         intake1.setPower(power);
         intake2.setPower(power);
         canToggleIntake = false;
     }
-
     //----------------------------------------//
     public void stopIntake() {
         intake1.setPower(0);
@@ -196,7 +189,6 @@ public class leagueMap
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
     public void grabPlate()
     {
         plateGrabber1.setPosition(0);
