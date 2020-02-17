@@ -24,6 +24,10 @@ public class tensorFlowAUTOS extends LinearOpMode
 	Orientation angles;
 	BNO055IMU imuTurn;
 	
+	public static float tensorLeft;
+	public static float tensorRight;
+	public static float tensorAvgDist;
+	
 	double diameter = 4;//4
 	double radius   = (diameter/2);//2
 	double circ     = (22/18 * (Math.PI * diameter));//12.5
@@ -268,32 +272,33 @@ public void setFlipPosition(double position)
 	robot.flip1.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionThree()
+private void blockPositionOne()
 {
-	moveDistanceAtAngle(-17, 0, 0.3);
+	moveDistanceAtAngle(-16, 0, 0.3);
 	setFlipPosition(grabbed);
-	turnAngle(20, 1500);
-	robot.intake(0.05);
-	moveDistanceAtAngle(-18, 20, 0.1);
-	robot.stopIntake();
-	moveDistanceAtAngle(13, 20, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
-	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.5);
-	robot.ungrabPlate();
-	moveDistanceAtAngle(55, 90, 0.5);
-	turnAngle(-20, 2000);
+	turnAngle(-20, 1000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13.8, -20, 0.3);
+	moveDistanceAtAngle(13, -20, 0.3);
 	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
+	moveDistanceAtAngle(-58, 90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.3);
-	robot.ungrabPlate();
 	moveDistanceAtAngle(8,90, 0.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(46, 90, 0.5);
+	turnAngle(-60, 2000);
+	moveDistanceAtAngle(-26, -60, 0.3);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-8, -60, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(20, -60, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-64, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90, 0.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(10, 90, 0.5);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
@@ -328,33 +333,32 @@ private void blockPositionTwo()
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionOne()
+private void blockPositionThree()
 {
-	moveDistanceAtAngle(-16, 0, 0.3);
+	moveDistanceAtAngle(-17, 0, 0.3);
 	setFlipPosition(grabbed);
-	turnAngle(-20, 1000);
+	turnAngle(20, 1500);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-18, 20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(13, 20, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-54, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90,.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(55, 90, 0.5);
+	turnAngle(-20, 2000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13, -20, 0.3);
+	moveDistanceAtAngle(13.8, -20, 0.3);
 	turnAngle(90, 2000);
-	moveDistanceAtAngle(-58, 90, 0.5);
+	moveDistanceAtAngle(-54, 90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.5);
+	moveDistanceAtAngle(8,90,.3);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(46, 90, 0.5);
-	turnAngle(-60, 2000);
-	moveDistanceAtAngle(-26, -60, 0.3);
-	robot.intake(0.05);
-	moveDistanceAtAngle(-8, -60, 0.1);
-	robot.stopIntake();
-	moveDistanceAtAngle(20, -60, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-64, 90, 0.5);
-	robot.disengageIntake();
 	moveDistanceAtAngle(8,90, 0.5);
-	robot.ungrabPlate();
-	moveDistanceAtAngle(10, 90, 0.5);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
@@ -363,7 +367,7 @@ private void blockPositionOne()
 		robot.init(hardwareMap);
 		turnIMU();
 		initVuforia();
-        if (ClassFactory.getInstance().canCreateTFObjectDetector())
+        if(ClassFactory.getInstance().canCreateTFObjectDetector())
         {
             initTfod();
         }
@@ -371,66 +375,62 @@ private void blockPositionOne()
 		{
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-        if (tfod != null)
+        if(tfod != null)
         {
-            tfod.activate();
-        }
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
+			tfod.activate();
+			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+			if(updatedRecognitions != null)
+			{
+				telemetry.addData("# Object Detected", updatedRecognitions.size());
+				telemetry.addLine("We're above the for loop");
+				telemetry.update();
+				//When you init, it does not evaluate past this spot, maybe try sticking all of this in a method?
+				//Idk fam, I gtg here in a sec
+				for(Recognition recognition : updatedRecognitions)
+				{
+					telemetry.addLine("We're in the for loop");
+					telemetry.update();
+					if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
+					{
+						telemetry.addLine("We're in the if statement");
+						tensorLeft    = (int) recognition.getTop();
+						tensorRight   = (int) recognition.getBottom();
+						tensorAvgDist = ((tensorLeft + tensorRight)/2);
+						telemetry.addLine("We're in the bottom of the if statement");
+						telemetry.update();
+						//I can't figure out how to return these to the main while loop below \/
+						//If you change the value of tensorAvgDist at the top it registers that though
+						//You cannot declare it in the if statement...
+					}
+				}
+			}
+		}
         waitForStart();
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
-			float tensorLeft;
-			float tensorRight;
-			float tensorAvgDist;
-			
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
-//				if(tfod != null)
-//				{
-//					List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-//					if(updatedRecognitions != null)
-//					{
-//						telemetry.addData("# Object Detected", updatedRecognitions.size());
-//						telemetry.update();
-//						for(Recognition recognition : updatedRecognitions)
-//						{
-//							if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
-//							{
-//								tensorLeft = (int) recognition.getTop();
-//								tensorRight = (int) recognition.getBottom();
-//								tensorAvgDist = ((tensorLeft + tensorRight) / 2);
-//							if(((recognition.getLabel() == LABEL_FIRST_ELEMENT) && (System.currentTimeMillis() > 6000)))
-//							{
-//								blockPositionOne();
-//							}
-//								if (tensorAvgDist > 725)
-//								{
-									blockPositionTwo();
-//								}
-//								if ((tensorAvgDist < 725) && (tensorAvgDist > 550))
-//								{
-//									blockPositionTwo();
-//								}
-//								if (tensorAvgDist < 550)
-//								{
-//									blockPositionThree();
-//								}
-//							}
-//						}
-//						telemetry.update();
-//					}
-//				}
-//				if(tfod == null)
-//				{
-//					telemetry.addLine("We can't see the brick");
-//					telemetry.update();
-//				}
-//				if((System.currentTimeMillis() > 6000) && (tfod == null))
-//				{
-//					blockPositionOne();
-//				}
+				telemetry.addLine("No Position");
+				telemetry.update();
+				if(tensorAvgDist > 725)
+				{
+					telemetry.addData("tensorAvgDist", tensorAvgDist);
+					telemetry.addLine("Position 1");
+					telemetry.update();
+				}
+				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
+				{
+					telemetry.addData("tensorAvgDist", tensorAvgDist);
+					telemetry.addLine("Position 2");
+					telemetry.update();
+				}
+				if(tensorAvgDist < 550)
+				{
+					telemetry.addData("tensorAvgDist", tensorAvgDist);
+					telemetry.addLine("Position 3");
+					telemetry.update();
+				}
 			}
 		}
 	}
