@@ -34,7 +34,7 @@ public class leagueTele extends LinearOpMode
 
     //these are the servo positions for the end effector - they allow us to change these values
     // everywhere in the code at once
-    double flippedIn = 0.91;
+    double flippedIn = 0.95;
     double flippedGrab = 0.80;
     double flippedOut = 0.2;
     double flipStartPos = 0.7;
@@ -165,7 +165,7 @@ public void initiateIntakeCycle()
 	robot.stopIntake();
 	double start = System.currentTimeMillis();
 	blockIsGrabbed = true;
-	while((System.currentTimeMillis() - start) > 250 && !isStopRequested())
+	while((System.currentTimeMillis() - start) > 750 && !isStopRequested())
 	{
 		telemetry.addLine("We are in the initiateIntakeCycle method");
 		normalTeleopStuff();
@@ -217,12 +217,14 @@ public void normalTeleopStuff()
 		canInitiateSpitCycle = false;
 		if(!blockIsGrabbed)
 		{
-			robot.outtake(1);
+			robot.disengageIntake();
 			double start = System.currentTimeMillis();
-			while((System.currentTimeMillis() - start) < 800 && !isStopRequested())
+			robot.outtake(0.02);
+			while((System.currentTimeMillis() - start) < 1500 && !isStopRequested())
 			{
 				normalTeleopStuff();
 			}
+			robot.
 			if(isInIntakeCycle)
 			{
 				robot.intake(0.05);
@@ -340,10 +342,6 @@ public void normalTeleopStuff()
 		hasBlock = true;
 	}
 	//------------------------------------------------------------------------------------------
-	if(isFlippedOutBack)
-	{
-		setRotateToCompensatedAngle();
-	}
 	//------------------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------------
 	driveLiftToPosition();
@@ -475,7 +473,13 @@ public void slapTheCap()
 {
 	robot.capStone.setPosition(capSlap);
 	double start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 1500 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
+	{
+		normalTeleopStuff();
+	}
+	setLiftPosition(3);
+	start = System.currentTimeMillis();
+	while((System.currentTimeMillis() - start) < 1000 && !isStopRequested())
 	{
 		normalTeleopStuff();
 	}

@@ -24,9 +24,11 @@ public class tensorFlowAUTOS extends LinearOpMode
 	Orientation angles;
 	BNO055IMU imuTurn;
 	
+	List<Recognition> updatedRecognitions;
+	
 	public static float tensorLeft;
 	public static float tensorRight;
-	public static float tensorAvgDist;
+	public float tensorAvgDist;
 	
 	double diameter = 4;//4
 	double radius   = (diameter/2);//2
@@ -272,7 +274,7 @@ public void setFlipPosition(double position)
 	robot.flip1.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionOne()
+private void blockPositionThree()
 {
 	moveDistanceAtAngle(-16, 0, 0.3);
 	setFlipPosition(grabbed);
@@ -313,7 +315,7 @@ private void blockPositionTwo()
 	moveDistanceAtAngle(-20, 20, 0.2);
 	robot.stopIntake();
 	moveDistanceAtAngle(19, 20, 0.2);
-	turnAngle(90, 1000);
+	turnAngle(90, 1750);
 	moveDistanceAtAngle(-58, 90, 0.5);
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,90, 0.3);
@@ -333,7 +335,7 @@ private void blockPositionTwo()
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionThree()
+private void blockPositionOne()
 {
 	moveDistanceAtAngle(-17, 0, 0.3);
 	setFlipPosition(grabbed);
@@ -347,7 +349,7 @@ private void blockPositionThree()
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,90,.5);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(55, 90, 0.5);
+	moveDistanceAtAngle(45, 90, 0.5);
 	turnAngle(-20, 2000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, -20, 0.1);
@@ -358,9 +360,61 @@ private void blockPositionThree()
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,90,.3);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(8,90, 0.5);
 	stop();
 }
+
+	public void waitForStart()
+	{
+		boolean alreadyRecorded = false;
+		while (!isStarted()) {
+			if(tfod != null)
+			{
+				tfod.activate();
+				updatedRecognitions = tfod.getUpdatedRecognitions();
+				
+			}
+			if(updatedRecognitions != null)
+			{
+				telemetry.addData("# Object Detected", updatedRecognitions.size());
+				telemetry.addLine("We're above the for loop");
+				telemetry.update();
+				//When you init, it does not evaluate past this spot, maybe try sticking all of this in a method?
+				//Idk fam, I gtg here in a sec
+				alreadyRecorded = false;
+				for(Recognition recognition : updatedRecognitions)
+				{
+					telemetry.addLine("We're in the for loop");
+					telemetry.update();
+					if(recognition.getLabel() == LABEL_SECOND_ELEMENT && !alreadyRecorded)
+					{
+						alreadyRecorded = true;
+						telemetry.addLine("We're in the if statement");
+						tensorLeft    = (int) recognition.getTop();
+						tensorRight   = (int) recognition.getBottom();
+						tensorAvgDist = ((tensorLeft + tensorRight)/2);
+						telemetry.addLine("We're in the bottom of the if statement");
+						telemetry.addData("TensorDistAverage", tensorAvgDist);
+						telemetry.update();
+						//I can't figure out how to return these to the main while loop below \/
+						//If you change the value of tensorAvgDist at the top it registers that though
+						//You cannot declare it in the if statement...
+					}
+				}
+			}
+			synchronized(this)
+			{
+				try
+				{
+					this.wait();
+				}
+				catch(InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+					return;
+				}
+			}
+		}
+	}
 //--------------------------------------------------------------------------------------------------
     public void runOpMode()
 	{
@@ -375,60 +429,31 @@ private void blockPositionThree()
 		{
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-        if(tfod != null)
-        {
-			tfod.activate();
-			List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-			if(updatedRecognitions != null)
-			{
-				telemetry.addData("# Object Detected", updatedRecognitions.size());
-				telemetry.addLine("We're above the for loop");
-				telemetry.update();
-				//When you init, it does not evaluate past this spot, maybe try sticking all of this in a method?
-				//Idk fam, I gtg here in a sec
-				for(Recognition recognition : updatedRecognitions)
-				{
-					telemetry.addLine("We're in the for loop");
-					telemetry.update();
-					if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
-					{
-						telemetry.addLine("We're in the if statement");
-						tensorLeft    = (int) recognition.getTop();
-						tensorRight   = (int) recognition.getBottom();
-						tensorAvgDist = ((tensorLeft + tensorRight)/2);
-						telemetry.addLine("We're in the bottom of the if statement");
-						telemetry.update();
-						//I can't figure out how to return these to the main while loop below \/
-						//If you change the value of tensorAvgDist at the top it registers that though
-						//You cannot declare it in the if statement...
-					}
-				}
-			}
-		}
         waitForStart();
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
-				telemetry.addLine("No Position");
-				telemetry.update();
 				if(tensorAvgDist > 725)
 				{
+					blockPositionThree();
 					telemetry.addData("tensorAvgDist", tensorAvgDist);
-					telemetry.addLine("Position 1");
+					telemetry.addLine("Position 3");
 					telemetry.update();
 				}
 				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
 				{
+					blockPositionTwo();
 					telemetry.addData("tensorAvgDist", tensorAvgDist);
 					telemetry.addLine("Position 2");
 					telemetry.update();
 				}
 				if(tensorAvgDist < 550)
 				{
+					blockPositionOne();
 					telemetry.addData("tensorAvgDist", tensorAvgDist);
-					telemetry.addLine("Position 3");
+					telemetry.addLine("Position 1");
 					telemetry.update();
 				}
 			}
