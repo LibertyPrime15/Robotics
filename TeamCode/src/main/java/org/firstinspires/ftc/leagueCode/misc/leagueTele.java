@@ -224,7 +224,7 @@ public void normalTeleopStuff()
 			{
 				normalTeleopStuff();
 			}
-			robot.
+			robot.ungrabPlate();
 			if(isInIntakeCycle)
 			{
 				robot.intake(0.05);
@@ -534,10 +534,6 @@ public void setRotateToCompensatedAngle()
         robot.ungrabPlate();
         waitForStart();
         initiateIntakeCycle();
-	
-		telemetry.addData("Status", "Hit it Bois");
-		telemetry.update();
-		waitForStart();
 //--------------------------------------------------------------------------------------------------
         while(opModeIsActive() && (!(isStopRequested())))
         {
