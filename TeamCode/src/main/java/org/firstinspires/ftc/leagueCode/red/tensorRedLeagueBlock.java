@@ -45,7 +45,7 @@ public class tensorRedLeagueBlock extends LinearOpMode
 	boolean canInitiateSpitCycle = true;
 	
 	double flippedIn = 0.91;
-	double flippedGrab = 0.80;
+	double flippedGrab = 0.85;
 	double flippedOut = 0.2;
 	double flipStartPos = 0.7;
 	double wristWhenIn = 0.81;
@@ -276,89 +276,92 @@ public void setFlipPosition(double position)
 //--------------------------------------------------------------------------------------------------
 private void blockPositionThree()
 {
-	moveDistanceAtAngle(-16, 0, 0.3);
-	setFlipPosition(grabbed);
-	turnAngle(-20, 1000);
+	moveDistanceAtAngle(-18, 0, 0.3);
+	setFlipPosition(flippedGrab);
+	turnAngle(20, 1000);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-19, -20, 0.1);
+	moveDistanceAtAngle(-19, 20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13, -20, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-58, 90, 0.5);
+	moveDistanceAtAngle(10, 20, 0.3);
+	turnAngle(-90, 2000);
+	moveDistanceAtAngle(-58, -90, 0.8);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.5);
+	moveDistanceAtAngle(8,-90, 0.7);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(46, 90, 0.5);
-	turnAngle(-60, 2000);
-	moveDistanceAtAngle(-26, -60, 0.3);
+	moveDistanceAtAngle(42, -90, 0.8);
+	turnAngle(0, 2000);
+	moveDistanceAtAngle(-9, 0, 0.3);
+	turnAngle(90,2000);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-8, -60, 0.1);
+	moveDistanceAtAngle(-8, 90, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(20, -60, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-64, 90, 0.5);
+	moveDistanceAtAngle(8,90,.2);
+	turnAngle(0,2000);
+	moveDistanceAtAngle(8.5,0,.3);
+	turnAngle(-90, 2000);
+	moveDistanceAtAngle(-64, -90, 0.8);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.5);
+	moveDistanceAtAngle(8,-90, 0.8);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(10, 90, 0.5);
+	moveDistanceAtAngle(10, -90, 0.8);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
 private void blockPositionTwo()
 {
 	moveDistanceAtAngle(-14, 0, 0.3);
-	setFlipPosition(grabbed);
-	turnAngle(-45, 1000);
-	moveDistanceAtAngle(-6.5, -45, 0.2);
-	turnAngle(20, 1000);
-	robot.intake(0.05);
-	moveDistanceAtAngle(-20, 20, 0.2);
-	robot.stopIntake();
-	moveDistanceAtAngle(19, 20, 0.2);
-	turnAngle(90, 1750);
-	moveDistanceAtAngle(-58, 90, 0.5);
-	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.3);
-	robot.ungrabPlate();
-	moveDistanceAtAngle(47.5, 90, 0.5);
-	turnAngle(-20, 2000);
+	setFlipPosition(flippedGrab);
+	turnAngle(45, 1000);
+	moveDistanceAtAngle(-7.5, 45, 0.2);
+	turnAngle(-20, 1000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-20, -20, 0.2);
 	robot.stopIntake();
-	moveDistanceAtAngle(12, -20, 0.5);
-	turnAngle(90, 1000);
-	moveDistanceAtAngle(-64, 90, .6);
+	moveDistanceAtAngle(15, -20, 0.2);
+	turnAngle(-90, 1750);
+	moveDistanceAtAngle(-58, -90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(4,90, 0.6);
+	moveDistanceAtAngle(8,-90, 0.3);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(6,90,0.6);
+	moveDistanceAtAngle(50, -90, 0.5);
+	turnAngle(20, 2000);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-20, 20, 0.2);
+	robot.stopIntake();
+	moveDistanceAtAngle(12, 20, 0.5);
+	turnAngle(-90, 1000);
+	moveDistanceAtAngle(-64, -90, .6);
+	robot.disengageIntake();
+	moveDistanceAtAngle(4,-90, 0.6);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(6,-90,0.6);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
 private void blockPositionOne()
 {
-	moveDistanceAtAngle(-17, 0, 0.3);
-	setFlipPosition(grabbed);
-	turnAngle(20, 1500);
+	moveDistanceAtAngle(-19, 0, 0.3);
+	setFlipPosition(flippedGrab);
+	turnAngle(-20, 1500);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-18, 20, 0.1);
+	moveDistanceAtAngle(-18, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13, 20, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
+	moveDistanceAtAngle(10, -20, 0.3);
+	turnAngle(-90, 2000);
+	moveDistanceAtAngle(-54, -90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.5);
+	moveDistanceAtAngle(8,-90,.5);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(45, 90, 0.5);
-	turnAngle(-20, 2000);
+	moveDistanceAtAngle(41, -90, 0.5);
+	turnAngle(20, 2000);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-19, -20, 0.1);
+	moveDistanceAtAngle(-19, 20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13.8, -20, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
+	moveDistanceAtAngle(13.8, 20, 0.3);
+	turnAngle(-90, 2000);
+	moveDistanceAtAngle(-54, -90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.3);
+	moveDistanceAtAngle(8,-90,.3);
 	robot.ungrabPlate();
 	stop();
 }
@@ -383,13 +386,20 @@ public void waitForStart()
 			{
 				telemetry.addLine("We're in the for loop");
 				telemetry.update();
-				if(recognition.getLabel() == LABEL_SECOND_ELEMENT && !alreadyRecorded)
+				if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
 				{
-					alreadyRecorded = true;
 					telemetry.addLine("We're in the if statement");
 					tensorLeft    = (int) recognition.getTop();
 					tensorRight   = (int) recognition.getBottom();
-					tensorAvgDist = ((tensorLeft + tensorRight)/2);
+					if(((tensorLeft + tensorRight)/2 < tensorAvgDist) && alreadyRecorded)
+					{
+						//do nothing
+					}
+					else
+					{
+						tensorAvgDist = (tensorLeft + tensorRight)/2;
+					}
+					alreadyRecorded = true;
 					telemetry.addLine("We're in the bottom of the if statement");
 					telemetry.addData("TensorDistAverage", tensorAvgDist);
 					telemetry.update();
@@ -398,7 +408,7 @@ public void waitForStart()
 		}
 		if(tensorAvgDist > 725)
 		{
-			telemetry.addLine("Tensorflow sees block 3");
+			telemetry.addLine("Tensorflow sees block 1");
 		}
 		else if(tensorAvgDist < 725 && tensorAvgDist > 550)
 		{
@@ -406,7 +416,7 @@ public void waitForStart()
 		}
 		else if(tensorAvgDist < 550)
 		{
-			telemetry.addLine("Tensorflow sees block position 1");
+			telemetry.addLine("Tensorflow sees block position 3");
 		}
 		synchronized(this)
 		{
@@ -444,7 +454,7 @@ public void waitForStart()
 			{
 				if(tensorAvgDist > 725)
 				{
-					blockPositionThree();
+					blockPositionOne();
 				}
 				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
 				{
@@ -452,7 +462,7 @@ public void waitForStart()
 				}
 				if(tensorAvgDist < 550)
 				{
-					blockPositionOne();
+					blockPositionThree();
 				}
 			}
 		}

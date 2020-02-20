@@ -34,7 +34,7 @@ public class leagueTele extends LinearOpMode
 
     //these are the servo positions for the end effector - they allow us to change these values
     // everywhere in the code at once
-    double flippedIn = 0.95;
+    double flippedIn = 0.93;
     double flippedGrab = 0.80;
     double flippedOut = 0.2;
     double flipStartPos = 0.7;
@@ -47,7 +47,7 @@ public class leagueTele extends LinearOpMode
     double grabbed = 0.8;
     double ungrabbed = 0.25;
     double capStore = 0;
-    double capSlap = 0.38;
+    double capSlap = 0.26;
     
     //This tells the code what position the lift should be in at the moment
     int currentLiftPos = 0;
@@ -472,8 +472,9 @@ public void regrabBlock()
 public void slapTheCap()
 {
 	robot.capStone.setPosition(capSlap);
+	robot.disengageIntake();
 	double start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
 	{
 		normalTeleopStuff();
 	}
