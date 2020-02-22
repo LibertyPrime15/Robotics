@@ -276,29 +276,29 @@ public void setFlipPosition(double position)
 //--------------------------------------------------------------------------------------------------
 private void blockPositionThree()
 {
-	moveDistanceAtAngle(-18, 0, 0.3);
+	moveDistanceAtAngle(-19, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(20, 1000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, 20, 0.1);
 	robot.stopIntake();
 	moveDistanceAtAngle(10, 20, 0.3);
-	turnAngle(-90, 2000);
+	turnAngle(-90, 1500);
 	moveDistanceAtAngle(-58, -90, 0.8);
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,-90, 0.7);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(42, -90, 0.8);
-	turnAngle(0, 2000);
-	moveDistanceAtAngle(-9, 0, 0.3);
-	turnAngle(90,2000);
+	moveDistanceAtAngle(43, -90, 0.7);
+	turnAngle(0, 1500);
+	moveDistanceAtAngle(-9, 0, 0.4);
+	turnAngle(90,1500);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-8, 90, 0.1);
 	robot.stopIntake();
 	moveDistanceAtAngle(8,90,.2);
-	turnAngle(0,2000);
+	turnAngle(0,1500);
 	moveDistanceAtAngle(8.5,0,.3);
-	turnAngle(-90, 2000);
+	turnAngle(-90, 1500);
 	moveDistanceAtAngle(-64, -90, 0.8);
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,-90, 0.8);

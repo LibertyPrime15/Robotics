@@ -34,7 +34,7 @@ public class leagueTele extends LinearOpMode
 
     //these are the servo positions for the end effector - they allow us to change these values
     // everywhere in the code at once
-    double flippedIn = 0.93;
+    double flippedIn = 0.95;
     double flippedGrab = 0.80;
     double flippedOut = 0.2;
     double flipStartPos = 0.7;
@@ -165,14 +165,14 @@ public void initiateIntakeCycle()
 	robot.stopIntake();
 	double start = System.currentTimeMillis();
 	blockIsGrabbed = true;
-	while((System.currentTimeMillis() - start) > 750 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 250 && !isStopRequested())
 	{
 		telemetry.addLine("We are in the initiateIntakeCycle method");
 		normalTeleopStuff();
 	}
 	setFlipPosition(flippedIn);
 	start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) > 1200 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 700 && !isStopRequested())
 	{
 		telemetry.addLine("We are in the initiateIntakeCycle method");
 		normalTeleopStuff();
@@ -462,7 +462,7 @@ public void regrabBlock()
 	}
 	setFlipPosition(flippedIn);
 	start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) > 800 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
 	{
 		normalTeleopStuff();
 	}
