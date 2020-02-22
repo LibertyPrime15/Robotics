@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.red;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.misc.revMap;
 
 @Autonomous(name="Red Plate", group = "Z")
-//@Disabled
+@Disabled
 public class redPlate extends LinearOpMode
 {
     revMap robot = new revMap();

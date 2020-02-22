@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.blue;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.HINT;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.misc.revMap;
 
 @Autonomous(name="Blue Block", group = "Y")
-//@Disabled
+@Disabled
 public class blueBlock extends LinearOpMode
 {
     //Call my hardware map

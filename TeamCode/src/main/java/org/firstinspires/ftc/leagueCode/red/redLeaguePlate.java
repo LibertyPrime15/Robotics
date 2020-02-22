@@ -304,7 +304,7 @@ private void moonDrive(double angle, double power, double moonPower, double time
 		telemetry.update();
 		waitForStart();
 //--------------------------------------------------------------------------------------------------
-		while (opModeIsActive() && (!(isStopRequested())))
+		while(opModeIsActive() && (!(isStopRequested())))
 		{
 //----------------------------------
 			double start = System.currentTimeMillis();
@@ -326,10 +326,9 @@ private void moonDrive(double angle, double power, double moonPower, double time
 			robot.ungrabPlate();
 			sleep(700);
 			turnAngle(-45, 1500);
-			moveDistanceAtAngle(2,-45,.5);
-			sleep(500);
-			turnAngle(-89,1500);
-			moveDistanceAtAngle(32,-89,.4);
+			moveDistanceAtAngle(14,-45,.5);
+			turnAngle(-85,1500);
+			moveDistanceAtAngle(29,-85,.4);
 			break;
 //----------------------------------
 		}

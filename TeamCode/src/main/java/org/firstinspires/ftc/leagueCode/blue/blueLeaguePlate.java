@@ -297,41 +297,41 @@ private void moonDrive(double angle, double power, double moonPower, double time
 //----------------------------------------//
 ////--------------------------------------//
 //--------------------------------------------------------------------------------------------------
-public void runOpMode()
-{
-	turnIMU();
-	telemetry.addData("Status", "Hit it Bois");
-	telemetry.update();
-	waitForStart();
-//--------------------------------------------------------------------------------------------------
-	while (opModeIsActive() && (!(isStopRequested())))
+	public void runOpMode()
 	{
+		turnIMU();
+		telemetry.addData("Status", "Hit it Bois");
+		telemetry.update();
+		waitForStart();
+//--------------------------------------------------------------------------------------------------
+		while (opModeIsActive() && (!(isStopRequested())))
+		{
 //----------------------------------
-		double start = System.currentTimeMillis();
-		double end   = start + 1000000;
-		
-		moveDistanceAtAngle(-4,0,.6);
-		setFlipPosition(flippedGrab);
-		turnAngle(45, 1500);
-		moveDistanceAtAngle(-12, 45, .6);
-		turnAngle(0, 1500);
-		moveDistanceAtAngle(-7.50,0,.1);
-		sleep(500);
-		robot.grabPlate();
-		sleep(800);
-		moonDrive(90, .6, .7,20000);
-		sleep(500);
-		moveDistanceAtAngle(-14,90,.4);
-		sleep(800);
-		robot.ungrabPlate();
-		sleep(800);
-		turnAngle(45, 1500);
-		moveDistanceAtAngle(3.5,45,.5);
-		sleep(500);
-		turnAngle(89,1500);
-		moveDistanceAtAngle(31,89,.4);
-		break;
+			double start = System.currentTimeMillis();
+			double end   = start + 1000000;
+			
+			moveDistanceAtAngle(-4,0,.6);
+			setFlipPosition(flippedGrab);
+			turnAngle(45, 1500);
+			moveDistanceAtAngle(-12, 45, .6);
+			turnAngle(0, 1500);
+			moveDistanceAtAngle(-7.50,0,.1);
+			sleep(500);
+			robot.grabPlate();
+			sleep(800);
+			moonDrive(90, .6, .7,20000);
+			sleep(500);
+			moveDistanceAtAngle(-14,90,.4);
+			sleep(800);
+			robot.ungrabPlate();
+			sleep(800);
+			turnAngle(45, 1500);
+			moveDistanceAtAngle(3.5,45,.5);
+			sleep(500);
+			turnAngle(89,1500);
+			moveDistanceAtAngle(31,89,.4);
+			break;
 //----------------------------------
+		}
 	}
-}
 }

@@ -30,13 +30,14 @@ public class leagueTele extends LinearOpMode
 
     //this array allows us to store the encoder values that correspond to different positions we
     // might want the lift to go to
-    public int[] liftPositions = {0, 375, 875, 1625, 2000, 2500, 3000, 3500, 3750, 4000};
+    public int[] liftPositions = {0, 500, 900, 1500, 2150, 2650, 3250, 3550, 4000, 4000};
 
     //these are the servo positions for the end effector - they allow us to change these values
     // everywhere in the code at once
-    double flippedIn = 0.95;
-    double flippedGrab = 0.80;
+    double flippedIn = 0.93;
+    double flippedGrab = 0.83;
     double flippedOut = 0.2;
+    double flippedAbouToPlace = 0.25;
     double flipStartPos = 0.7;
     double wristWhenIn = 0.81;
     double wristWhenOut = 0.06;
@@ -47,7 +48,7 @@ public class leagueTele extends LinearOpMode
     double grabbed = 0.8;
     double ungrabbed = 0.25;
     double capStore = 0;
-    double capSlap = 0.26;
+    double capSlap = 0.38;
     
     //This tells the code what position the lift should be in at the moment
     int currentLiftPos = 0;
@@ -172,7 +173,7 @@ public void initiateIntakeCycle()
 	}
 	setFlipPosition(flippedIn);
 	start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 700 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
 	{
 		telemetry.addLine("We are in the initiateIntakeCycle method");
 		normalTeleopStuff();
@@ -369,9 +370,9 @@ public void goToNextPosition()
 		normalTeleopStuff();
 		telemetry.addLine("We are in the goToNextPosition method");
 	}
-	if(nextLiftPos >= 3)
+	if(nextLiftPos >= 4)
 	{
-		setLiftPosition(nextLiftPos + 1);
+		setLiftPosition(nextLiftPos);
 	}
 	else
 	{
@@ -385,7 +386,7 @@ public void goToNextPosition()
 	}
 	isFlippedOutBack = true;
 	robot.ungrabPlate();
-	setFlipPosition(flippedOut);
+	setFlipPosition(flippedAbouToPlace);
 	robot.wrist.setPosition(wristWhenOut);
 	if(nextPlacePos == 0)
 	{
@@ -403,7 +404,7 @@ public void goToNextPosition()
 	{
 		robot.rotate.setPosition(rotateGrab);
 	}
-	setLiftPosition(nextLiftPos + 1);
+	setLiftPosition(nextLiftPos);
 }
 //--------------------------------------------------------------------------------------------------
 //this method drops the block, flips the arm back in, and collapses the slides to get ready for
@@ -412,7 +413,7 @@ public void place()
 {
 	if(currentLiftPos > 1)
 	{
-		setLiftPosition(currentLiftPos - 1);
+		setLiftPosition(currentLiftPos);
 	}
 	normalTeleopStuff();
 	while(!isAtTargetPosition && !isStopRequested())
@@ -420,9 +421,16 @@ public void place()
 		telemetry.addLine("we are in the place method");
 		normalTeleopStuff();
 	}
+	double start = System.currentTimeMillis();
+	setFlipPosition(flippedOut);
+	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
+	{
+		telemetry.addLine("we are in the place method");
+		normalTeleopStuff();
+	}
 	robot.grabber.setPosition(ungrabbed);
 	blockIsGrabbed = false;
-	double start = System.currentTimeMillis();
+	start = System.currentTimeMillis();
 	while((System.currentTimeMillis() - start) < 400 && !isStopRequested())
 	{
 		telemetry.addLine("we are in the place method");
@@ -462,7 +470,7 @@ public void regrabBlock()
 	}
 	setFlipPosition(flippedIn);
 	start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 300 && !isStopRequested())
 	{
 		normalTeleopStuff();
 	}
@@ -472,15 +480,8 @@ public void regrabBlock()
 public void slapTheCap()
 {
 	robot.capStone.setPosition(capSlap);
-	robot.disengageIntake();
 	double start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 750 && !isStopRequested())
-	{
-		normalTeleopStuff();
-	}
-	setLiftPosition(3);
-	start = System.currentTimeMillis();
-	while((System.currentTimeMillis() - start) < 1000 && !isStopRequested())
+	while((System.currentTimeMillis() - start) < 1500 && !isStopRequested())
 	{
 		normalTeleopStuff();
 	}

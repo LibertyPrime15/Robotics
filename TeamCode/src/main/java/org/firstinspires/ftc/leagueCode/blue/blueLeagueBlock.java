@@ -4,30 +4,31 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.Range;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
-
 import org.firstinspires.ftc.leagueCode.misc.leagueMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import java.util.List;
 
-@Autonomous(name="blueLeagueBlock", group = "blueLeague")
+@Autonomous(name = "blueLeagueBlock", group = "blueLeague")
 //@Disabled
 public class blueLeagueBlock extends LinearOpMode
 {
 	leagueMap robot = new leagueMap();
 	Orientation angles;
 	BNO055IMU imuTurn;
+	
+	List<Recognition> updatedRecognitions;
+	
+	public static float tensorLeft;
+	public static float tensorRight;
+	public float tensorAvgDist;
 	
 	double diameter = 4;//4
 	double radius   = (diameter/2);//2
@@ -38,87 +39,33 @@ public class blueLeagueBlock extends LinearOpMode
 	double Compensation = 1.5;
 	double Steps        = 537.6;
 	
-	double drive = 0;
-	double turn  = 0;
+	boolean canTogglePlateGrabber = true;
+	boolean canAddToLiftPos = true;
+	boolean canSubtractFromLiftPos = true;
+	boolean canInitiateSpitCycle = true;
 	
-	private VuforiaLocalizer vuforiaLocalizer;
-	private VuforiaLocalizer.Parameters parameters;
-	private VuforiaTrackables visionTargets;
-	private VuforiaTrackable target;
-	private VuforiaTrackableDefaultListener listener;
-	private OpenGLMatrix lastKnownLocation;
-	private OpenGLMatrix phoneLocation;
+	double flippedIn = 0.91;
+	double flippedGrab = 0.80;
+	double flippedOut = 0.2;
+	double flipStartPos = 0.7;
+	double wristWhenIn = 0.81;
+	double wristWhenOut = 0.06;
+	double rotateGrab = 0.98;
+	double rotateFar = 0.58;
+	double rotateLeft = 0.23;
+	double rotateClose = 0;
+	double grabbed = 0.8;
+	double ungrabbed = 0.25;
+	double capStore = 0;
+	double capSlap = 0.38;
 	
-	private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
-	
-	boolean inView  = false;
-	
-	boolean blockPositionOne   = false;
-	boolean blockPositionTwo   = false;
-	boolean blockPositionThree = false;
-	
-	private float robotX = 0;
-	private float robotY = 0;
-	private float robotAngle = 0;
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    private static final String VUFORIA_KEY = "AZ6Zar7/////AAABmb9BpTFpR0aao8WchstmN7g6gEQUqWGKJOgwV0UnhrDJwzv1nw8KkSFm4bLbbd/e63bMkh4k2W5raskv2je6UOaSviD58AJtw7RiTt/T1hmt/Row6McUnaoB4KLMoADScEMRa6EnJuW2fMeSgFFy8554WHyYai9AjCfoF3MY4BXSYhZmAx/Y/8fSPBqsbfBxSs5sBZityMz6XsraptRFNQVuRuQlo19wDUc4eU3Eq9D0R1QxiFPxv8yxS6x1jN4rwfkkQBl9eQzNI0/FxSr7Caig9WOwrc65x1+3Op7UmUapHboIn+oRKlOktmT98sGtTBpxY/nz6IV9B6UTjquUNwS3Yu5eRJiu5IZoNWtuxjFA";
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
 //--------------------------------------------------------------------------------------------------
-//----------------------------------------//
-//----------------------------------------//
-//---These are all of my Called Methods---//gyro.getHeading()
-//----------------------------------------//
-//----------------------------------------//
-//--------------------------------------------------------------------------------------------------
-//This method is used for setting up Vuforia and runs everytime the program initializes
-private void setupVuforia()
-{
-	parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-	parameters.vuforiaLicenseKey = VUFORIA_KEY;
-	parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-	parameters.useExtendedTracking = false;
-	vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
-	
-	visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("Skystone");
-	Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-	
-	target = visionTargets.get(0);
-	target.setName("Wheels Target");
-	target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
-	phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
-	
-	
-	listener = (VuforiaTrackableDefaultListener) target.getListener();
-	listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-	
-}
-private OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-{
-	return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
-}
-private String formatMatrix(OpenGLMatrix matrix)
-{
-	//This method formats weird
-	return matrix.formatAsTransform();
-}
-public boolean vuforia()
-{
-	OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
-	
-	if(latestLocation != null)
-	{
-		lastKnownLocation = latestLocation;
-	}
-	float[] coordinates = lastKnownLocation.getTranslation().getData();
-	
-	robotX = coordinates[0];
-	robotY = coordinates[1];
-	robotAngle = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-	
-	telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-	telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-	telemetry.update();
-	return listener.isVisible();
-}
-//--------------------------------------------------------------------------------------------------
-//This method is for reseting the imu - must be called after every time a turn is used
 private void turnIMU()
 {
 	BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -128,92 +75,27 @@ private void turnIMU()
 	parameters.loggingEnabled = true;
 	parameters.loggingTag = "IMU";
 	parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-	
+
 	robot.init(hardwareMap);
-	imuTurn = hardwareMap.get(BNO055IMU.class, "imu1");
+	imuTurn = hardwareMap.get(BNO055IMU.class,"imu1");
 	imuTurn.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-//This method moves a certain distance in inches SIDEWAYS at a certain speed - when moving it will move perfectly straight
-public void moveSide(double distance, double power, double time, boolean goingRight)
+private void initVuforia()
 {
-	double length = distance;
-	double totDistInSteps = (Math.abs(circ / Steps) * (length * Compensation));
-	
-	double start = System.currentTimeMillis();
-	double end   = start + time;
-	
-	int currentEncSumRight = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition());
-	int currentEncSumLeft  = (robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition());
-	
-	int currentEncPosAvgRight = (Math.abs(currentEncSumRight / 2));
-	int currentEncPosAvgLeft  = (Math.abs(currentEncSumLeft  / 2));
-	
-	double topRight;
-	double topLeft;
-	double bottomRight;
-	double bottomLeft;
-	telemetry.addLine("Line Check 1");
-	telemetry.update();
-	if(goingRight)//DRIVE TO THE RIGHT
-	{
-//------------------------------
-		telemetry.addLine("Line Check 2");
-		telemetry.update();
-		while(totDistInSteps > currentEncPosAvgRight && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-		{
-			currentEncSumRight    = (robot.front_right.getCurrentPosition() + robot.back_right.getCurrentPosition());
-			currentEncPosAvgRight = (Math.abs(currentEncSumRight / 2));
-			
-			telemetry.addData("Average Encoder RIGHT",currentEncPosAvgRight);
-			telemetry.addData("TotDistInSteps",totDistInSteps);
-			telemetry.update();
-			
-			turnIMU();
-			drive = -power;
-			turn  = .05 * currHeading;
-			
-			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
-			robot.front_right.setPower(topRight);
-			robot.front_left.setPower(topLeft);
-			robot.back_right.setPower(bottomRight);
-			robot.back_left.setPower(bottomLeft);
-		}
-	}
-	
-	else if(!goingRight)//DRIVE TO THE LEFT
-	{
-//------------------------------
-		while(totDistInSteps < currentEncPosAvgLeft && opModeIsActive() && (!(isStopRequested())) && System.currentTimeMillis() < end)
-		{
-			currentEncSumLeft    = (robot.front_left.getCurrentPosition()  + robot.back_left.getCurrentPosition());
-			currentEncPosAvgLeft = (Math.abs(currentEncSumLeft / 2));
-			
-			telemetry.addData("----Average Encoder LEFT",currentEncPosAvgLeft);
-			telemetry.addData("----TotDistInSteps",totDistInSteps);
-			telemetry.update();
-			
-			turnIMU();
-			drive = -power;
-			turn  = .05 * currHeading;
-			
-			topRight    = Range.clip(drive + turn, -1.0, 1.0);
-			topLeft     = Range.clip(drive - turn, -1.0, 1.0);
-			bottomRight = Range.clip(drive + turn, -1.0, 1.0);
-			bottomLeft  = Range.clip(drive - turn, -1.0, 1.0);
-			
-			robot.front_right.setPower(topRight);
-			robot.front_left.setPower(topLeft);
-			robot.back_right.setPower(bottomRight);
-			robot.back_left.setPower(bottomLeft);
-		}
-	}
-	robot.resetEncoder();
-	robot.Halt();
+	VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+	parameters.vuforiaLicenseKey = VUFORIA_KEY;
+	parameters.cameraDirection = CameraDirection.BACK;
+	vuforia = ClassFactory.getInstance().createVuforia(parameters);
+}
+//--------------------------------------------------------------------------------------------------
+private void initTfod()
+{
+	int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+	TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+	tfodParameters.minimumConfidence = 0.77;
+	tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+	tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 }
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
@@ -392,168 +274,196 @@ public void setFlipPosition(double position)
 	robot.flip1.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
-//This checks to see if the skystone is in view
-public void checkSight()
+private void blockPositionThree()
 {
-	turnAngle(7,2500);//Positions to see the block
-	if(listener.isVisible() && System.currentTimeMillis() > 2000)
-	{
-		inView = true;
-	}
-	if(inView)
-	{
-		blockPositionOne = true;
-		turnAngle(1,400);
-		runCycle();
-	}
-	else
-	{
-		turnAngle(-10,400);
-		moveDistanceAtAngle(-1.2,-10,.2);
-		turnAngle(-10,2500);//These are all positioning to see the block
-		if(listener.isVisible())
+	moveDistanceAtAngle(-18, 0, 0.3);
+	setFlipPosition(grabbed);
+	turnAngle(-20, 1000);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-19, -20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(11, -20, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-58, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90, 0.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(46, 90, 0.5);
+	turnAngle(-55, 2000);
+	moveDistanceAtAngle(-26, -55, 0.2);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-8, -55, 0.1);
+	robot.intake(1);
+	moveDistanceAtAngle(20, -55, 0.3);
+	robot.stopIntake();
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-64, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90, 0.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(10, 90, 0.5);
+	stop();
+}
+//--------------------------------------------------------------------------------------------------
+private void blockPositionTwo()
+{
+	moveDistanceAtAngle(-14, 0, 0.3);
+	setFlipPosition(grabbed);
+	turnAngle(-45, 1000);
+	moveDistanceAtAngle(-8, -45, 0.2);
+	turnAngle(20, 1000);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-20, 20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(19, 20, 0.2);
+	turnAngle(90, 1750);
+	moveDistanceAtAngle(-58, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90, 0.3);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(50, 90, 0.5);
+	turnAngle(-20, 2000);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-20, -20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(12, -20, 0.5);
+	turnAngle(90, 1000);
+	moveDistanceAtAngle(-64, 90, .6);
+	robot.disengageIntake();
+	moveDistanceAtAngle(4,90, 0.6);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(6,90,0.6);
+	stop();
+}
+//--------------------------------------------------------------------------------------------------
+private void blockPositionOne()
+{
+	moveDistanceAtAngle(-17, 0, 0.3);
+	setFlipPosition(grabbed);
+	turnAngle(20, 1500);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-18, 20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(13, 20, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-54, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90,.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(42, 90, 0.5);
+	turnAngle(-20, 2000);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-19, -20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(13.8, -20, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-54, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90,.3);
+	robot.ungrabPlate();
+	stop();
+}
+//--------------------------------------------------------------------------------------------------
+public void waitForStart()
+{
+	boolean alreadyRecorded;
+	while (!isStarted()) {
+		if(tfod != null)
 		{
-			inView = true;
+			tfod.activate();
+			updatedRecognitions = tfod.getUpdatedRecognitions();
+			
 		}
-		if(inView)
+		if(updatedRecognitions != null)
 		{
-			blockPositionTwo = true;
-			turnAngle(-8,500);
-			runCycle();
+			telemetry.addData("# Object Detected", updatedRecognitions.size());
+			telemetry.addLine("We're above the for loop");
+			telemetry.update();
+			alreadyRecorded = false;
+			for(Recognition recognition : updatedRecognitions)
+			{
+				telemetry.addLine("We're in the for loop");
+				telemetry.update();
+				if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
+				{
+					telemetry.addLine("We're in the if statement");
+					tensorLeft    = (int) recognition.getTop();
+					tensorRight   = (int) recognition.getBottom();
+					if(((tensorLeft + tensorRight)/2 > tensorAvgDist) && alreadyRecorded)
+					{
+						//do nothing
+					}
+					else
+					{
+						tensorAvgDist = (tensorLeft + tensorRight)/2;
+					}
+					alreadyRecorded = true;
+					telemetry.addLine("We're in the bottom of the if statement");
+					telemetry.addData("TensorDistAverage", tensorAvgDist);
+					telemetry.update();
+				}
+			}
 		}
-		else
+		if(tensorAvgDist > 725)
 		{
-			blockPositionThree = true;
-			runCycle();
+			telemetry.addLine("Tensorflow sees block 1");
+		}
+		else if(tensorAvgDist < 725 && tensorAvgDist > 550)
+		{
+			telemetry.addLine("Tensorflow sees block position 2");
+		}
+		else if(tensorAvgDist < 550)
+		{
+			telemetry.addLine("Tensorflow sees block position 3");
+		}
+		synchronized(this)
+		{
+			try
+			{
+				this.wait();
+			}
+			catch(InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				return;
+			}
 		}
 	}
 }
 //--------------------------------------------------------------------------------------------------
-//This method runs actual atonomous code and calls the methods that run actual atonomous code
-public void beginScanning()
-{
-	//This moves the robot out of its start position and prepares for scanning
-	moveDistanceAtAngle(-16.4,0,.2);
-	robot.wrist.setPosition(.03);
-	setFlipPosition(.8);
-	checkSight();
-}
-//--------------------------------------------------------------------------------------------------
-public void runCycle()
-{
-	if(blockPositionOne)//THIS IS A POSITION 1 TEST
+    public void runOpMode()
 	{
-		moveDistanceAtAngle(5, 0, 0.3);
-		turnAngle(-40, 1000);
-		moveDistanceAtAngle(-8, -40, 0.3);
-		turnAngle(18, 1500);
-		robot.intake(.05);
-		moveDistanceAtAngle(-20, 20, .15);
-		robot.stopIntake();
-		moveDistanceAtAngle(10, 20, .3);
-		turnAngle(90, 1200);
-		moveDistanceAtAngle(-40, 90, .5);
-		robot.disengageIntake();
-		sleep(400);
-		moveDistanceAtAngle(47, 90, .5);
-		robot.ungrabPlate();
-		turnAngle(-20, 1200);
-		robot.intake(.05);
-		moveDistanceAtAngle(-10, -20, .2);
-		robot.stopIntake();
-		moveDistanceAtAngle(10, -20, .2);
-		turnAngle(90, 1000);
-		moveDistanceAtAngle(-58, 90, .5);
-		robot.disengageIntake();
-		sleep(400);
-		moveDistanceAtAngle(12,90,.5);
-		robot.ungrabPlate();
-		stop();
-	}
-	else if(blockPositionTwo)//THIS IS A POSITION 2 TEST
-	{
-		turnAngle(0, 1500);
-		moveDistanceAtAngle(-2, 0, 0.3);
-		turnAngle(-19, 1500);
-		robot.intake(.05);
-		moveDistanceAtAngle(-15, -19, .15);
-		robot.stopIntake();
-		moveDistanceAtAngle(12.5, -19, .3);
-		turnAngle(90, 1200);
-		moveDistanceAtAngle(-37, 90, .6);
-		robot.disengageIntake();
-		sleep(400);
-		moveDistanceAtAngle(52, 90, .6);
-		robot.ungrabPlate();
-		turnAngle(-20, 1300);
-		robot.intake(.05);
-		moveDistanceAtAngle(-18, -20, .3);
-		robot.stopIntake();
-		moveDistanceAtAngle(14.2, -20, .3);
-		turnAngle(90, 1000);
-		moveDistanceAtAngle(-60, 90, .6);
-		robot.disengageIntake();
-		sleep(400);
-		moveDistanceAtAngle(15, 90, .4);
-		robot.ungrabPlate();
-		stop();
-	}
-	else if(blockPositionThree)//THIS IS A POSITION 3 TEST - Unfinished
-	{
-		moveDistanceAtAngle(10, -10, 0.3);
-		turnAngle(-25, 1000);
-		moveDistanceAtAngle(-12, -28, 0.3);
-		robot.intake(.05);
-		moveDistanceAtAngle(-20, -28, .1);
-		robot.stopIntake();
-		moveDistanceAtAngle(10.5, -27, .3);
-		turnAngle(90, 1000);
-		moveDistanceAtAngle(-50, 90, .6);
-		robot.disengageIntake();
-		sleep(400);
-		moveDistanceAtAngle(52.5, 90, .6);
-		robot.ungrabPlate();
-		turnAngle(-20, 1000);
-		robot.intake(.05);
-		moveDistanceAtAngle(-16, -20, .1);
-		robot.stopIntake();
-		moveDistanceAtAngle(10, -20, .3);
-		turnAngle(90, 1000);
-		moveDistanceAtAngle(-60, 90, .8);
-		robot.disengageIntake();
-		sleep(700);
-		moveDistanceAtAngle(15, 90, .8);
-		robot.ungrabPlate();
-		stop();
-	}
-}
-//--------------------------------------------------------------------------------------------------
-//----------------------------------------//
-//----------------------------------------//
-//---No More Methods Are Made Past This---//
-//----------------------------------------//
-////--------------------------------------//
-//--------------------------------------------------------------------------------------------------
-	public void runOpMode()
-	{
+		robot.init(hardwareMap);
 		turnIMU();
-		setupVuforia();
-		lastKnownLocation = createMatrix(0, 500, 0, 90, 0, 90);
-		telemetry.addData("Status", "Hit it Bois");
-		telemetry.update();
-		
-		waitForStart();
-		visionTargets.activate();
-//--------------------------------------------------------------------------------------------------
-		while (opModeIsActive() && (!(isStopRequested())))
+		initVuforia();
+        if(ClassFactory.getInstance().canCreateTFObjectDetector())
+        {
+            initTfod();
+        }
+        else
 		{
-//----------------------------------
-			double start = System.currentTimeMillis();
-			double end   = start + 1000000;
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+        waitForStart();
 //--------------------------------------------------------------------------------------------------
-			vuforia();
-			beginScanning();
-//----------------------------------
+		if(opModeIsActive())
+		{
+			while(opModeIsActive() && (!(isStopRequested())))
+			{
+				if(tensorAvgDist > 725)
+				{
+					blockPositionThree();
+				}
+				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
+				{
+					blockPositionTwo();
+				}
+				if(tensorAvgDist < 550)
+				{
+					blockPositionOne();
+				}
+			}
 		}
 	}
+//--------------------------------------------------------------------------------------------------
 }
