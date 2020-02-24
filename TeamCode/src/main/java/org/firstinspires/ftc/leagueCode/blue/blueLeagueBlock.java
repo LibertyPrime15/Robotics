@@ -274,40 +274,38 @@ public void setFlipPosition(double position)
 	robot.flip1.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionThree()
+private void blockPositionOne()
 {
-	moveDistanceAtAngle(-18, 0, 0.3);
+	moveDistanceAtAngle(-19, 0, 0.3);
 	setFlipPosition(grabbed);
-	turnAngle(-20, 1000);
+	turnAngle(20, 1500);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-18, 20, 0.1);
+	robot.stopIntake();
+	moveDistanceAtAngle(11, 20, 0.3);
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-54, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90,.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(42, 90, 0.5);
+	turnAngle(-20, 2000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(11, -20, 0.3);
+	moveDistanceAtAngle(13.8, -20, 0.3);
 	turnAngle(90, 2000);
-	moveDistanceAtAngle(-58, 90, 0.5);
+	moveDistanceAtAngle(-54, 90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.5);
+	moveDistanceAtAngle(8,90,.3);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(46, 90, 0.5);
-	turnAngle(-55, 2000);
-	moveDistanceAtAngle(-26, -55, 0.2);
-	robot.intake(0.05);
-	moveDistanceAtAngle(-8, -55, 0.1);
-	robot.intake(1);
-	moveDistanceAtAngle(20, -55, 0.3);
-	robot.stopIntake();
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-64, 90, 0.5);
-	robot.disengageIntake();
-	moveDistanceAtAngle(8,90, 0.5);
-	robot.ungrabPlate();
-	moveDistanceAtAngle(10, 90, 0.5);
+	moveDistanceAtAngle(4,90,.3);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
 private void blockPositionTwo()
 {
-	moveDistanceAtAngle(-14, 0, 0.3);
+	moveDistanceAtAngle(-16, 0, 0.3);
 	setFlipPosition(grabbed);
 	turnAngle(-45, 1000);
 	moveDistanceAtAngle(-8, -45, 0.2);
@@ -336,38 +334,42 @@ private void blockPositionTwo()
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
-private void blockPositionOne()
+private void blockPositionThree()
 {
-	moveDistanceAtAngle(-17, 0, 0.3);
+	moveDistanceAtAngle(-20, 0, 0.3);
 	setFlipPosition(grabbed);
-	turnAngle(20, 1500);
-	robot.intake(0.05);
-	moveDistanceAtAngle(-18, 20, 0.1);
-	robot.stopIntake();
-	moveDistanceAtAngle(13, 20, 0.3);
-	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
-	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.5);
-	robot.ungrabPlate();
-	moveDistanceAtAngle(42, 90, 0.5);
-	turnAngle(-20, 2000);
+	turnAngle(-20, 1000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13.8, -20, 0.3);
+	moveDistanceAtAngle(11, -20, 0.3);
 	turnAngle(90, 2000);
-	moveDistanceAtAngle(-54, 90, 0.5);
+	moveDistanceAtAngle(-58, 90, 0.5);
 	robot.disengageIntake();
-	moveDistanceAtAngle(8,90,.3);
+	moveDistanceAtAngle(8,90, 0.5);
 	robot.ungrabPlate();
+	moveDistanceAtAngle(46, 90, 0.5);
+	turnAngle(-55, 2000);
+	moveDistanceAtAngle(-26, -55, 0.2);
+	robot.intake(0.05);
+	moveDistanceAtAngle(-8, -55, 0.1);
+	robot.intake(1);
+	moveDistanceAtAngle(20, -55, 0.3);
+	robot.stopIntake();
+	turnAngle(90, 2000);
+	moveDistanceAtAngle(-64, 90, 0.5);
+	robot.disengageIntake();
+	moveDistanceAtAngle(8,90, 0.5);
+	robot.ungrabPlate();
+	moveDistanceAtAngle(10, 90, 0.5);
 	stop();
 }
 //--------------------------------------------------------------------------------------------------
 public void waitForStart()
 {
 	boolean alreadyRecorded;
-	while (!isStarted()) {
+	while (!isStarted())
+	{
 		if(tfod != null)
 		{
 			tfod.activate();

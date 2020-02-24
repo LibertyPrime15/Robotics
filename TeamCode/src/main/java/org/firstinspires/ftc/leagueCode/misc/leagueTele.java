@@ -197,6 +197,7 @@ public void normalTeleopStuff()
 	frontLeft  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
 	backRight  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) + gamepad1.right_stick_x;
 	backLeft   = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) + (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
+	telemetry.addData("Right stick x", gamepad1.right_stick_x);
 	//This is holonomic drive
 	robot.front_right.setPower(frontRight);
 	robot.front_left.setPower(frontLeft);

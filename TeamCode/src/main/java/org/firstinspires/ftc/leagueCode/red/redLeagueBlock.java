@@ -276,24 +276,24 @@ public void setFlipPosition(double position)
 //--------------------------------------------------------------------------------------------------
 private void blockPositionOne()
 {
-	moveDistanceAtAngle(-19, 0, 0.3);
+	moveDistanceAtAngle(-21, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(-20, 1500);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-18, -20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(10, -20, 0.3);
+	moveDistanceAtAngle(11, -20, 0.3);
 	turnAngle(-90, 2000);
 	moveDistanceAtAngle(-54, -90, 0.5);
 	robot.disengageIntake();
 	moveDistanceAtAngle(8,-90,.5);
 	robot.ungrabPlate();
-	moveDistanceAtAngle(41, -90, 0.5);
+	moveDistanceAtAngle(42, -90, 0.5);
 	turnAngle(20, 2000);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-19, 20, 0.1);
+	moveDistanceAtAngle(-20, 20, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(13.8, 20, 0.3);
+	moveDistanceAtAngle(15, 20, 0.3);
 	turnAngle(-90, 2000);
 	moveDistanceAtAngle(-54, -90, 0.5);
 	robot.disengageIntake();
@@ -304,7 +304,7 @@ private void blockPositionOne()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionTwo()
 {
-	moveDistanceAtAngle(-14, 0, 0.3);
+	moveDistanceAtAngle(-15, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(43, 1500);
 	moveDistanceAtAngle(-9, 45, 0.2);
@@ -312,7 +312,7 @@ private void blockPositionTwo()
 	robot.intake(0.05);
 	moveDistanceAtAngle(-22, -20, 0.2);
 	robot.stopIntake();
-	moveDistanceAtAngle(18, -20, 0.2);
+	moveDistanceAtAngle(19, -20, 0.2);
 	turnAngle(-90, 1750);
 	moveDistanceAtAngle(-58, -90, 0.5);
 	robot.disengageIntake();
@@ -335,13 +335,13 @@ private void blockPositionTwo()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionThree()
 {
-	moveDistanceAtAngle(-19, 0, 0.3);
+	moveDistanceAtAngle(-21, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(17, 1000);
 	robot.intake(0.05);
 	moveDistanceAtAngle(-19, 17, 0.1);
 	robot.stopIntake();
-	moveDistanceAtAngle(10, 17, 0.3);
+	moveDistanceAtAngle(13, 17, 0.3);
 	turnAngle(-90, 1000);
 	moveDistanceAtAngle(-53, -90, 0.7);
 	robot.disengageIntake();
@@ -349,14 +349,14 @@ private void blockPositionThree()
 	robot.ungrabPlate();
 	moveDistanceAtAngle(39.4, -90, 0.65);
 	turnAngle(0, 1000);
-	moveDistanceAtAngle(-9, 0, 0.4);
+	moveDistanceAtAngle(-11, 0, 0.4);
 	turnAngle(90,1000);
 	robot.intake(0.05);
-	moveDistanceAtAngle(-9, 90, 0.08);
+	moveDistanceAtAngle(-10.5, 90, 0.08);
 	robot.stopIntake();
-	moveDistanceAtAngle(11,90,.2);
+	moveDistanceAtAngle(13,90,.2);
 	turnAngle(0,1000);
-	moveDistanceAtAngle(5,0,.3);
+	moveDistanceAtAngle(9,0,.3);
 	turnAngle(-90, 1000);
 	moveDistanceAtAngle(-60, -90, 0.7);
 	robot.disengageIntake();
