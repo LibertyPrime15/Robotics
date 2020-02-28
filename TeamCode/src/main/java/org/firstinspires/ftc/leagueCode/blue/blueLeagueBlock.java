@@ -30,6 +30,10 @@ public class blueLeagueBlock extends LinearOpMode
 	public static float tensorRight;
 	public float tensorAvgDist;
 	
+	double startTime = System.currentTimeMillis();
+	double endTime;
+	double actualTime;
+	
 	double diameter = 4;//4
 	double radius   = (diameter/2);//2
 	double circ     = (22/18 * (Math.PI * diameter));//12.5
@@ -163,7 +167,7 @@ private void turnAngle(double angle, double time)
 //Power is the power that we want to move at; it should be between 0 and 1. Making this value negative will put the bot into a loop that goes on forever
 public void moveDistanceAtAngle(double distance, double angle, double power)
 {
-	//this resets the encoders, to make sure that all the values start at 0
+		//this resets the encoders, to make sure that all the values start at 0
 	robot.resetEncoder();
 	robot.setDriveToBrake();
 	
@@ -180,11 +184,12 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 		telemetry.addData("We are in the if statement", "");
 		telemetry.update();
 		double realAngleDifference = angleDifference;
+		double startTime = 0;
+		double previousStartTime = 0;
 		
 		//while we aren't supposed to be stopped, and we haven't yet reached the distance we are supposed to travel,
 		while(!isStopRequested() && (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()) < (4 * totalDistInSteps))
 		{
-			
 			//need to split this into 2 if statements - the same ones that are used in turnAngle
 			telemetry.addData("Front right encoder value", robot.front_right.getCurrentPosition());
 			telemetry.addData("Total number of steps to travel", totalDistInSteps);
@@ -274,9 +279,16 @@ public void setFlipPosition(double position)
 	robot.flip1.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
+public void turnOffTensorFlow()
+{
+	tfod.deactivate();
+	tfod.shutdown();
+}
+//--------------------------------------------------------------------------------------------------
 private void blockPositionOne()
 {
-	moveDistanceAtAngle(-19, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-17, 0, 0.3);
 	setFlipPosition(grabbed);
 	turnAngle(20, 1500);
 	robot.intake(0.05);
@@ -305,7 +317,8 @@ private void blockPositionOne()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionTwo()
 {
-	moveDistanceAtAngle(-16, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-14, 0, 0.3);
 	setFlipPosition(grabbed);
 	turnAngle(-45, 1000);
 	moveDistanceAtAngle(-8, -45, 0.2);
@@ -336,7 +349,8 @@ private void blockPositionTwo()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionThree()
 {
-	moveDistanceAtAngle(-20, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-18, 0, 0.3);
 	setFlipPosition(grabbed);
 	turnAngle(-20, 1000);
 	robot.intake(0.05);
@@ -450,21 +464,23 @@ public void waitForStart()
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
-			while(opModeIsActive() && (!(isStopRequested())))
-			{
-				if(tensorAvgDist > 725)
-				{
-					blockPositionThree();
-				}
-				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
-				{
-					blockPositionTwo();
-				}
-				if(tensorAvgDist < 550)
-				{
-					blockPositionOne();
-				}
-			}
+//			while(opModeIsActive() && (!(isStopRequested())))
+//			{
+				moveDistanceAtAngle(3,0,.1);
+				sleep(20000000);
+//				if(tensorAvgDist > 725)
+//				{
+//					blockPositionThree();
+//				}
+//				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
+//				{
+//					blockPositionTwo();
+//				}
+//				if(tensorAvgDist < 550)
+//				{
+//					blockPositionOne();
+//				}
+//			}
 		}
 	}
 //--------------------------------------------------------------------------------------------------

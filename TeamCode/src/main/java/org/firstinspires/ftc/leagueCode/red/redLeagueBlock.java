@@ -268,6 +268,12 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 	robot.setDriveToBrake();
 }
 //--------------------------------------------------------------------------------------------------
+public void turnOffTensorFlow()
+{
+	tfod.deactivate();
+	tfod.shutdown();
+}
+//--------------------------------------------------------------------------------------------------
 public void setFlipPosition(double position)
 {
 	robot.flip2.setPosition(position);
@@ -276,7 +282,8 @@ public void setFlipPosition(double position)
 //--------------------------------------------------------------------------------------------------
 private void blockPositionOne()
 {
-	moveDistanceAtAngle(-21, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-19, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(-20, 1500);
 	robot.intake(0.05);
@@ -304,7 +311,8 @@ private void blockPositionOne()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionTwo()
 {
-	moveDistanceAtAngle(-15, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-13, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(43, 1500);
 	moveDistanceAtAngle(-9, 45, 0.2);
@@ -335,7 +343,8 @@ private void blockPositionTwo()
 //--------------------------------------------------------------------------------------------------
 private void blockPositionThree()
 {
-	moveDistanceAtAngle(-21, 0, 0.3);
+	turnOffTensorFlow();
+	moveDistanceAtAngle(-19, 0, 0.3);
 	setFlipPosition(flippedGrab);
 	turnAngle(17, 1000);
 	robot.intake(0.05);
