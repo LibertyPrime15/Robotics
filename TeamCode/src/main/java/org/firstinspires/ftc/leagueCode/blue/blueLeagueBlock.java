@@ -102,6 +102,20 @@ private void initTfod()
 	tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 }
 //--------------------------------------------------------------------------------------------------
+//If you don't know how to use this method than please don't call it and expect it to work
+private void cycleTimeStart()
+{
+	double startTime = 0;
+	double previousStartTime = 0;
+//-------------------------------------------------------------
+//This bit \/ goes inside of an if statement or in a while loop
+	previousStartTime = startTime;
+	startTime = System.currentTimeMillis();
+	double cycleTime = startTime - previousStartTime;
+	telemetry.addData("Cycle Time Average", cycleTime);
+	telemetry.update();
+}
+//--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
 private void turnAngle(double angle, double time)
 {
@@ -167,7 +181,7 @@ private void turnAngle(double angle, double time)
 //Power is the power that we want to move at; it should be between 0 and 1. Making this value negative will put the bot into a loop that goes on forever
 public void moveDistanceAtAngle(double distance, double angle, double power)
 {
-		//this resets the encoders, to make sure that all the values start at 0
+	//this resets the encoders, to make sure that all the values start at 0
 	robot.resetEncoder();
 	robot.setDriveToBrake();
 	
@@ -184,16 +198,10 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 		telemetry.addData("We are in the if statement", "");
 		telemetry.update();
 		double realAngleDifference = angleDifference;
-		double startTime = 0;
-		double previousStartTime = 0;
 		
 		//while we aren't supposed to be stopped, and we haven't yet reached the distance we are supposed to travel,
 		while(!isStopRequested() && (robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()) < (4 * totalDistInSteps))
 		{
-			//need to split this into 2 if statements - the same ones that are used in turnAngle
-			telemetry.addData("Front right encoder value", robot.front_right.getCurrentPosition());
-			telemetry.addData("Total number of steps to travel", totalDistInSteps);
-			
 			//Find the current angle using the rev hub I.M.U., and find the difference between that and the angle we are trying to reach
 			angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 			this.imuTurn.getPosition();
@@ -215,7 +223,6 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 					realAngleDifference = (360 - Math.abs(angleDifference));
 				}
 			}
-			
 			telemetry.addData("Power", power + (0.02 * realAngleDifference));
 			telemetry.addData("While loop value",(robot.front_right.getCurrentPosition() + robot.front_left.getCurrentPosition() + robot.back_right.getCurrentPosition() + robot.back_left.getCurrentPosition()));
 			telemetry.update();
@@ -255,7 +262,6 @@ public void moveDistanceAtAngle(double distance, double angle, double power)
 					realAngleDifference = (360 - Math.abs(angleDifference));
 				}
 			}
-			
 			//Drive at the the power that was input as a parameter, and correct for the angle difference
 			robot.front_right.setPower(-power - (0.02 * realAngleDifference));
 			robot.front_left.setPower(-power + (0.02 * realAngleDifference));
@@ -388,7 +394,6 @@ public void waitForStart()
 		{
 			tfod.activate();
 			updatedRecognitions = tfod.getUpdatedRecognitions();
-			
 		}
 		if(updatedRecognitions != null)
 		{
@@ -464,23 +469,21 @@ public void waitForStart()
 //--------------------------------------------------------------------------------------------------
 		if(opModeIsActive())
 		{
-//			while(opModeIsActive() && (!(isStopRequested())))
-//			{
-				moveDistanceAtAngle(3,0,.1);
-				sleep(20000000);
-//				if(tensorAvgDist > 725)
-//				{
-//					blockPositionThree();
-//				}
-//				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
-//				{
-//					blockPositionTwo();
-//				}
-//				if(tensorAvgDist < 550)
-//				{
-//					blockPositionOne();
-//				}
-//			}
+			while(opModeIsActive() && (!(isStopRequested())))
+			{
+				if(tensorAvgDist > 725)
+				{
+					blockPositionThree();
+				}
+				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
+				{
+					blockPositionTwo();
+				}
+				if(tensorAvgDist < 550)
+				{
+					blockPositionOne();
+				}
+			}
 		}
 	}
 //--------------------------------------------------------------------------------------------------
