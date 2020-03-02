@@ -4,32 +4,18 @@ import org.firstinspires.ftc.leagueCode.misc.leagueMap;
 public class multiThreading extends Thread
 {
 	leagueMap robot = new leagueMap();
+	//This is what runs \/ \/ \/
 	public void run()
 	{
-		try
+		try//The code we actually want to run goes right here \/ \/ \/ \/
 		{
 			// Displaying the thread that is running
 			System.out.println("Thread " + Thread.currentThread().getId() + " is running");
-			
 		}
 		catch(Exception e)
 		{
 			// Throwing an exception
 			System.out.println("Exception is caught");
-		}
-	}
-	
-	// Main Class
-	public class Multithread
-	{
-		public void main(String[] args)
-		{
-			int n = 8;// Number of threads
-			for (int i = 0; i < 8; i++)
-			{
-				multiThreading object = new multiThreading();
-				object.start();
-			}
 		}
 	}
 }

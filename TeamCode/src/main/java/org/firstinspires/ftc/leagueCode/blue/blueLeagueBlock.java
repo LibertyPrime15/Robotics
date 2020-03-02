@@ -403,6 +403,10 @@ public void waitForStart()
 			alreadyRecorded = false;
 			for(Recognition recognition : updatedRecognitions)
 			{
+				//This starts our multiThreading Program
+				multiThreading object = new multiThreading();
+				object.start();
+				
 				telemetry.addLine("We're in the for loop");
 				telemetry.update();
 				if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
