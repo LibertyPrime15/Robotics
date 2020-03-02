@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.leagueCode.misc;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,31 +21,21 @@ public class leagueMap
     public DcMotor liftPrimary = null;
     public DcMotor liftSecondary = null;
 
-    public Servo flip1 = null;
-    public Servo flip2 = null;
-    public Servo wrist = null;
-    public Servo rotate = null;
-    public Servo grabber = null;
+    public Servo flip1         = null;
+    public Servo flip2         = null;
+    public Servo wrist         = null;
+    public Servo rotate        = null;
+    public Servo grabber       = null;
     public Servo plateGrabber1 = null;
     public Servo plateGrabber2 = null;
-    public Servo capStone = null;
-
-
-    public boolean canToggleIntake = true;
-
-    public ColorSensor sensorColor;
-
-//    public Servo arm6  = null;
-//    public Servo arm7  = null;
-//    public Servo arm8  = null;
-//    public Servo arm9  = null;
-//    public Servo arm10 = null;
-//
-//    public Servo arm11 = null;
-//    public Servo arm12 = null;
+    public Servo capStone      = null;
+	public CRServo measuringTape = null;
+	
+	public ColorSensor sensorColor;
+	
+	public boolean canToggleIntake = true;
 //--------------------------------------------------------------------------------------------------
     HardwareMap hwMap = null;
-
     public leagueMap(){}
 
     public void init(HardwareMap ahwMap)
@@ -54,30 +45,26 @@ public class leagueMap
         sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
 
         front_right = hwMap.get(DcMotor.class, "front_right");
-        front_left = hwMap.get(DcMotor.class, "front_left");
-        back_right = hwMap.get(DcMotor.class, "back_right");
-        back_left = hwMap.get(DcMotor.class, "back_left");
+        front_left  = hwMap.get(DcMotor.class, "front_left");
+        back_right  = hwMap.get(DcMotor.class, "back_right");
+        back_left   = hwMap.get(DcMotor.class, "back_left");
 
-        intake1 = hwMap.get(DcMotor.class, "intake1");
-        intake2 = hwMap.get(DcMotor.class, "intake2");
-        liftPrimary = hwMap.get(DcMotor.class, "liftPrimary");
+        intake1       = hwMap.get(DcMotor.class, "intake1");
+        intake2       = hwMap.get(DcMotor.class, "intake2");
+        liftPrimary   = hwMap.get(DcMotor.class, "liftPrimary");
         liftSecondary = hwMap.get(DcMotor.class, "liftSecondary");
 
         flip1 = hwMap.get(Servo.class, "flip1");
         flip2 = hwMap.get(Servo.class, "flip2");
 
-        wrist = hwMap.get(Servo.class, "wrist");
-        rotate = hwMap.get(Servo.class, "rotate");
+        wrist   = hwMap.get(Servo.class, "wrist");
+        rotate  = hwMap.get(Servo.class, "rotate");
         grabber = hwMap.get(Servo.class, "grabber");
 
         plateGrabber1  = hwMap.get(Servo.class, "plateGrabber1");
         plateGrabber2  = hwMap.get(Servo.class, "plateGrabber2");
-        capStone  = hwMap.get(Servo.class, "capStone");
-//        arm9  = hwMap.get(Servo.class, "arm9");
-//        arm10 = hwMap.get(Servo.class, "arm10");
-//
-//        arm11 = hwMap.get(Servo.class, "arm11");
-//        arm12 = hwMap.get(Servo.class, "arm12");
+        capStone       = hwMap.get(Servo.class, "capStone");
+		measuringTape  = hwMap.get(CRServo.class, "tape");
 //------------------------------
         front_right.setPower(0);
         front_left.setPower(0);
@@ -106,6 +93,7 @@ public class leagueMap
 
         intake1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //THIS IS COMMENTED OUT SO WE CAN MOVE THE MOTOR TO A POSITION USING A PID LOOP
 //        liftPrimary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		liftSecondary.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //------------------------------

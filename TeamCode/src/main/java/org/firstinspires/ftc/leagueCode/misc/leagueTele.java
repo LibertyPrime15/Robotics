@@ -52,6 +52,9 @@ public class leagueTele extends LinearOpMode
     
     //This tells the code what position the lift should be in at the moment
     int currentLiftPos = 0;
+    
+    //This is our capstone timer
+	double capstoneTimer;
 
     //This is a value that lowers the lift slightly when we want to place a brick
     int blockPlaceValue = 500;
@@ -179,7 +182,6 @@ public void initiateIntakeCycle()
 		normalTeleopStuff();
 	}
 	robot.grabber.setPosition(grabbed);
-
 }
 //--------------------------------------------------------------------------------------------------
 //this method stores most of our standard (not automated) teleop code like driving and toggling
@@ -187,7 +189,6 @@ public void initiateIntakeCycle()
 //making this a method allowed us to add this functionality to other methods easier
 public void normalTeleopStuff()
 {
-	//--------------------------------------------------------------------------------------------------
 	double frontRight;
 	double frontLeft;
 	double backRight;
@@ -203,7 +204,7 @@ public void normalTeleopStuff()
 	robot.front_left.setPower(frontLeft);
 	robot.back_right.setPower(backRight);
 	robot.back_left.setPower(backLeft);
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 	if(robot.sensorColor.red() > 2 * robot.sensorColor.blue())
 	{
 		hasBlock = true;
@@ -212,7 +213,7 @@ public void normalTeleopStuff()
 	{
 		hasBlock = false;
 	}
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 	//this spits out a block if for some reason we need to
 	if(gamepad1.left_bumper && canInitiateSpitCycle)
 	{
@@ -261,13 +262,12 @@ public void normalTeleopStuff()
 			robot.ungrabPlate();
 			blockIsGrabbed = false;
 		}
-
 	}
 	else if(!canInitiateSpitCycle && !gamepad1.left_bumper)
 	{
 		canInitiateSpitCycle = true;
 	}
-	//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 	if(canTogglePlateGrabber && gamepad1.dpad_left)
 	{
 		if(robot.plateGrabber1.getPosition() == 0.73 && canTogglePlateGrabber)
@@ -284,44 +284,64 @@ public void normalTeleopStuff()
 	{
 		canTogglePlateGrabber = true;
 	}
-	//------------------------------------------------------------------------------------------
-	if(canAddToLiftPos && gamepad1.dpad_up && nextLiftPos < 9)
+//------------------------------------------------------------------------------------------
+	if(canAddToLiftPos && gamepad2.dpad_up && nextLiftPos < 9)
 	{
 		nextLiftPos++;
 		canAddToLiftPos = false;
 	}
-	else if(!canAddToLiftPos && !gamepad1.dpad_up)
+	else if(!canAddToLiftPos && !gamepad2.dpad_up)
 	{
 		canAddToLiftPos = true;
 	}
-	if(canSubtractFromLiftPos && gamepad1.dpad_down && nextLiftPos > 0)
+	if(canSubtractFromLiftPos && gamepad2.dpad_down && nextLiftPos > 0)
 	{
 		nextLiftPos--;
 		canSubtractFromLiftPos = false;
 	}
-	else if(!canSubtractFromLiftPos && !gamepad1.dpad_down)
+	else if(!canSubtractFromLiftPos && !gamepad2.dpad_down)
 	{
 		canSubtractFromLiftPos = true;
 	}
 	telemetry.addData("Next lift position", nextLiftPos);
-	//--------------------------------------------------------------------------------------------------
-	if(gamepad1.a || gamepad2.a)
+//--------------------------------------------------------------------------------------------------
+	if(gamepad1.a)
 	{
 		nextPlacePos = 0;
 	}
-	if(gamepad1.x || gamepad2.x)
+	if(gamepad1.x)
 	{
 		nextPlacePos = 1;
 	}
-	if(gamepad1.y || gamepad2.y)
+	if(gamepad1.y)
 	{
 		nextPlacePos = 2;
 	}
-	if(gamepad1.b || gamepad2.b)
+	if(gamepad1.b)
 	{
 		nextPlacePos = 3;
 	}
-	//------------------------------------------------------------------------------------------
+//THIS CODE EXTENDS THE NEW MEASURING TAPE
+	if(gamepad2.y)
+	{
+		robot.measuringTape.setPower(1);
+	}
+//THIS RETRACTS THE MEASURING TAPE
+	else if(gamepad2.x)
+	{
+		robot.measuringTape.setPower(-1);
+	}
+//THIS CODE STOPS THE SERVO FORM MOVING AFTER WE LET GO
+	else
+	{
+		robot.measuringTape.setPower(0);
+	}
+//THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS
+	if(gamepad2.left_trigger !=0)
+	{
+		hasBlock = true;
+	}
+//------------------------------------------------------------------------------------------
 	if(nextPlacePos == 0)
 	{
 		telemetry.addLine("the next brick will be placed close");
@@ -338,18 +358,15 @@ public void normalTeleopStuff()
 	{
 		telemetry.addLine("the next brick will be placed on the right");
 	}
-	//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
 	if(gamepad1.dpad_right)
 	{
 		hasBlock = true;
 	}
-	//------------------------------------------------------------------------------------------
-	//------------------------------------------------------------------------------------------
-	//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
 	driveLiftToPosition();
 	telemetry.addData("Lift encoder position", robot.liftPrimary.getCurrentPosition());
 	telemetry.update();
-
 }
 //--------------------------------------------------------------------------------------------------
 //this sets both the flip servos to a position.
@@ -359,8 +376,7 @@ public void setFlipPosition(double position)
 	robot.flip2.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
-//this method moves the lift to it's next place position, as tracked with nextLiftPos and
-// nextPlacePos
+//this method moves the lift to it's next place position, as tracked with nextLiftPos and nextPlacePos
 //It allows our driver to press 1 button and have the robot do everything to get ready to place
 public void goToNextPosition()
 {
@@ -487,7 +503,6 @@ public void slapTheCap()
 		normalTeleopStuff();
 	}
 	robot.capStone.setPosition(capStore);
-
 }
 //--------------------------------------------------------------------------------------------------
 public double compensateAngle()
@@ -524,8 +539,52 @@ public void setRotateToCompensatedAngle()
 //------------------------------------------------------//
 //------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
     public void runOpMode()
     {
+    	capstoneTimer = System.currentTimeMillis();
         turnIMU();
         driveIMU();
         robot.resetLift();
@@ -562,7 +621,10 @@ public void setRotateToCompensatedAngle()
             }
             if(gamepad1.back)
             {
-                slapTheCap();
+            	if(capstoneTimer > 91000)
+				{
+					slapTheCap();
+				}
             }
         }
     }
