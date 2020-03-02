@@ -1,13 +1,11 @@
 ----------------------------------------------------------------------------------------------------
-Gamepad 1 =
-
-The side arm flipper boi                        ----- Jacob W is doing this
-//Extend the Tape measure                       ----- I put this onto CONTROLLER 222222
-//We need a timer so the capstone cannot be placed before 30 seconds
+Gamepad 1 ------------------------------------------------------------------------------------------
+The side arm flipper boi ---------------------------------------------------------------------------
+//Extend the Tape measure --------------------------------------------------------------------------
+//We need a timer so the capstone cannot be placed before 30 seconds ------- Track a block using boolean for thing ----- Place cycle will not work
 ----------------------------------------------------------------------------------------------------
-Gamepad 2 =
-
-//Put the stacking height onto gamepad 2
-//Color sensor override
-//Retract the measuring tape
+Gamepad 2 ------------------------------------------------------------------------------------------
+//Put the stacking height onto gamepad 2 -----------------------------------------------------------
+//Color sensor override         ----------- boolean
+//Retract the measuring tape -----------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------

@@ -53,7 +53,9 @@ public class leagueTele extends LinearOpMode
     //This tells the code what position the lift should be in at the moment
     int currentLiftPos = 0;
     
-    //This is our capstone timer
+    //This is our capstone checker thingy
+	boolean canPlaceLastBrick = false;
+	//This represents the time needed to pass before we can place our capstone on the plate
 	double capstoneTimer;
 
     //This is a value that lowers the lift slightly when we want to place a brick
@@ -285,21 +287,21 @@ public void normalTeleopStuff()
 		canTogglePlateGrabber = true;
 	}
 //------------------------------------------------------------------------------------------
-	if(canAddToLiftPos && gamepad2.dpad_up && nextLiftPos < 9)
+	if(canAddToLiftPos && (gamepad1.dpad_up || gamepad2.dpad_up) && nextLiftPos < 9)
 	{
 		nextLiftPos++;
 		canAddToLiftPos = false;
 	}
-	else if(!canAddToLiftPos && !gamepad2.dpad_up)
+	else if(!canAddToLiftPos && (!gamepad1.dpad_up || !gamepad2.dpad_up))
 	{
 		canAddToLiftPos = true;
 	}
-	if(canSubtractFromLiftPos && gamepad2.dpad_down && nextLiftPos > 0)
+	if(canSubtractFromLiftPos && (gamepad2.dpad_down || gamepad2.dpad_down) && nextLiftPos > 0)
 	{
 		nextLiftPos--;
 		canSubtractFromLiftPos = false;
 	}
-	else if(!canSubtractFromLiftPos && !gamepad2.dpad_down)
+	else if(!canSubtractFromLiftPos && (!gamepad2.dpad_down || !gamepad2.dpad_down))
 	{
 		canSubtractFromLiftPos = true;
 	}
@@ -331,15 +333,15 @@ public void normalTeleopStuff()
 	{
 		robot.measuringTape.setPower(-1);
 	}
-//THIS CODE STOPS THE SERVO FORM MOVING AFTER WE LET GO
-	else
-	{
-		robot.measuringTape.setPower(0);
-	}
 //THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS
 	if(gamepad2.left_trigger !=0)
 	{
 		hasBlock = true;
+	}
+//THIS DETERMINES WHETHER OR NOT WE CAN PLACE OUR LAST BRICK
+	if(gamepad2.dpad_up)
+	{
+		canPlaceLastBrick = true;
 	}
 //------------------------------------------------------------------------------------------
 	if(nextPlacePos == 0)
@@ -359,9 +361,10 @@ public void normalTeleopStuff()
 		telemetry.addLine("the next brick will be placed on the right");
 	}
 //------------------------------------------------------------------------------------------
+//THIS CODE STOPS THE SERVO FORM MOVING AFTER WE LET GO
 	if(gamepad1.dpad_right)
 	{
-		hasBlock = true;
+		robot.measuringTape.setPower(-1);
 	}
 //------------------------------------------------------------------------------------------
 	driveLiftToPosition();
@@ -443,6 +446,22 @@ public void place()
 	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
 	{
 		telemetry.addLine("we are in the place method");
+		normalTeleopStuff();
+	}
+////NORMAL FUNCTION
+//	if(gamepad1.right_bumper && capstoneTimer < 91000 && !canPlaceLastBrick)
+//	{
+//		telemetry.addLine("You're good to Place");
+//	}
+////TIMER IS UP AND PERMISSION TO PLACE IS GRANTED
+//	else if(gamepad1.right_bumper && capstoneTimer > 91000 && canPlaceLastBrick)
+//	{
+//		telemetry.addLine("You're good to Place");
+//	}
+//TIMER IS UP AND PERMISSION TO PLACE IS NOT GRANTED
+	if(gamepad1.right_bumper && capstoneTimer > 91000 && !canPlaceLastBrick)
+	{
+		telemetry.addLine("YOU NEED TO ENABLE THE FINAL BRICK");
 		normalTeleopStuff();
 	}
 	robot.grabber.setPosition(ungrabbed);
@@ -584,7 +603,6 @@ public void setRotateToCompensatedAngle()
 	
     public void runOpMode()
     {
-    	capstoneTimer = System.currentTimeMillis();
         turnIMU();
         driveIMU();
         robot.resetLift();
@@ -597,35 +615,36 @@ public void setRotateToCompensatedAngle()
         waitForStart();
         initiateIntakeCycle();
 //--------------------------------------------------------------------------------------------------
-        while(opModeIsActive() && (!(isStopRequested())))
-        {
-            normalTeleopStuff();
-            if(gamepad1.left_stick_button)
-            {
-                if(blockIsGrabbed)
-                {
-                    regrabBlock();
-                }
-                else
-                {
-                    initiateIntakeCycle();
-                }
-            }
-            if(gamepad1.right_stick_button)
-            {
-                goToNextPosition();
-            }
-            if(gamepad1.right_bumper)
-            {
-                place();
-            }
-            if(gamepad1.back)
-            {
-            	if(capstoneTimer > 91000)
+        if(opModeIsActive() && (!(isStopRequested())))
+		{
+			capstoneTimer = System.currentTimeMillis();
+			while(opModeIsActive() && (!(isStopRequested())))
+			{
+				normalTeleopStuff();
+				if(gamepad1.left_stick_button)
+				{
+					if(blockIsGrabbed)
+					{
+						regrabBlock();
+					}
+					else
+					{
+						initiateIntakeCycle();
+					}
+				}
+				if(gamepad1.right_stick_button)
+				{
+					goToNextPosition();
+				}
+				if(gamepad1.right_bumper)
+				{
+					place();
+				}
+				if(gamepad1.back)
 				{
 					slapTheCap();
 				}
-            }
+			}
         }
     }
 
