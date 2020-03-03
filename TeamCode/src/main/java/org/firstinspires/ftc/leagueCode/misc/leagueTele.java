@@ -53,8 +53,8 @@ public class leagueTele extends LinearOpMode
     //This tells the code what position the lift should be in at the moment
     int currentLiftPos = 0;
     
-    //This is our capstone checker thingy
-	boolean canPlaceLastBrick = false;
+	//Whether or not the capstone has been activated
+	boolean capStonePlaced    = false;
 	//This represents the time needed to pass before we can place our capstone on the plate
 	double capstoneTimer;
 
@@ -333,15 +333,15 @@ public void normalTeleopStuff()
 	{
 		robot.measuringTape.setPower(-1);
 	}
-//THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS
+//THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS - true
 	if(gamepad2.left_trigger !=0)
 	{
 		hasBlock = true;
 	}
-//THIS DETERMINES WHETHER OR NOT WE CAN PLACE OUR LAST BRICK
-	if(gamepad2.dpad_up)
+//THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS - false
+	if(gamepad2.right_trigger !=0)
 	{
-		canPlaceLastBrick = true;
+		hasBlock = false;
 	}
 //------------------------------------------------------------------------------------------
 	if(nextPlacePos == 0)
@@ -448,21 +448,30 @@ public void place()
 		telemetry.addLine("we are in the place method");
 		normalTeleopStuff();
 	}
-////NORMAL FUNCTION
-//	if(gamepad1.right_bumper && capstoneTimer < 91000 && !canPlaceLastBrick)
-//	{
-//		telemetry.addLine("You're good to Place");
-//	}
-////TIMER IS UP AND PERMISSION TO PLACE IS GRANTED
-//	else if(gamepad1.right_bumper && capstoneTimer > 91000 && canPlaceLastBrick)
-//	{
-//		telemetry.addLine("You're good to Place");
-//	}
-//TIMER IS UP AND PERMISSION TO PLACE IS NOT GRANTED
-	if(gamepad1.right_bumper && capstoneTimer > 91000 && !canPlaceLastBrick)
+//NORMAL FUNCTION
+	if(gamepad1.right_bumper && capstoneTimer < 90000 && !capStonePlaced)
 	{
-		telemetry.addLine("YOU NEED TO ENABLE THE FINAL BRICK");
-		normalTeleopStuff();
+		telemetry.addLine("Placing the brick");
+		telemetry.update();
+	}
+//TIMER IS READY AND THE CAPSTONE HAS BEEN PLACED ON THE BLOCK
+	else if(gamepad1.right_bumper && capStonePlaced && capstoneTimer > 90000)
+	{
+		telemetry.addLine("Placing the brick");
+		telemetry.update();
+	}
+//IF THE DRIVER IS PLACING A BRICK BEFORE THE CAPSTONE BRICK
+	else if(gamepad1.right_bumper && !capStonePlaced && capstoneTimer > 90000)
+	{
+		telemetry.addLine("Hurry it up gamer!!!");
+		telemetry.update();
+	}
+//IF THE TIMER IS NOT READY AND THE CAPSTONE IS
+	else if(gamepad1.right_bumper && capStonePlaced && capstoneTimer < 90000)
+	{
+		telemetry.addLine("Waiting on the Timer");
+		telemetry.update();
+		normalTeleopStuff();//Unsure what exactly is supposed to go right here
 	}
 	robot.grabber.setPosition(ungrabbed);
 	blockIsGrabbed = false;
@@ -522,6 +531,7 @@ public void slapTheCap()
 		normalTeleopStuff();
 	}
 	robot.capStone.setPosition(capStore);
+	capStonePlaced = true;
 }
 //--------------------------------------------------------------------------------------------------
 public double compensateAngle()
