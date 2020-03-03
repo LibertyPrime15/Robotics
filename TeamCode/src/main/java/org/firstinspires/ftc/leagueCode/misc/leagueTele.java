@@ -287,6 +287,7 @@ public void normalTeleopStuff()
 		canTogglePlateGrabber = true;
 	}
 //------------------------------------------------------------------------------------------
+//CAN BE DRIVER BY EITHER GAMEPAD NOW
 	if(canAddToLiftPos && (gamepad1.dpad_up || gamepad2.dpad_up) && nextLiftPos < 9)
 	{
 		nextLiftPos++;
@@ -323,6 +324,23 @@ public void normalTeleopStuff()
 	{
 		nextPlacePos = 3;
 	}
+//------------------------------------------------------------------------------------------
+//THIS IS THE SIDE GRABBER CODE
+	if(gamepad2.right_stick_button)
+	{
+		robot.sideGrabber.setPosition(1);
+	}
+	else if(gamepad2.left_stick_button)
+	{
+		robot.sideGrabber.setPosition(-1);
+	}
+//------------------------------------------------------------------------------------------
+
+
+
+
+
+//------------------------------------------------------------------------------------------
 //THIS CODE EXTENDS THE NEW MEASURING TAPE
 	if(gamepad2.y)
 	{
@@ -343,6 +361,12 @@ public void normalTeleopStuff()
 	{
 		hasBlock = false;
 	}
+//------------------------------------------------------------------------------------------
+
+
+
+
+
 //------------------------------------------------------------------------------------------
 	if(nextPlacePos == 0)
 	{
@@ -448,6 +472,7 @@ public void place()
 		telemetry.addLine("we are in the place method");
 		normalTeleopStuff();
 	}
+//------------------------------------------------------------------------------------------
 //NORMAL FUNCTION
 	if(gamepad1.right_bumper && capstoneTimer < 90000 && !capStonePlaced)
 	{
@@ -473,6 +498,7 @@ public void place()
 		telemetry.update();
 		normalTeleopStuff();//Unsure what exactly is supposed to go right here
 	}
+//------------------------------------------------------------------------------------------
 	robot.grabber.setPosition(ungrabbed);
 	blockIsGrabbed = false;
 	start = System.currentTimeMillis();

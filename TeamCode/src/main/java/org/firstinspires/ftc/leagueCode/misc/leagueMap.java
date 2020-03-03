@@ -29,6 +29,7 @@ public class leagueMap
     public Servo plateGrabber1 = null;
     public Servo plateGrabber2 = null;
     public Servo capStone      = null;
+	public Servo sideGrabber   = null;
 	public CRServo measuringTape = null;
 	
 	public ColorSensor sensorColor;
@@ -64,6 +65,7 @@ public class leagueMap
         plateGrabber1  = hwMap.get(Servo.class, "plateGrabber1");
         plateGrabber2  = hwMap.get(Servo.class, "plateGrabber2");
         capStone       = hwMap.get(Servo.class, "capStone");
+		sideGrabber    = hwMap.get(Servo.class, "sideGrabber");
 		measuringTape  = hwMap.get(CRServo.class, "tape");
 //------------------------------
         front_right.setPower(0);
