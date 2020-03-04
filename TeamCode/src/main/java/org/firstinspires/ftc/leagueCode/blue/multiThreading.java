@@ -1,22 +1,32 @@
 package org.firstinspires.ftc.leagueCode.blue;
-import org.firstinspires.ftc.leagueCode.misc.leagueMap;
-
 public class multiThreading extends Thread
 {
-	leagueMap robot = new leagueMap();
-	//This is what runs \/ \/ \/
+	public int cycles1 = 0;
+	public int cycles2 = 0;
+	private blueLeagueBlock opMode = null;
+
+//--------------------------------------------------------------------------------------------------
+	public void passInOpMode(blueLeagueBlock opMode)
+	{
+		this.opMode = opMode;
+	}
+//--------------------------------------------------------------------------------------------------
 	public void run()
 	{
-		try//The code we actually want to run goes right here \/ \/ \/ \/
+		try
 		{
-			// Displaying the thread that is running
-			System.out.println("Thread " + Thread.currentThread().getId() + " is running");
+			while(true)
+			{
+				cycles1++;
+				cycles2--;
+				opMode.passPosition(cycles1, cycles2);
+			}
 		}
 		catch(Exception e)
 		{
 			// Throwing an exception
-			System.out.println("Exception is caught");
 		}
+		this.stop();
 	}
 }
 //--------------------------------------------------------------------------------------------------

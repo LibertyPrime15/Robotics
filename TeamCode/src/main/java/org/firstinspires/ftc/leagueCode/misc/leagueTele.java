@@ -32,8 +32,12 @@ public class leagueTele extends LinearOpMode
     // might want the lift to go to
     public int[] liftPositions = {0, 500, 900, 1500, 2150, 2650, 3250, 3550, 4000, 4000};
 
-    //these are the servo positions for the end effector - they allow us to change these values
-    // everywhere in the code at once
+    //These are our side blocker grabber positions
+    double grabbedFlippedOut = .5;
+    double grabbedFlipperIn  = 0;
+    
+    //These are the servo positions for the end effector - they allow us to change these values
+    //everywhere in the code at once
     double flippedIn = 0.93;
     double flippedGrab = 0.83;
     double flippedOut = 0.2;
@@ -54,7 +58,7 @@ public class leagueTele extends LinearOpMode
     int currentLiftPos = 0;
     
 	//Whether or not the capstone has been activated
-	boolean capStonePlaced    = false;
+	boolean capStonePlaced = false;
 	//This represents the time needed to pass before we can place our capstone on the plate
 	double capstoneTimer;
 
@@ -149,6 +153,12 @@ public void setLiftPosition(int position)
 	{
 		currentLiftPos = position;
 	}
+}
+//--------------------------------------------------------------------------------------------------
+//This method moves our side block grabber into it's position
+public void setSideGrabberPosition(double position)
+{
+	robot.sideGrabber.setPosition(position);
 }
 //--------------------------------------------------------------------------------------------------
 //this method starts an intake cycle - it will start the intake, wait until we have a block, and
@@ -297,12 +307,12 @@ public void normalTeleopStuff()
 	{
 		canAddToLiftPos = true;
 	}
-	if(canSubtractFromLiftPos && (gamepad2.dpad_down || gamepad2.dpad_down) && nextLiftPos > 0)
+	if(canSubtractFromLiftPos && (gamepad1.dpad_down || gamepad2.dpad_down) && nextLiftPos > 0)
 	{
 		nextLiftPos--;
 		canSubtractFromLiftPos = false;
 	}
-	else if(!canSubtractFromLiftPos && (!gamepad2.dpad_down || !gamepad2.dpad_down))
+	else if(!canSubtractFromLiftPos && (!gamepad1.dpad_down || !gamepad2.dpad_down))
 	{
 		canSubtractFromLiftPos = true;
 	}
@@ -328,41 +338,29 @@ public void normalTeleopStuff()
 //THIS IS THE SIDE GRABBER CODE
 	if(gamepad2.right_stick_button)
 	{
-		robot.sideGrabber.setPosition(1);
+		setSideGrabberPosition(grabbedFlippedOut);
 	}
 	else if(gamepad2.left_stick_button)
 	{
-		robot.sideGrabber.setPosition(-1);
+		setSideGrabberPosition(grabbedFlipperIn);
 	}
 //------------------------------------------------------------------------------------------
 
-
-
-
-
-//------------------------------------------------------------------------------------------
 //THIS CODE EXTENDS THE NEW MEASURING TAPE
-	if(gamepad2.y)
-	{
-		robot.measuringTape.setPower(1);
-	}
-//THIS RETRACTS THE MEASURING TAPE
-	else if(gamepad2.x)
-	{
-		robot.measuringTape.setPower(-1);
-	}
+	robot.measuringTape.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
+
+//------------------------------------------------------------------------------------------
 //THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS - true
-	if(gamepad2.left_trigger !=0)
+	if(gamepad1.dpad_right)
 	{
 		hasBlock = true;
 	}
-//THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS - false
-	if(gamepad2.right_trigger !=0)
-	{
-		hasBlock = false;
-	}
 //------------------------------------------------------------------------------------------
-
+	if(gamepad2.dpad_up)
+	{
+		capStonePlaced = true;
+	}
 
 
 
@@ -383,12 +381,6 @@ public void normalTeleopStuff()
 	if(nextPlacePos == 3)
 	{
 		telemetry.addLine("the next brick will be placed on the right");
-	}
-//------------------------------------------------------------------------------------------
-//THIS CODE STOPS THE SERVO FORM MOVING AFTER WE LET GO
-	if(gamepad1.dpad_right)
-	{
-		robot.measuringTape.setPower(-1);
 	}
 //------------------------------------------------------------------------------------------
 	driveLiftToPosition();
@@ -473,30 +465,9 @@ public void place()
 		normalTeleopStuff();
 	}
 //------------------------------------------------------------------------------------------
-//NORMAL FUNCTION
-	if(gamepad1.right_bumper && capstoneTimer < 90000 && !capStonePlaced)
+	while(capStonePlaced && capstoneTimer < 90000)
 	{
-		telemetry.addLine("Placing the brick");
-		telemetry.update();
-	}
-//TIMER IS READY AND THE CAPSTONE HAS BEEN PLACED ON THE BLOCK
-	else if(gamepad1.right_bumper && capStonePlaced && capstoneTimer > 90000)
-	{
-		telemetry.addLine("Placing the brick");
-		telemetry.update();
-	}
-//IF THE DRIVER IS PLACING A BRICK BEFORE THE CAPSTONE BRICK
-	else if(gamepad1.right_bumper && !capStonePlaced && capstoneTimer > 90000)
-	{
-		telemetry.addLine("Hurry it up gamer!!!");
-		telemetry.update();
-	}
-//IF THE TIMER IS NOT READY AND THE CAPSTONE IS
-	else if(gamepad1.right_bumper && capStonePlaced && capstoneTimer < 90000)
-	{
-		telemetry.addLine("Waiting on the Timer");
-		telemetry.update();
-		normalTeleopStuff();//Unsure what exactly is supposed to go right here
+		normalTeleopStuff();
 	}
 //------------------------------------------------------------------------------------------
 	robot.grabber.setPosition(ungrabbed);

@@ -30,6 +30,11 @@ public class blueLeagueBlock extends LinearOpMode
 	public static float tensorRight;
 	public float tensorAvgDist;
 	
+	double yPos = 0;
+	double xPos = 0;
+	
+	double testCounter = 0;
+	
 	double startTime = System.currentTimeMillis();
 	double endTime;
 	double actualTime;
@@ -171,6 +176,12 @@ private void turnAngle(double angle, double time)
 	}
 	robot.Halt();
 	robot.resetEncoder();
+}
+//--------------------------------------------------------------------------------------------------
+public void passPosition(double yPos, double xPos)
+{
+	this.yPos = yPos;
+	this.xPos = xPos;
 }
 //--------------------------------------------------------------------------------------------------
 //This is a method that will move a certain distance at a certain angle and a certain power
@@ -388,6 +399,10 @@ private void blockPositionThree()
 public void waitForStart()
 {
 	boolean alreadyRecorded;
+	//This starts our multiThreading Program
+	multiThreading object = new multiThreading();
+	object.start();
+	object.passInOpMode(this);
 	while (!isStarted())
 	{
 		if(tfod != null)
@@ -403,10 +418,6 @@ public void waitForStart()
 			alreadyRecorded = false;
 			for(Recognition recognition : updatedRecognitions)
 			{
-				//This starts our multiThreading Program
-				multiThreading object = new multiThreading();
-				object.start();
-				
 				telemetry.addLine("We're in the for loop");
 				telemetry.update();
 				if(recognition.getLabel() == LABEL_SECOND_ELEMENT)
@@ -475,19 +486,25 @@ public void waitForStart()
 		{
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
-				if(tensorAvgDist > 725)
-				{
-					blockPositionThree();
-				}
-				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
-				{
-					blockPositionTwo();
-				}
-				if(tensorAvgDist < 550)
-				{
-					blockPositionOne();
-				}
+				telemetry.addData("yPos", yPos);
+				telemetry.addData("xPos", xPos);
+				testCounter++;
+				telemetry.addData("testCounter", testCounter);
+				telemetry.update();
+//				if(tensorAvgDist > 725)
+//				{
+//					blockPositionThree();
+//				}
+//				if((tensorAvgDist < 725) && (tensorAvgDist > 550))
+//				{
+//					blockPositionTwo();
+//				}
+//				if(tensorAvgDist < 550)
+//				{
+//					blockPositionOne();
+//				}
 			}
+			this.stop();
 		}
 	}
 //--------------------------------------------------------------------------------------------------

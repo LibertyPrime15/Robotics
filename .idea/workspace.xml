@@ -2,8 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a8da2075-97ce-4e0c-8ad2-4405cc160569" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/leagueCode/misc/leagueTele.class" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/javac/debug/classes/org/firstinspires/ftc/leagueCode/misc/leagueTele.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/transforms/dexBuilder/debug/0/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/transforms/dexBuilder/debug/0/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/transforms/dexBuilder/debug/0/org/firstinspires/ftc/leagueCode/misc/leagueTele.dex" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/transforms/dexBuilder/debug/0/org/firstinspires/ftc/leagueCode/misc/leagueTele.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/build/outputs/apk/debug/TeamCode-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/build/outputs/apk/debug/TeamCode-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,7 +30,7 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="ZY2249KF4T" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="ZY2249H2FD" />
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
@@ -25,20 +40,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
-              <caret line="289" column="37" selection-start-line="289" selection-start-column="37" selection-end-line="289" selection-end-column="37" />
+            <state relative-caret-position="187">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="100" selection-start-line="2" selection-start-column="100" selection-end-line="2" selection-end-column="100" />
+            <state relative-caret-position="253">
+              <caret line="403" column="6" selection-start-line="403" selection-start-column="6" selection-end-line="403" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+              <folding>
+                <element signature="e#649#650#0" expanded="true" />
+                <element signature="e#676#677#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/paulsMultiThreadTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="15" column="11" lean-forward="true" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
+              <folding>
+                <element signature="e#341#342#0" expanded="true" />
+                <element signature="e#368#369#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -54,8 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>currentPosition</find>
-      <find>null</find>
       <find>getCurrent</find>
       <find>getCurren</find>
       <find>curRHeading</find>
@@ -82,6 +121,10 @@
       <find>hasBlock</find>
       <find>hasBlock = false;</find>
       <find>hasBlock = true;</find>
+      <find>leagueTele</find>
+      <find>bumper</find>
+      <find>Multi</find>
+      <find>passP</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -90,7 +133,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/red/blueLeaguePlate.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/red/redPlateLeague.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/bluePlateLeague.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/leagueMap.java" />
@@ -135,12 +177,13 @@
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeaguePlate.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/red/redLeagueBlock.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueMultiThreadMethods.java" />
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java" />
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTeleTest.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueMap.java" />
-        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java" />
+        <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/paulsMultiThreadTest.java" />
       </list>
     </option>
   </component>
@@ -248,8 +291,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.firstinspires.ftc.leagueCode.misc" />
       <recent name="org.firstinspires.ftc.leagueCode.blue" />
+      <recent name="org.firstinspires.ftc.leagueCode.misc" />
       <recent name="org.firstinspires.ftc.leagueCode" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -405,42 +448,6 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>349</line>
-          <properties />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>350</line>
-          <properties />
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>351</line>
-          <properties />
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>352</line>
-          <properties />
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>348</line>
-          <properties />
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>353</line>
-          <properties />
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
           <line>355</line>
           <properties />
           <option name="timeStamp" value="14" />
@@ -459,375 +466,147 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>344</line>
-          <properties />
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>345</line>
-          <properties />
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>346</line>
-          <properties />
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>347</line>
-          <properties />
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>343</line>
-          <properties />
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>288</line>
+          <line>298</line>
           <properties />
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>290</line>
+          <line>300</line>
           <properties />
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>291</line>
+          <line>301</line>
           <properties />
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>292</line>
+          <line>302</line>
           <properties />
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>293</line>
+          <line>303</line>
           <properties />
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>294</line>
+          <line>304</line>
           <properties />
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>295</line>
+          <line>305</line>
           <properties />
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>296</line>
+          <line>306</line>
           <properties />
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>297</line>
+          <line>307</line>
           <properties />
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>298</line>
+          <line>308</line>
           <properties />
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>299</line>
+          <line>309</line>
           <properties />
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>300</line>
+          <line>310</line>
           <properties />
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>301</line>
+          <line>311</line>
           <properties />
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>302</line>
+          <line>312</line>
           <properties />
           <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>303</line>
+          <line>313</line>
           <properties />
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>304</line>
+          <line>314</line>
           <properties />
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>305</line>
+          <line>315</line>
           <properties />
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>306</line>
+          <line>316</line>
           <properties />
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>307</line>
+          <line>317</line>
           <properties />
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>308</line>
+          <line>318</line>
           <properties />
           <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>391</line>
-          <properties />
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>390</line>
-          <properties />
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>389</line>
-          <properties />
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>388</line>
-          <properties />
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>387</line>
-          <properties />
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>57</line>
+          <line>61</line>
           <properties />
           <option name="timeStamp" value="54" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>482</line>
-          <properties />
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>483</line>
-          <properties />
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>486</line>
-          <properties />
-          <option name="timeStamp" value="68" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>484</line>
-          <properties />
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>488</line>
-          <properties />
-          <option name="timeStamp" value="70" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>489</line>
-          <properties />
-          <option name="timeStamp" value="71" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>492</line>
-          <properties />
-          <option name="timeStamp" value="73" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>481</line>
-          <properties />
-          <option name="timeStamp" value="75" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>487</line>
-          <properties />
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>55</line>
+          <line>59</line>
           <properties />
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>559</line>
+          <line>530</line>
           <properties />
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>480</line>
-          <properties />
-          <option name="timeStamp" value="91" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>477</line>
-          <properties />
-          <option name="timeStamp" value="93" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>475</line>
+          <line>467</line>
           <properties />
           <option name="timeStamp" value="94" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>476</line>
-          <properties />
-          <option name="timeStamp" value="95" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>493</line>
-          <properties />
-          <option name="timeStamp" value="96" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>494</line>
-          <properties />
-          <option name="timeStamp" value="97" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>495</line>
-          <properties />
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>496</line>
-          <properties />
-          <option name="timeStamp" value="99" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>498</line>
-          <properties />
-          <option name="timeStamp" value="100" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>499</line>
-          <properties />
-          <option name="timeStamp" value="101" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>478</line>
-          <properties />
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>490</line>
-          <properties />
-          <option name="timeStamp" value="105" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>491</line>
-          <properties />
-          <option name="timeStamp" value="106" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>485</line>
-          <properties />
-          <option name="timeStamp" value="107" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>479</line>
-          <properties />
-          <option name="timeStamp" value="108" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>497</line>
-          <properties />
-          <option name="timeStamp" value="109" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>358</line>
-          <properties />
-          <option name="timeStamp" value="118" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>361</line>
-          <properties />
-          <option name="timeStamp" value="119" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>359</line>
-          <properties />
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>360</line>
-          <properties />
-          <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
@@ -837,87 +616,232 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>362</line>
-          <properties />
-          <option name="timeStamp" value="124" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>329</line>
+          <line>339</line>
           <properties />
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>328</line>
+          <line>338</line>
           <properties />
           <option name="timeStamp" value="127" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>331</line>
+          <line>341</line>
           <properties />
           <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>335</line>
+          <line>345</line>
           <properties />
           <option name="timeStamp" value="129" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>334</line>
+          <line>344</line>
           <properties />
           <option name="timeStamp" value="130" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>333</line>
+          <line>343</line>
           <properties />
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>332</line>
+          <line>342</line>
           <properties />
           <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>330</line>
+          <line>340</line>
           <properties />
           <option name="timeStamp" value="133" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>327</line>
+          <line>337</line>
           <properties />
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>289</line>
+          <line>299</line>
           <properties />
           <option name="timeStamp" value="136" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>468</line>
+          <properties />
+          <option name="timeStamp" value="138" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>469</line>
+          <properties />
+          <option name="timeStamp" value="139" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>470</line>
+          <properties />
+          <option name="timeStamp" value="140" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>359</line>
+          <properties />
+          <option name="timeStamp" value="141" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>360</line>
+          <properties />
+          <option name="timeStamp" value="142" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>362</line>
+          <properties />
+          <option name="timeStamp" value="143" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>361</line>
+          <properties />
+          <option name="timeStamp" value="146" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>34</line>
+          <properties />
+          <option name="timeStamp" value="152" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>161</line>
+          <properties />
+          <option name="timeStamp" value="153" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>160</line>
+          <properties />
+          <option name="timeStamp" value="154" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>159</line>
+          <properties />
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>157</line>
+          <properties />
+          <option name="timeStamp" value="157" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>156</line>
+          <properties />
+          <option name="timeStamp" value="158" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>402</line>
+          <properties />
+          <option name="timeStamp" value="161" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>403</line>
+          <properties />
+          <option name="timeStamp" value="162" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>404</line>
+          <properties />
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>506</line>
+          <properties />
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>492</line>
+          <properties />
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>491</line>
+          <properties />
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>490</line>
+          <properties />
+          <option name="timeStamp" value="167" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>489</line>
+          <properties />
+          <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java</url>
+          <line>488</line>
+          <properties />
+          <option name="timeStamp" value="169" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-field">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>58</line>
+          <line>62</line>
           <properties field="capstoneTimer" class="org.firstinspires.ftc.leagueCode.misc.leagueTele" />
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-field">
           <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
-          <line>56</line>
+          <line>60</line>
           <properties field="capStonePlaced" class="org.firstinspires.ftc.leagueCode.misc.leagueTele" />
           <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>36</line>
+          <properties field="grabbedFlipperIn" class="org.firstinspires.ftc.leagueCode.misc.leagueTele" />
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>35</line>
+          <properties field="grabbedFlippedOut" class="org.firstinspires.ftc.leagueCode.misc.leagueTele" />
+          <option name="timeStamp" value="151" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java</url>
+          <line>158</line>
+          <properties class="org.firstinspires.ftc.leagueCode.misc.leagueTele" method="setSideGrabberPosition">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="156" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/raymondSolo.java" />
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/PaulsraymondSolo.java" />
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/teleOp.java" />
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/leagueAuto.java" />
@@ -1133,31 +1057,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="5" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/tensorFlowTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-289">
-          <caret line="71" column="7" selection-start-line="71" selection-start-column="7" selection-end-line="71" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTeleTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
           <caret line="99" column="58" selection-start-line="99" selection-start-column="58" selection-end-line="99" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="294" column="1" lean-forward="true" selection-start-line="294" selection-start-column="1" selection-end-line="294" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1168,17 +1071,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo">
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/tensorFlowTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="100" selection-start-line="2" selection-start-column="100" selection-end-line="2" selection-end-column="100" />
+        <state relative-caret-position="17">
+          <caret line="71" column="7" selection-start-line="71" selection-start-column="7" selection-end-line="71" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/misc/leagueTele.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="289" column="37" selection-start-line="289" selection-start-column="37" selection-end-line="289" selection-end-column="37" />
+        <state relative-caret-position="204">
+          <caret line="336" column="35" lean-forward="true" selection-start-line="336" selection-start-column="35" selection-end-line="336" selection-end-column="35" />
+          <folding>
+            <element signature="e#6224#6225#0" expanded="true" />
+            <element signature="e#6245#6246#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/Todo">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/blueLeagueBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="403" column="6" selection-start-line="403" selection-start-column="6" selection-end-line="403" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/multiThreading.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+          <folding>
+            <element signature="e#649#650#0" expanded="true" />
+            <element signature="e#676#677#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/leagueCode/blue/paulsMultiThreadTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="11" lean-forward="true" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
+          <folding>
+            <element signature="e#341#342#0" expanded="true" />
+            <element signature="e#368#369#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
