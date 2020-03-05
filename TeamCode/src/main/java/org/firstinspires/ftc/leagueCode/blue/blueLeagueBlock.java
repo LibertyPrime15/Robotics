@@ -202,20 +202,20 @@ public ArrayList<Integer> returnEndocerValues()
 		count++;
 	}
 	average = sum/count;
-	return average;
+	telemetry.addData("Return list Average", average);
+	telemetry.addData("return List", returnList);
+	telemetry.update();
 }
 //--------------------------------------------------------------------------------------------------
-	
-	public double returnAngle()
-	{
-		angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-		this.imuTurn.getPosition();
-		currAngle = angles.firstAngle;
-		return currAngle;
-	}
+public double returnAngle()
+{
+	angles = this.imuTurn.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+	this.imuTurn.getPosition();
+	currAngle = angles.firstAngle;
+	return currAngle;
+}
 //--------------------------------------------------------------------------------------------------
-	
-	//This is a method that will move a certain distance at a certain angle and a certain power
+//This is a method that will move a certain distance at a certain angle and a certain power
 //Distance is the distance that we want to travel, in inches
 //Angle is the absolute field angle that we want to move along; 90 degrees is pointing from the quarry side to the foundation side on blue
 //on red, 90 degrees points from foundation to quarry. 0 degrees is directly off the starting wall, and 180 or -180 is towards the
