@@ -108,18 +108,18 @@ private void initTfod()
 }
 //--------------------------------------------------------------------------------------------------
 //If you don't know how to use this method than please don't call it and expect it to work
-private void cycleTimeStart()
-{
-	double startTime = 0;
-	double previousStartTime = 0;
-//-------------------------------------------------------------
-//This bit \/ goes inside of an if statement or in a while loop
-	previousStartTime = startTime;
-	startTime = System.currentTimeMillis();
-	double cycleTime = startTime - previousStartTime;
-	telemetry.addData("Cycle Time Average", cycleTime);
-	telemetry.update();
-}
+//private void cycleTimeStart()
+//{
+//	double startTime = 0;
+//	double previousStartTime = 0;
+////-------------------------------------------------------------
+////This bit \/ goes inside of an if statement or in a while loop
+//	previousStartTime = startTime;
+//	startTime = System.currentTimeMillis();
+//	double cycleTime = startTime - previousStartTime;
+//	telemetry.addData("Cycle Time Average", cycleTime);
+//	telemetry.update();
+//}
 //--------------------------------------------------------------------------------------------------
 //This method turns the robot a certain angle: 0-180 to the left && 0 to -180 in the right
 private void turnAngle(double angle, double time)

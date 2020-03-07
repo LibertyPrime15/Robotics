@@ -105,21 +105,6 @@ private void turnIMU()
 	imu.initialize(parameters);
 }
 //--------------------------------------------------------------------------------------------------
-private void driveIMU()
-{
-	BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-	parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-	parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-	parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-	parameters.loggingEnabled = true;
-	parameters.loggingTag = "IMU";
-	parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-	robot.init(hardwareMap);
-	imu = hardwareMap.get(BNO055IMU.class,"imu2");
-	imu.initialize(parameters);
-}
-//--------------------------------------------------------------------------------------------------
 //this method tells the lift motors to drive towards their target position and updates our tracking booleans
 public void driveLiftToPosition()
 {
@@ -210,7 +195,6 @@ public void normalTeleopStuff()
 	frontLeft  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
 	backRight  = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) - (0.25 * gamepad1.left_stick_x) + gamepad1.right_stick_x;
 	backLeft   = gamepad1.right_stick_y + (0.25 * gamepad1.left_stick_y) + (0.25 * gamepad1.left_stick_x) - gamepad1.right_stick_x;
-	telemetry.addData("Right stick x", gamepad1.right_stick_x);
 	//This is holonomic drive
 	robot.front_right.setPower(frontRight);
 	robot.front_left.setPower(frontLeft);
@@ -336,23 +320,23 @@ public void normalTeleopStuff()
 	}
 //------------------------------------------------------------------------------------------
 //THIS IS THE SIDE GRABBER CODE
-	if(gamepad2.right_stick_button)
-	{
-		setSideGrabberPosition(grabbedFlippedOut);
-	}
-	else if(gamepad2.left_stick_button)
-	{
-		setSideGrabberPosition(grabbedFlipperIn);
-	}
+//	if(gamepad2.right_stick_button)
+//	{
+//		setSideGrabberPosition(grabbedFlippedOut);
+//	}
+//	else if(gamepad2.left_stick_button)
+//	{
+//		setSideGrabberPosition(grabbedFlipperIn);
+//	}
 //------------------------------------------------------------------------------------------
 //THIS CODE EXTENDS THE NEW MEASURING TAPE
-	robot.measuringTape.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+//	robot.measuringTape.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
 //------------------------------------------------------------------------------------------
 //THIS CODE OVERRIDES OUR COLOR SENSOR IN CASE IS MALFUNCTIONS - true
-	if(gamepad1.dpad_right)
-	{
-		hasBlock = true;
-	}
+//	if(gamepad1.dpad_right)
+//	{
+//		hasBlock = true;
+//	}
 //------------------------------------------------------------------------------------------
 	if(gamepad2.dpad_up)
 	{
@@ -455,11 +439,6 @@ public void place()
 	while((System.currentTimeMillis() - start) < 500 && !isStopRequested())
 	{
 		telemetry.addLine("we are in the place method");
-		normalTeleopStuff();
-	}
-//------------------------------------------------------------------------------------------
-	while(capStonePlaced && capstoneTimer < 90000)
-	{
 		normalTeleopStuff();
 	}
 //------------------------------------------------------------------------------------------
