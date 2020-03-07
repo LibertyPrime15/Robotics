@@ -60,10 +60,7 @@ public class leagueTele extends LinearOpMode
 	//Whether or not the capstone has been activated
 	boolean capStonePlaced = false;
 	//This represents the time needed to pass before we can place our capstone on the plate
-	double capstoneTimer;
-
-    //This is a value that lowers the lift slightly when we want to place a brick
-    int blockPlaceValue = 500;
+//	double capstoneTimer;
 
     //these track what our next place position on, to make it so our driver doesn't have to deal
     // with as much
@@ -141,10 +138,10 @@ public void setLiftPosition(int position)
 }
 //--------------------------------------------------------------------------------------------------
 //This method moves our side block grabber into it's position
-public void setSideGrabberPosition(double position)
-{
-	robot.sideGrabber.setPosition(position);
-}
+//public void setSideGrabberPosition(double position)
+//{
+//	robot.sideGrabber.setPosition(position);
+//}
 //--------------------------------------------------------------------------------------------------
 //this method starts an intake cycle - it will start the intake, wait until we have a block, and
 //then grab onto it
@@ -338,10 +335,10 @@ public void normalTeleopStuff()
 //		hasBlock = true;
 //	}
 //------------------------------------------------------------------------------------------
-	if(gamepad2.dpad_up)
-	{
-		capStonePlaced = true;
-	}
+//	if(gamepad2.dpad_up)
+//	{
+//		capStonePlaced = true;
+//	}
 //------------------------------------------------------------------------------------------
 	if(nextPlacePos == 0)
 	{
@@ -441,7 +438,6 @@ public void place()
 		telemetry.addLine("we are in the place method");
 		normalTeleopStuff();
 	}
-//------------------------------------------------------------------------------------------
 	robot.grabber.setPosition(ungrabbed);
 	blockIsGrabbed = false;
 	start = System.currentTimeMillis();
@@ -511,25 +507,25 @@ public double compensateAngle()
 	return(currAngle/260);
 }
 //--------------------------------------------------------------------------------------------------
-public void setRotateToCompensatedAngle()
-{
-	if(nextPlacePos == 0)
-	{
-		robot.rotate.setPosition(rotateClose + compensateAngle());
-	}
-	else if(nextPlacePos == 1)
-	{
-		robot.rotate.setPosition(rotateLeft + compensateAngle());
-	}
-	else if(nextPlacePos == 2)
-	{
-		robot.rotate.setPosition(rotateFar + compensateAngle());
-	}
-	else if(nextPlacePos == 3);
-	{
-		robot.rotate.setPosition(rotateGrab + compensateAngle());
-	}
-}
+//public void setRotateToCompensatedAngle()
+//{
+//	if(nextPlacePos == 0)
+//	{
+//		robot.rotate.setPosition(rotateClose + compensateAngle());
+//	}
+//	else if(nextPlacePos == 1)
+//	{
+//		robot.rotate.setPosition(rotateLeft + compensateAngle());
+//	}
+//	else if(nextPlacePos == 2)
+//	{
+//		robot.rotate.setPosition(rotateFar + compensateAngle());
+//	}
+//	else if(nextPlacePos == 3);
+//	{
+//		robot.rotate.setPosition(rotateGrab + compensateAngle());
+//	}
+//}
 //--------------------------------------------------------------------------------------------------
 //------------------------------------------------------//
 //------------------------------------------------------//
@@ -583,7 +579,6 @@ public void setRotateToCompensatedAngle()
     public void runOpMode()
     {
         turnIMU();
-        driveIMU();
         robot.resetLift();
         robot.sensorColor.enableLed(true);
         setFlipPosition(flipStartPos);
@@ -596,7 +591,6 @@ public void setRotateToCompensatedAngle()
 //--------------------------------------------------------------------------------------------------
         if(opModeIsActive() && (!(isStopRequested())))
 		{
-			capstoneTimer = System.currentTimeMillis();
 			while(opModeIsActive() && (!(isStopRequested())))
 			{
 				normalTeleopStuff();
