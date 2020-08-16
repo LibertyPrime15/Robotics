@@ -1,0 +1,10 @@
+Hey Nerds, I want you to use the 3 classes in this folder as a reference for how you should be programming.
+
+I want this year to be used as a learning experience because it really can't be anything else.
+These 3 classes have been hyper commented so please read the comments if something doesn't make sense.
+
+You need to be able to problem solve and figure out solutions on your own because our code is only going to get you so far
+and you should always be trying to make it better. I will not be giving out my github password as it is still my personal github however
+I encourage you guys to make a github and to try to actually figure out how to program.
+
+If you have any questions don't text me, text Paul😁
